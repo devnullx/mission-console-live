@@ -131,11 +131,11 @@
       $('d-pow').textContent = `${A.power_w} W · ${A.brakes ? 'ON' : 'OFF'}`; $('d-react').textContent = A.reaction_nm + ' N·m'; $('d-cyc').textContent = A.cycles;
       const ih = $('inhand'); ih.hidden = !A.grip;
       if (A.grip && A.module) { const m = f.modules[A.module - 1]; $('ih-name').textContent = `Module ${m.id} · ${m.payload.kind} · ${m.customer}`;
-        $('ih-det').textContent = `${m.payload.mass_kg} kg · ${m.payload.vials} vials · ${m.payload.containment} · ${m.t} °C on umbilical power`; }
+        $('ih-det').textContent = `${m.payload.mass_kg} kg · ${m.payload.vials} vials · ${m.payload.containment} · ${m.t} °C on umbilical power · ${m.protocol && m.protocol.mode === 'cycle' ? 'thermal-cycling protocol' : 'constant-temperature protocol'}`; }
     }
     const states = f.modules.map(moduleState);
     if (f.t !== lastFrameT) {
-      f.modules.forEach((m, k) => { const el = $('mod-' + m.id); el.className = 'mod ' + states[k]; el.lastChild.textContent = m.state === 'stowed' ? m.size : m.t.toFixed(1) + '°'; el.title = `${m.exp} · ${m.t} °C · ${m.p} kPa · health ${m.health}`; });
+      f.modules.forEach((m, k) => { const el = $('mod-' + m.id); el.className = 'mod ' + states[k]; el.lastChild.textContent = m.state === 'stowed' ? m.size : m.t.toFixed(1) + '°'; el.title = `${m.exp} · ${m.t} °C · ${m.p} kPa · health ${m.health}` + (m.protocol ? ` · ${m.protocol.mode === 'cycle' ? 'thermal cycling (eclipse-synced), ' + m.protocol.cycles + ' cycles' : 'constant ' + m.protocol.setpoint + ' °C'}${m.protocol.crystal_um ? ' · crystals ' + m.protocol.crystal_um + ' µm' : ''}` : ''); });
       lastFrameT = f.t;
     }
     // comms
