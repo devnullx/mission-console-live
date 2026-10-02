@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Customer Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css?v=14">
+<link rel="stylesheet" href="static/customer.css?v=14">
+</head>
+<body class="customer">
+
+<header id="topbar">
+  <div class="brand">
+    <span class="brand-main">SPACE PHILIC</span>
+    <span class="brand-sub">CUSTOMER PANEL · LELP-1</span>
+  </div>
+  <div class="who">
+    <div class="who-name" id="cust-name">Adriana · Zurich Biotech Lab</div>
+    <div class="who-sub">Experiment SC-ORG-1 · stem-cell organoids · module <span id="cust-mod">17</span> (L) · identity <span id="cust-fp" class="mono">—</span></div>
+  </div>
+  <div class="clock"><span class="clock-label">T+</span><span id="met">00:00:00</span><span id="phase-pill" class="pill">PRE-LAUNCH</span></div>
+  <div class="scenario"><a class="toggle" href="index.html">MISSION CONSOLE</a></div>
+</header>
+
+<main id="cmain">
+  <section class="col">
+    <div class="panel">
+      <h2>YOUR SAMPLE <span class="h-sub">live from module 17</span></h2>
+      <div class="hero-row">
+        <div class="hero"><div class="hero-label">TEMPERATURE</div><div class="hero-num"><span id="m-t">—</span><span class="unit">°C</span></div><div class="hero-sub">protocol 37.0 ± 0.5</div></div>
+        <div class="hero"><div class="hero-label">VIABILITY</div><div class="hero-num"><span id="m-h">—</span><span class="unit">%</span></div><div class="hero-sub" id="m-h-sub">—</div></div>
+      </div>
+      <div class="kv-grid">
+        <div><span>PRESSURE</span><b id="m-p">—</b></div>
+        <div><span>CONTAINMENT</span><b id="m-seal">—</b></div>
+        <div><span>STATE</span><b id="m-state">—</b></div>
+        <div><span>HEATER</span><b id="m-heat">—</b></div>
+      </div>
+      <h3>TEMPERATURE · LAST 2 H</h3>
+      <svg id="chart-t" viewBox="0 0 360 120" aria-label="Module 17 temperature over time"></svg>
+      <h3>VIABILITY</h3>
+      <svg id="chart-h" viewBox="0 0 360 70" aria-label="Module 17 viability over time"></svg>
+    </div>
+    <div class="panel">
+      <h2>EXPERIMENT PROTOCOL <span class="h-sub">SC-ORG-1</span></h2>
+      <ol class="steps" id="steps"></ol>
+    </div>
+  </section>
+
+  <section class="col">
+    <div class="panel">
+      <h2>MISSION JOURNEY <span class="h-sub">launch → orbit → lab → return</span></h2>
+      <div class="journey" id="journey"></div>
+    </div>
+    <div class="panel">
+      <h2>DATA DELIVERED TO YOU <span class="h-sub">Leuk ground station, Switzerland</span></h2>
+      <ul class="deliveries" id="deliveries"></ul>
+      <div class="kv-grid three">
+        <div><span>REPORTS</span><b id="d-n">0</b></div>
+        <div><span>IMAGING FRAMES</span><b id="d-frames">0</b></div>
+        <div><span>DATA</span><b id="d-mb">0 MB</b></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>SAMPLE RETURN <span class="h-sub">return capsule, cold chain 4 °C</span></h2>
+      <div class="return" id="return"></div>
+    </div>
+  </section>
+
+  <section class="col">
+    <div class="panel">
+      <h2>WHO TOUCHED YOUR EXPERIMENT <span class="h-sub">Sentinel command audit, signed ledger</span></h2>
+      <p class="note">Every command that could affect module 17 had to pass post-quantum signature checks <em>and</em> the mission guardian. Blocked attempts are shown too.</p>
+      <ol id="audit" class="audit"></ol>
+      <div class="kv-grid three">
+        <div><span>AUTHORISED</span><b id="a-ok">0</b></div>
+        <div><span>BLOCKED</span><b id="a-bad">0</b></div>
+        <div><span>LEDGER</span><b id="a-ledger">—</b></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="timeline">
+  <div class="controls">
+    <button id="btn-play" title="Play/Pause (space)">▶</button>
+    <select id="speed" title="Replay speed">
+      <option value="1">1×</option><option value="20">20×</option><option value="60" selected>60×</option><option value="300">300×</option>
+    </select>
+  </div>
+  <div class="track" id="track"><div class="track-fill" id="track-fill"></div><div class="track-marks" id="track-marks"></div></div>
+  <div class="scorecard" id="scorecard"></div>
+</footer>
+
+<script src="static/customer.js?v=14"></script>
+</body>
+</html>
