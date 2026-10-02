@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mission Globe</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<script>window.CESIUM_BASE_URL = "https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/";</script>
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/Cesium.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<style>
+  html, body { margin: 0; height: 100%; background: #0d0d0d; font-family: Inter, system-ui, sans-serif; color: #fff; }
+  #cesiumContainer { position: absolute; inset: 0; }
+  #bar { position: absolute; left: 16px; top: 14px; z-index: 5; display: flex; gap: 10px; align-items: center; background: rgba(13,13,13,.7); border: 1px solid #2e2e2c; border-radius: 4px; padding: 8px 12px; font-size: 12px; }
+  #bar b { font-family: "IBM Plex Mono", monospace; letter-spacing: .1em; }
+  #bar a { color: #3987e5; text-decoration: none; font-weight: 600; }
+  #note { position: absolute; right: 16px; top: 14px; z-index: 5; font-size: 11px; color: #c3c2b7; background: rgba(13,13,13,.7); border: 1px solid #2e2e2c; border-radius: 4px; padding: 8px 12px; max-width: 420px; line-height: 1.4; }
+  .cesium-viewer-bottom { display: none; }
+</style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<div id="bar"><b>SPACE PHILIC · LELP-1 · GLOBE</b><span>true-scale WGS-84 Earth (CesiumJS) · twin trajectories as CZML</span><a href="index.html">MISSION CONSOLE →</a></div>
+<div id="note">Launch from APJ Abdul Kalam Island due east over the Bay of Bengal; booster to the barge, upper stage + LELP-1 to the mission orbit, relays, ground stations and the return capsule. Imagery: Natural Earth II (offline, no token). Play with the clock at the bottom.</div>
+<script>
+(async () => {
+  const viewer = new Cesium.Viewer('cesiumContainer', {
+    baseLayer: Cesium.ImageryLayer.fromProviderAsync(Cesium.TileMapServiceImageryProvider.fromUrl(Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII'))),
+    terrain: undefined, baseLayerPicker: false, geocoder: false, homeButton: false, sceneModePicker: true, navigationHelpButton: false,
+    infoBox: true, selectionIndicator: true, timeline: true, animation: true, shouldAnimate: true,
+  });
+  viewer.scene.globe.enableLighting = true; viewer.scene.skyAtmosphere.show = true; viewer.scene.globe.showGroundAtmosphere = true;
+  const ds = await Cesium.CzmlDataSource.load('/static/mission.czml.json');
+  viewer.dataSources.add(ds); viewer.clock.multiplier = 20;
+  viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(92.0, 14.0, 2.6e6), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-60), roll: 0 }, duration: 0 });
+  // follow buttons: free view by default; the bar offers tracking of each vehicle
+  const bar = document.getElementById('bar');
+  for (const [label, id] of [['FREE', null], ['STACK', 'Stack'], ['BOOSTER', 'Booster'], ['LELP-1', 'Upper stage + LELP-1'], ['CAPSULE', 'Return capsule']]) {
+    const b = document.createElement('button'); b.textContent = label; b.style.cssText = 'background:#232322;color:#fff;border:1px solid #2e2e2c;border-radius:3px;padding:4px 8px;font:600 10px Inter,sans-serif;cursor:pointer';
+    b.onclick = () => { viewer.trackedEntity = id ? ds.entities.getById(id) : undefined; }; bar.appendChild(b);
+  }
+})();
+</script>
+</body>
+</html>

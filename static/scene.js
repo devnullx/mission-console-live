@@ -48,15 +48,15 @@
   class Scene3D {
     constructor(canvas) {
       this.canvas = canvas;
-      this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+      this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, logarithmicDepthBuffer: true });
       this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
       this.renderer.outputEncoding = THREE.sRGBEncoding; this.renderer.toneMapping = THREE.ACESFilmicToneMapping; this.renderer.toneMappingExposure = 1.05;
       this.scene = new THREE.Scene(); this.scene.background = new THREE.Color(0x05070c);
-      this.camera = new THREE.PerspectiveCamera(38, 1, 0.5, 20000);
+      this.camera = new THREE.PerspectiveCamera(38, 1, 0.01, 2.0e6);
       this.camPos = V(0, 30, 120); this.camTarget = V(0, 20, 0);
-      this.sun = new THREE.DirectionalLight(0xfff4e0, 2.4); this.sun.position.set(300, 220, 180); this.scene.add(this.sun);
+      this.sun = new THREE.DirectionalLight(0xfff4e0, 2.4); this.sun.position.set(30000, 22000, 18000); this.scene.add(this.sun);
       this.scene.add(new THREE.HemisphereLight(0x9fb9ff, 0x1a1410, 0.7));
-      this.scene.add(stars(2200, 9000));
+      this.scene.add(stars(2600, 6.0e5));
       this.loader = new THREE.TextureLoader(); this.loader.setCrossOrigin('anonymous');
       this.t = 0; this.phase = null;
       this._buildLaunch(); this._buildOps();
@@ -67,28 +67,49 @@
     _std(color, o = {}) { return new THREE.MeshStandardMaterial(Object.assign({ color, roughness: .55, metalness: .35 }, o)); }
     _tex(name, onload) { this.loader.load(TEX + name, t => { t.encoding = THREE.sRGBEncoding; onload(t); }, undefined, () => {}); }
 
-    // ================= LAUNCH =================
+    // ================= LAUNCH: true scale, 1 unit = 1 km =================
+    // Earth is a 6 371 km sphere at the origin (y = north pole). The pad is at APJ Abdul Kalam Island
+    // (20.758 N, 87.085 E); the twin's downrange distance is laid along the easterly great circle, altitude
+    // along the local vertical. Vehicles, pad and barge are drawn 40x larger than life so a 20 m rocket is
+    // visible in a chase shot; at 1 000 km altitude a 0.6 km tower is sub-pixel, as it should be.
+    _geo() {
+      const R = 6371.0, lat = THREE.MathUtils.degToRad(20.758), lon = THREE.MathUtils.degToRad(87.085);
+      const up = V(Math.cos(lat) * Math.cos(lon), Math.sin(lat), -Math.cos(lat) * Math.sin(lon));     // matches SphereGeometry uv mapping
+      const east = V(-Math.sin(lon), 0, -Math.cos(lon));
+      const north = new THREE.Vector3().crossVectors(up, east).negate();
+      return { R, up, east, north };
+    }
+    _place(downrangeKm, altKm) {
+      const { R, up, east } = this._geo(), ang = downrangeKm / R;
+      const u = up.clone().multiplyScalar(Math.cos(ang)).add(east.clone().multiplyScalar(Math.sin(ang)));   // local up
+      const f = up.clone().multiplyScalar(-Math.sin(ang)).add(east.clone().multiplyScalar(Math.cos(ang)));  // local forward (downrange)
+      return { pos: u.clone().multiplyScalar(R + altKm), up: u, fwd: f, side: new THREE.Vector3().crossVectors(u, f).normalize() };
+    }
+    _orient(obj, up, fwd, tiltRad) {
+      const b = up.clone().multiplyScalar(Math.cos(tiltRad)).add(fwd.clone().multiplyScalar(Math.sin(tiltRad))).normalize();
+      obj.quaternion.setFromUnitVectors(V(0, 1, 0), b);
+    }
     _buildLaunch() {
       const g = this.launch = new THREE.Group(); this.scene.add(g);
-      // curved Earth below the pad: radius 2600 u, surface at y = 0 under the pad
-      const R = this.earthR = 2600;
-      const earth = new THREE.Mesh(new THREE.SphereGeometry(R, 96, 64), this._std(0x1e3a2a, { roughness: 1, metalness: 0 }));
-      earth.position.y = -R; g.add(earth); this.lEarth = earth;
+      const R = this.earthR = 6371.0;
+      const earth = new THREE.Mesh(new THREE.SphereGeometry(R, 192, 128), this._std(0x1c3f66, { roughness: .95, metalness: 0 }));
+      g.add(earth); this.lEarth = earth;
       this._tex('earth_atmos_2048.jpg', t => { earth.material.map = t; earth.material.color.set(0xffffff); earth.material.needsUpdate = true; });
-      const sea = new THREE.Mesh(new THREE.CircleGeometry(900, 64), this._std(0x12304a, { roughness: .35, metalness: .1 }));
-      sea.rotation.x = -Math.PI / 2; sea.position.set(300, .4, 0); g.add(sea);          // coast east of the pad
-      const land = new THREE.Mesh(new THREE.CircleGeometry(220, 48), this._std(0x2a3524, { roughness: 1 })); land.rotation.x = -Math.PI / 2; land.position.y = .6; g.add(land);
-      const atmo = new THREE.Mesh(new THREE.SphereGeometry(R + 60, 96, 64), new THREE.MeshBasicMaterial({ color: 0x4a8fff, transparent: true, opacity: .16, side: THREE.BackSide, depthWrite: false }));
-      atmo.position.y = -R; g.add(atmo);
-      // pad, tower, flame trench
-      const pad = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, .8, 32), this._std(0x3a3d42, { roughness: .9 })); pad.position.y = .9; g.add(pad);
-      const tower = new THREE.Mesh(new THREE.BoxGeometry(2.4, 46, 2.4), this._std(0x8a8f98, { roughness: .7 })); tower.position.set(-7, 24, 0); g.add(tower);
-      for (let i = 1; i < 6; i++) { const arm = new THREE.Mesh(new THREE.BoxGeometry(5, .5, .8), this._std(0x8a8f98)); arm.position.set(-4.5, i * 7.5, 0); g.add(arm); }
-      // barge, downrange (positioned per landing zone at runtime)
+      const atmo = new THREE.Mesh(new THREE.SphereGeometry(R + 90, 128, 96), new THREE.MeshBasicMaterial({ color: 0x5aa0ff, transparent: true, opacity: .20, side: THREE.BackSide, depthWrite: false, blending: THREE.AdditiveBlending }));
+      g.add(atmo);
+      const VS = 0.04;   // scene km per real metre with the 40x exaggeration
+      // pad + tower (40x): tower 15 m -> 0.6 km
+      this.pad = new THREE.Group(); g.add(this.pad);
+      const padMesh = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, .8, 32), this._std(0x3a3d42, { roughness: .9 })); padMesh.position.y = .4; this.pad.add(padMesh);
+      const tower = new THREE.Mesh(new THREE.BoxGeometry(2.4, 46, 2.4), this._std(0x8a8f98, { roughness: .7 })); tower.position.set(-7, 23, 0); this.pad.add(tower);
+      for (let i = 1; i < 6; i++) { const arm = new THREE.Mesh(new THREE.BoxGeometry(5, .5, .8), this._std(0x8a8f98)); arm.position.set(-4.5, i * 7.5, 0); this.pad.add(arm); }
+      this.pad.scale.setScalar(VS / 3.0);
+      // barge (40x)
       this.barge = new THREE.Group(); g.add(this.barge);
       const deck = new THREE.Mesh(new THREE.BoxGeometry(26, 1.2, 14), this._std(0x2c3340, { roughness: .8 })); deck.position.y = .6; this.barge.add(deck);
       const mark = new THREE.Mesh(new THREE.RingGeometry(3.5, 4.2, 48), new THREE.MeshBasicMaterial({ color: 0xffd34d, side: THREE.DoubleSide })); mark.rotation.x = -Math.PI / 2; mark.position.y = 1.25; this.barge.add(mark);
-      // vehicle: booster + upper (exaggerated size, webcast style)
+      this.barge.scale.setScalar(VS / 3.0);
+      // vehicle (procedural fallback, replaced by the CAD); built at 3 units per metre, scaled to VS
       const skin = this._std(0xe6e6e0, { roughness: .45, metalness: .25 });
       this.booster = new THREE.Group(); g.add(this.booster);
       const bBody = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 42, 32), skin); bBody.position.y = 21; this.booster.add(bBody);
@@ -100,7 +121,7 @@
       for (let i = 0; i < 4; i++) {
         const a = i / 4 * Math.PI * 2 + Math.PI / 4;
         const pivot = new THREE.Group(); pivot.position.set(Math.cos(a) * 2.2, 4, Math.sin(a) * 2.2); pivot.rotation.y = -a; this.booster.add(pivot);
-        const leg = new THREE.Mesh(new THREE.BoxGeometry(.5, 12, 1.1), this._std(0x1f2226)); leg.position.set(0, -6, 0); pivot.add(leg); pivot.rotation.z = 0; this.legs.push(pivot);
+        const leg = new THREE.Mesh(new THREE.BoxGeometry(.5, 12, 1.1), this._std(0x1f2226)); leg.position.set(0, -6, 0); pivot.add(leg); this.legs.push(pivot);
         const fp = new THREE.Group(); fp.position.set(Math.cos(a) * 2.2, 40, Math.sin(a) * 2.2); fp.rotation.y = -a; this.booster.add(fp);
         const fin = new THREE.Mesh(new THREE.BoxGeometry(2.6, .25, 2.0), this._std(0x3a3a3a, { metalness: .6 })); fin.position.x = 1.3; fp.add(fin); fp.rotation.z = Math.PI / 2; this.fins.push(fp);
       }
@@ -108,16 +129,26 @@
       const uBody = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 12, 32), skin); uBody.position.y = 6; this.upper.add(uBody);
       const fairing = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 9, 32), skin); fairing.position.y = 16.5; this.upper.add(fairing);
       const nose = new THREE.Mesh(new THREE.SphereGeometry(2.2, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), skin); nose.position.y = 21; this.upper.add(nose);
-      const inter = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 2, 32), this._std(0x1a1a1a)); inter.position.y = -1; this.upper.add(inter);
       const vacEngine = new THREE.Mesh(new THREE.ConeGeometry(1.5, 3.2, 24, 1, true), this._std(0x555a63, { side: THREE.DoubleSide, metalness: .8 })); vacEngine.position.y = -2.4; vacEngine.rotation.x = Math.PI; this.upper.add(vacEngine);
       this.uFlame = flame(1.3, 16, 0xa0c8ff); this.uFlame.position.y = -3; this.upper.add(this.uFlame);
-      this.plume = exhaust(600); g.add(this.plume);
+      this.vehScale = VS / 3.0; this.booster.scale.setScalar(this.vehScale); this.upper.scale.setScalar(this.vehScale);
+      this.stackH = 42 * this.vehScale;    // booster height in km (procedural); CAD overrides
+      this.plume = exhaust(300); g.add(this.plume);
+      this.plume.material.size = 0.05; this.plume.material.sizeAttenuation = true; this.plume.material.opacity = .45;
       this.sepT = null;
+      // local terrain around the pad (the 2 048 px Earth texture is ~20 km/pixel): a 60 km disc, land west, sea east
+      const site = this._place(0, 0); this.pad.position.copy(site.pos); this._orient(this.pad, site.up, site.fwd, 0);
+      const ground = new THREE.Group(); g.add(ground); ground.position.copy(site.pos); this._orient(ground, site.up, site.fwd, 0);
+      const sea = new THREE.Mesh(new THREE.CircleGeometry(60, 64), this._std(0x173a55, { roughness: .4, metalness: .1 })); sea.rotation.x = -Math.PI / 2; sea.position.y = -0.02; ground.add(sea);
+      const landShape = new THREE.Shape(); landShape.moveTo(-60, -60); landShape.lineTo(-60, 60); landShape.lineTo(2, 60); landShape.bezierCurveTo(8, 20, -6, -20, 1, -60); landShape.lineTo(-60, -60);
+      const land = new THREE.Mesh(new THREE.ShapeGeometry(landShape), this._std(0x2d3b26, { roughness: 1 })); land.rotation.x = -Math.PI / 2; land.position.y = -0.01; ground.add(land);
+      // island strip under the pad (APJ Abdul Kalam Island is a 3 km barrier island)
+      const island = new THREE.Mesh(new THREE.BoxGeometry(1.2, .02, 4.0), this._std(0x3a4a2e, { roughness: 1 })); island.position.y = 0; ground.add(island);
       this._loadCad();
     }
     _loadCad() {
       /* Team CAD (scripts/cad_to_glb.py): booster.glb / upper.glb in metres, Y up, base at the origin.
-         Scene scale: 3 units per metre keeps the webcast-style exaggeration (procedural stack is 63 u tall). */
+         Inside the vehicle groups 1 unit = 1/3 m (procedural build scale), so the CAD gets scale 3. */
       if (!THREE.GLTFLoader) return;
       const loader = new THREE.GLTFLoader(), S = 3.0;
       const skin = new THREE.MeshStandardMaterial({ color: 0xe9e9e4, roughness: .42, metalness: .3 });
@@ -127,18 +158,16 @@
         root.traverse(o => { if (o.isMesh) { if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); const bb = new THREE.Box3().setFromObject(o); o.material = (bb.max.y - bb.min.y) < 2.5 ? dark : skin; o.material.side = THREE.DoubleSide; } });
         hideProcedural.forEach(o => o.visible = false);
         grp.add(root); grp.userData.cad = root;
-        const bb = new THREE.Box3().setFromObject(root); grp.userData.cadHeight = bb.max.y - bb.min.y;
+        const bb = new THREE.Box3(); root.traverse(o => { if (o.isMesh) { o.geometry.computeBoundingBox(); bb.union(o.geometry.boundingBox); } });
+        grp.userData.cadHeight = (bb.max.y - bb.min.y) * S;   // metres x S = group units (independent of the group's own scale)
       };
       loader.load('static/models/booster.glb?v=3', g => {
-        // the team's CAD already has the legs, grid fins and engine bay: hide every procedural part except the flame
         attach(this.booster, g, this.booster.children.filter(c => c !== this.bFlame));
         this.legs.forEach(l => l.visible = false); this.fins.forEach(f => f.visible = false); this.engines.visible = false;
         this.bFlame.position.y = -0.5;
-        this.cadBoosterH = this.booster.userData.cadHeight;
+        this.cadBoosterH = this.booster.userData.cadHeight; this.stackH = this.cadBoosterH * this.vehScale;
       }, undefined, () => {});
-      loader.load('static/models/upper.glb?v=3', g => {
-        attach(this.upper, g, this.upper.children.filter(c => c !== this.uFlame));
-      }, undefined, () => {});
+      loader.load('static/models/upper.glb?v=3', g => { attach(this.upper, g, this.upper.children.filter(c => c !== this.uFlame)); }, undefined, () => {});
     }
     _emit(pos, dir, n, spread, speed) {
       const u = this.plume.userData, p = this.plume.geometry.attributes.position.array;
@@ -147,7 +176,7 @@
     }
     _stepPlume(dt) {
       const u = this.plume.userData, p = this.plume.geometry.attributes.position.array;
-      for (let i = 0; i < u.life.length; i++) { if (u.life[i] <= 0) continue; u.life[i] -= dt * .9; p[i * 3] += u.vel[i * 3] * dt; p[i * 3 + 1] += u.vel[i * 3 + 1] * dt; p[i * 3 + 2] += u.vel[i * 3 + 2] * dt; u.vel[i * 3 + 1] += 6 * dt; if (u.life[i] <= 0) p[i * 3 + 1] = -1e4; }
+      for (let i = 0; i < u.life.length; i++) { if (u.life[i] <= 0) continue; u.life[i] -= dt * 1.6; p[i * 3] += u.vel[i * 3] * dt; p[i * 3 + 1] += u.vel[i * 3 + 1] * dt; p[i * 3 + 2] += u.vel[i * 3 + 2] * dt; if (u.life[i] <= 0) p[i * 3 + 1] = -1e7; }
       this.plume.geometry.attributes.position.needsUpdate = true;
     }
     _flameOn(f, on, throttle, flicker) {
@@ -156,51 +185,51 @@
     }
     updateLaunch(s, hasSep) {
       const dt = 1 / 60; this.t += dt;
-      const sc = 0.5, xsc = 0.6;              // km -> scene units (altitude compressed, downrange more)
-      const pos = (b) => b ? V(b.downrange_km * xsc, Math.max(b.alt_km, 0) * sc, 0) : null;
-      const st = pos(s.stack), bo = pos(s.booster), up = pos(s.upper);
-      const alt = (s.upper || s.stack || { alt_km: 0 }).alt_km;
-      // sky darkens with altitude; atmosphere thins
-      const k = Math.min(alt / 90, 1); this.scene.background.setRGB(lerp(.36, .02, k), lerp(.56, .03, k), lerp(.85, .06, k));
+      const hero = s.upper || s.stack, alt = hero ? hero.alt_km : 0;
+      const k = Math.min(alt / 90, 1); this.scene.background.setRGB(lerp(.36, .01, k), lerp(.56, .02, k), lerp(.85, .05, k));
+      const placeVeh = (obj, smp, tilt) => { const g = this._place(smp.downrange_km, Math.max(smp.alt_km, 0)); obj.position.copy(g.pos); this._orient(obj, g.up, g.fwd, tilt); return g; };
+      let camFrom = null, camAt = null;
       if (!hasSep) {
-        const p = st || V(0, 0, 0);
-        const body = s.stack; const tilt = body ? Math.atan2(body.downrange_km, body.alt_km + 6) * .95 : 0;
-        this.booster.position.copy(p); this.booster.rotation.z = -tilt;
-        const bh = this.cadBoosterH || 42; this.upper.position.copy(p).add(V(Math.sin(tilt) * bh, Math.cos(tilt) * bh, 0)); this.upper.rotation.z = -tilt;
-        const on = !!(body && body.throttle > 0); this._flameOn(this.bFlame, on, body ? body.throttle : 0, this.t); this.uFlame.visible = false;
-        if (on) this._emit(p.clone().add(V(Math.sin(tilt) * -2, -2, 0)), V(Math.sin(tilt) * -1, -1, 0), alt < 3 ? 14 : 3, alt < 3 ? 18 : 4, alt < 3 ? 22 : 10);
-        // shots: wide pad shot at liftoff -> chase cam that backs off as the vehicle climbs
-        if (alt < 1.5) { this.camPos.lerp(V(110, 26, 150), .04); this.camTarget.lerp(V(p.x, p.y + (this.cadBoosterH || 42) * .7, 0), .1); }
-        else { const d = 150 + p.y * .35; this.camPos.lerp(V(p.x + d * .5, p.y + d * .2, d * .9), .035); this.camTarget.lerp(V(p.x, p.y + 25, 0), .08); }
+        const body = s.stack || { downrange_km: 0, alt_km: 0, throttle: 0 };
+        const tilt = Math.atan2(body.downrange_km, body.alt_km + 6) * .95;
+        const g = placeVeh(this.booster, body, tilt);
+        // the upper stage rides on top of the booster
+        const topDir = g.up.clone().multiplyScalar(Math.cos(tilt)).add(g.fwd.clone().multiplyScalar(Math.sin(tilt)));
+        this.upper.position.copy(g.pos).add(topDir.multiplyScalar(this.stackH)); this.upper.quaternion.copy(this.booster.quaternion);
+        const on = body.throttle > 0; this._flameOn(this.bFlame, on, body.throttle, this.t); this.uFlame.visible = false;
+        if (on) this._emit(g.pos.clone().sub(g.up.clone().multiplyScalar(.04)), g.up.clone().negate(), alt < 3 ? 10 : 3, alt < 3 ? .03 : .01, alt < 3 ? .06 : .03);
+        const d = Math.max(1.6, alt * .09);                         // chase distance grows with altitude so the curvature shows
+        camFrom = g.pos.clone().add(g.side.clone().multiplyScalar(d * .8)).add(g.fwd.clone().multiplyScalar(-d * .45)).add(g.up.clone().multiplyScalar(d * .3));
+        camAt = g.pos.clone().add(g.up.clone().multiplyScalar(this.stackH * .6));
         this.sepT = null;
       } else {
         if (this.sepT === null) this.sepT = this.t;
         const sepAge = this.t - this.sepT;
-        if (up) { const u = s.upper; const fpa = Math.atan2(u.speed_ms > 0 ? 1 : 0, 1); this.upper.position.copy(up); this.upper.rotation.z = -lerp(0.4, 1.35, Math.min(sepAge / 6, 1));
-          this._flameOn(this.uFlame, u.throttle > 0, u.throttle, this.t); }
-        if (bo) {
-          const b = s.booster; this.booster.position.copy(bo);
-          const retro = ['boostback', 'entry_burn', 'landing_burn', 'descent', 'entry_coast'].includes(b.phase);
-          const targetRot = b.phase === 'coast' ? -0.5 : retro ? Math.PI + 0.08 : 0; if (b.phase === 'landing_burn' || b.phase === 'descent') { /* engines first, upright */ }
-          this.booster.rotation.z = lerp(this.booster.rotation.z, b.phase === 'coast' ? -0.5 : (b.phase === 'boostback' ? Math.PI * 0.85 : 0.0), .05);
+        let gb = null, gu = null;
+        if (s.upper) { gu = placeVeh(this.upper, s.upper, lerp(0.4, 1.45, Math.min(sepAge / 6, 1))); this._flameOn(this.uFlame, s.upper.throttle > 0, s.upper.throttle, this.t); }
+        if (s.booster) {
+          const b = s.booster; const retro = ['boostback', 'entry_coast', 'entry_burn', 'descent', 'landing_burn'].includes(b.phase);
+          gb = placeVeh(this.booster, b, b.phase === 'coast' ? .5 : (b.phase === 'boostback' ? Math.PI * .85 : 0.0));
           this._flameOn(this.bFlame, b.throttle > 0, b.throttle, this.t);
-          if (b.throttle > 0) this._emit(bo.clone().add(V(0, -2, 0)), V(0, -1, 0), 2, 3, 8);
+          if (b.throttle > 0) this._emit(gb.pos.clone(), gb.up.clone().negate(), 2, .01, .03);
           const finsOut = ['entry_coast', 'entry_burn', 'descent', 'landing_burn'].includes(b.phase);
-          if (!this.cadBoosterH) this.fins.forEach(f => f.rotation.z = lerp(f.rotation.z, finsOut ? 0 : Math.PI / 2, .06));
-          const legsOut = b.phase === 'landing_burn' && b.alt_km < 1.2;
-          if (!this.cadBoosterH) this.legs.forEach(l => l.rotation.z = lerp(l.rotation.z, legsOut ? -0.55 : 0, .08));
+          if (!this.cadBoosterH) { this.fins.forEach(f => f.rotation.z = lerp(f.rotation.z, finsOut ? 0 : Math.PI / 2, .06)); this.legs.forEach(l => l.rotation.z = lerp(l.rotation.z, (b.phase === 'landing_burn' && b.alt_km < 1.2) ? -0.55 : 0, .08)); }
+          if (b.landed) this.bFlame.visible = false;
         }
-        // barge sits at the landing zone the twin computed (downrange km -> scene units)
-        this.barge.position.set((this.landingZoneKm || 0) * xsc, .2, 0);
-        // camera: follow the booster home; final approach from the barge
-        const f = bo || up;
-        if (bo && s.booster.alt_km < 4 && ['landing_burn', 'descent'].includes(s.booster.phase)) { this.camPos.lerp(V(this.barge.position.x + 90, 14, 110), .05); this.camTarget.lerp(V(bo.x, bo.y + 18, 0), .1); }
-        else if (bo && sepAge < 6) { this.camPos.lerp(V(f.x + 60, f.y + 15, 110), .04); this.camTarget.lerp(V(f.x, f.y + 20, 0), .08); }
-        else { const d = 170 + f.y * .6; this.camPos.lerp(V(f.x + d * .5, f.y + d * .25, d * .9), .03); this.camTarget.lerp(V(f.x, f.y + 12, 0), .06); }
-        if (bo && s.booster.landed) { this.bFlame.visible = false; }
+        const lz = this._place(this.landingZoneKm || 0, 0); this.barge.position.copy(lz.pos); this._orient(this.barge, lz.up, lz.fwd, 0);
+        const g = gb || gu, smp = s.booster || s.upper;
+        if (gb && s.booster.alt_km < 4 && ['landing_burn', 'descent'].includes(s.booster.phase)) {
+          camFrom = lz.pos.clone().add(lz.side.clone().multiplyScalar(1.4)).add(lz.fwd.clone().multiplyScalar(.9)).add(lz.up.clone().multiplyScalar(.35));
+          camAt = gb.pos.clone().add(gb.up.clone().multiplyScalar(.25));
+        } else {
+          const d = Math.max(2.0, smp.alt_km * .12);
+          camFrom = g.pos.clone().add(g.side.clone().multiplyScalar(d * .8)).add(g.fwd.clone().multiplyScalar(-d * .5)).add(g.up.clone().multiplyScalar(d * .3));
+          camAt = g.pos.clone();
+        }
       }
+      if (camFrom) { this.camPos.copy(camFrom); this.camTarget.copy(camAt); }   // rigid chase: replay runs 20-300x real time
       this._stepPlume(dt);
-      this.camera.position.copy(this.camPos); this.camera.lookAt(this.camTarget);
+      this.camera.position.copy(this.camPos); this.camera.up.copy(this.camPos.clone().normalize()); this.camera.lookAt(this.camTarget);
       this.renderer.render(this.scene, this.camera);
     }
 
@@ -383,7 +412,8 @@
       else if (state === 'chute') { this.plasma.material.opacity = lerp(this.plasma.material.opacity, 0, .05); this.chute.visible = true; c.rotation.z = lerp(c.rotation.z, 3.14, .03); c.position.lerp(V(-90, earthTop + 30, 50), .004); }
       else if (state === 'landed') { this.chute.visible = false; this.plasma.material.opacity = 0; c.visible = false; }
     }
-    setPhase(p) { if (p === this.phase) return; this.phase = p; this.launch.visible = p === 'launch'; this.ops.visible = p === 'ops'; this.camPos.set(p === 'launch' ? 70 : 60, 20, p === 'launch' ? 85 : 60); }
+    setPhase(p) { if (p === this.phase) return; this.phase = p; this.launch.visible = p === 'launch'; this.ops.visible = p === 'ops';
+      if (p === 'ops') { this.camera.up.set(0, 1, 0); this.camPos.set(60, 20, 60); } else { const g = this._place(0, 0); this.camPos.copy(g.pos.clone().add(g.side.clone().multiplyScalar(1.4)).add(g.up.clone().multiplyScalar(.5))); this.camTarget.copy(g.pos); } }
     setSolar(d) { this._solarDeployed = d; }
     setLandingZone(km) { this.landingZoneKm = km; }
   }
