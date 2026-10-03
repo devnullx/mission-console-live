@@ -230,4 +230,5 @@
     else if (e.key === 'Escape' && document.body.classList.contains('cinema')) cinema(false); });
 
   indexLaunch(); buildTimeline(); seek(0); requestAnimationFrame(tick);
+  window.seekTo = seek; window.replayState = S;   // debug / recording hooks
 })();
