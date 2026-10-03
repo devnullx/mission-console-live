@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/style.css?v=31">
+<link rel="stylesheet" href="/static/style.css?v=33">
 </head>
 <body class="loading" data-mode="sentinel">
 
@@ -75,8 +75,8 @@
             <div><span>THROTTLE</span><b id="b-thr">—</b></div>
           </div>
           <div class="mech">
-            <div class="mech-item"><span class="lbl">DRAG FINS</span><span class="fins" id="fins"><i></i><i></i><i></i><i></i></span><b id="b-fins">STOWED</b></div>
-            <div class="mech-item"><span class="lbl">LANDING LEGS</span><span class="legs" id="legs"><i></i><i></i><i></i><i></i></span><b id="b-legs">STOWED</b></div>
+            <div class="mech-item"><span class="lbl">DRAG FINS</span><svg class="mech-svg" id="fins-svg" viewBox="0 0 56 30" aria-hidden="true"><rect class="skin" x="0" y="0" width="12" height="30"/><line class="edge" x1="12" y1="0" x2="12" y2="30"/><line class="part" id="fins-line" x1="12" y1="25" x2="12" y2="7"/><circle class="hinge" cx="12" cy="25" r="2"/></svg><b id="b-fins">STOWED</b></div>
+            <div class="mech-item"><span class="lbl">LANDING LEGS</span><svg class="mech-svg" id="legs-svg" viewBox="0 0 56 30" aria-hidden="true"><rect class="skin" x="0" y="0" width="12" height="30"/><line class="edge" x1="12" y1="0" x2="12" y2="30"/><line class="part" id="legs-line" x1="12" y1="16" x2="12" y2="1"/><circle class="hinge" cx="12" cy="16" r="2"/></svg><b id="b-legs">STOWED</b></div>
           </div>
           <div class="stab" id="stab"></div>
         </div>
@@ -165,7 +165,7 @@
     <div id="stage">
       <canvas id="view3d"></canvas>
       <div class="stage-top">
-        <div id="overlay-caption" class="hud-chip"></div>
+        <div class="stage-left"><div id="overlay-caption" class="hud-chip"></div><div id="ret-readout" class="hud-chip readout" hidden></div></div>
         <div class="stage-tools">
           <button class="btn" id="btn-broadcast" title="Overlay mode: panels on black for video compositing (B)">OVERLAY</button>
           <button class="btn" id="btn-cinema" title="Fullscreen animation (F)">FULLSCREEN</button>
@@ -281,9 +281,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script>
-<script src="/static/scene.js?v=31"></script>
-<script src="/static/hydrate.js?v=31"></script>
-<script src="/static/replay.js?v=31"></script>
-<script src="/static/app.js?v=31"></script>
+<script src="/static/scene.js?v=33"></script>
+<script src="/static/hydrate.js?v=33"></script>
+<script src="/static/replay.js?v=33"></script>
+<script src="/static/app.js?v=33"></script>
 </body>
 </html>

@@ -11,6 +11,7 @@
   const C = { gold: 0xb08a3e, goldActive: 0x3f9a5a, warn: 0xd09a2a, crit: 0xb03030, move: 0x2d7fe0,
               body: 0x23262b, trim: 0x474c55, cell: 0x14213d, flame: 0xffb060, flameCore: 0xfff3d0 };
   const lerp = (a, b, k) => a + (b - a) * k;
+  const sstep = (k) => { k = Math.min(Math.max(k, 0), 1); return k * k * (3 - 2 * k); };
   const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
   function solarTexture() {   // procedural solar-cell grid
@@ -61,7 +62,7 @@
       this.stars = stars(2600, 6.0e5); this.scene.add(this.stars);
       this.loader = new THREE.TextureLoader(); this.loader.setCrossOrigin('anonymous');
       this.t = 0; this.phase = null;
-      this._buildLaunch(); this._buildOps();
+      this._buildLaunch(); this._buildReturn(); this._buildOps();
       this.setPhase('launch');
       this._resize(); addEventListener('resize', () => this._resize());
     }
@@ -154,6 +155,117 @@
       const island = new THREE.Mesh(new THREE.BoxGeometry(1.2, .02, 4.0), this._std(0x3a4a2e, { roughness: 1 })); island.position.y = 0; ground.add(island);
       this._loadCad();
     }
+    // ================= RETURN: capsule entry, parachutes and splashdown, true scale (1 unit = 1 km) =================
+    // Same Earth and the same 40x vehicle exaggeration as the launch; positions come from the twin's capsule model
+    // (sentinel/lelp/capsule.py), so the canopies open where the model opens them: drogue 14 km, main 3 km.
+    _buildReturn() {
+      const r = this.ret = new THREE.Group(); r.visible = false; this.launch.add(r);
+      const cap = this.rcap = new THREE.Group(); r.add(cap);                 // built in metres; local +y = aft (canister)
+      const shell = this._std(0xd6d9dd, { roughness: .5, metalness: .35 }), tps = this._std(0x3a2a20, { roughness: .9, metalness: .05 });
+      const th = 0.95, R0 = 0.62;                                            // heat shield: spherical cap, 1.0 m rim
+      const shield = new THREE.Mesh(new THREE.SphereGeometry(R0, 32, 10, 0, Math.PI * 2, Math.PI - th, th), tps); shield.position.y = R0 * Math.cos(th); cap.add(shield);
+      const back = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.5, 0.52, 32), shell); back.position.y = 0.26; cap.add(back);
+      const can = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.12, 24), this._std(0x2b2e33, { roughness: .6 })); can.position.y = 0.58; cap.add(can);
+      const glow = (color, op) => new THREE.MeshBasicMaterial({ color, transparent: true, opacity: op, depthWrite: false, blending: THREE.AdditiveBlending });
+      this.rPlasma = new THREE.Mesh(new THREE.SphereGeometry(0.8, 24, 16), glow(0xff5a12, 0)); this.rPlasma.position.y = -0.25; cap.add(this.rPlasma);
+      this.rWake = new THREE.Mesh(new THREE.ConeGeometry(0.55, 9, 24, 1, true), glow(0xff6a20, 0)); this.rWake.position.y = 4.8; cap.add(this.rWake);
+      this.rBeacon = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 8), new THREE.MeshBasicMaterial({ color: 0xffffff })); this.rBeacon.position.y = 0.68; cap.add(this.rBeacon);   // recovery strobe
+      // canopies: origin at the canister, risers to the rim, canopy downwind (+y)
+      const gores = (a, b) => { const c = document.createElement('canvas'); c.width = 256; c.height = 8; const g = c.getContext('2d');
+        for (let i = 0; i < 16; i++) { g.fillStyle = i % 2 ? a : b; g.fillRect(i * 16, 0, 16, 8); } return new THREE.CanvasTexture(c); };
+      const chute = (radius, riser, a, b) => {
+        const grp = new THREE.Group(); grp.position.y = 0.64;
+        const canopy = new THREE.Mesh(new THREE.SphereGeometry(radius, 32, 10, 0, Math.PI * 2, 0, Math.PI * 0.42),
+          new THREE.MeshStandardMaterial({ map: gores(a, b), roughness: .9, metalness: 0, side: THREE.DoubleSide }));
+        canopy.position.y = riser - radius * Math.cos(Math.PI * 0.42); grp.add(canopy);
+        const rim = radius * Math.sin(Math.PI * 0.42), pts = [];
+        for (let i = 0; i < 12; i++) { const q = i / 12 * Math.PI * 2; pts.push(V(0, 0, 0), V(Math.cos(q) * rim, riser, Math.sin(q) * rim)); }
+        const lines = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xdedede, transparent: true, opacity: .8 })); grp.add(lines);
+        grp.userData = { canopy, lines }; grp.visible = false; cap.add(grp); return grp;
+      };
+      this.rDrogue = chute(0.9, 6, '#ff7a1a', '#f4f4f4');                  // 1.8 m drogue on a 6 m riser
+      this.rMain = chute(3.5, 12, '#ff7a1a', '#f4f4f4');                    // 7 m main on a 12 m riser
+      cap.scale.setScalar(0.04);                                             // 40x, like the booster
+      // splash zone: open sea, a foam ring at splashdown, the recovery ship (built in metres, bow along +x)
+      this.retSea = new THREE.Group(); r.add(this.retSea);
+      const sea = new THREE.Mesh(new THREE.CircleGeometry(120, 96), this._std(0x173a55, { roughness: .35, metalness: .15 })); sea.rotation.x = -Math.PI / 2; this.retSea.add(sea);
+      this.rSplash = new THREE.Mesh(new THREE.RingGeometry(1.2, 2.2, 48), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false }));
+      this.rSplash.rotation.x = -Math.PI / 2; this.rSplash.position.y = 0.002; this.rSplash.scale.setScalar(0.04); this.retSea.add(this.rSplash);
+      // after splashdown: fluorescein dye spreading round the capsule, and the released main canopy floating downwind
+      this.rDye = new THREE.Mesh(new THREE.CircleGeometry(1, 48), new THREE.MeshBasicMaterial({ color: 0x22e05a, transparent: true, opacity: 0, depthWrite: false }));
+      this.rDye.rotation.x = -Math.PI / 2; this.rDye.position.y = 0.001; this.retSea.add(this.rDye);
+      this.rFloat = new THREE.Mesh(new THREE.CircleGeometry(3.2, 32), new THREE.MeshStandardMaterial({ color: 0xff7a1a, roughness: .9, transparent: true, opacity: .9, side: THREE.DoubleSide }));
+      this.rFloat.rotation.x = -Math.PI / 2; this.rFloat.position.set(0.3, 0.0015, 0.12); this.rFloat.scale.set(0.04, 0.04 * 0.6, 0.04); this.retSea.add(this.rFloat);
+      const ship = this.ship = new THREE.Group(); r.add(ship);
+      const hullM = this._std(0x2e3a48, { roughness: .7 }), deckM = this._std(0x5b6470, { roughness: .8 }), whiteM = this._std(0xe8e8e6, { roughness: .6 }), craneM = this._std(0xd9a400, { roughness: .5, metalness: .4 });
+      const box = (w, h, d, m, x, y, z) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); ship.add(b); return b; };
+      box(62, 6, 13, hullM, 0, 3, 0); box(60, 0.6, 12.4, deckM, 0, 6.3, 0); box(14, 9, 11, whiteM, 17, 11, 0); box(5, 4, 5, whiteM, 19, 17.5, 0);
+      box(1.2, 14, 1.2, craneM, -12, 13, 3.5); const jib = box(16, 1, 1, craneM, -18, 19.5, 3.5); jib.rotation.z = -0.35;
+      ship.scale.setScalar(0.04); this.shipDeckKm = 6.6 * 0.04;
+      this.retSea.visible = true;
+    }
+    _basis(obj, xAxis, yAxis) {   // orient obj so its local +x and +y line up with the given world directions
+      const y = yAxis.clone().normalize(), x = xAxis.clone().sub(y.clone().multiplyScalar(xAxis.dot(y))).normalize(), z = new THREE.Vector3().crossVectors(x, y);
+      obj.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, z));
+    }
+    updateReturn(c, dt = 1 / 60) {
+      /* c: capsule state at the replay time (replay.js capsuleAt): alt_km, speed_ms, x_km (along the launch azimuth line),
+         fpa_deg, heat_kw_m2, phase, t and the key times tDrogue / tMain / tSplash / tRecovery, splashKm, shipKm, shipMs. */
+      this.t += dt;
+      const alt = Math.max(c.alt_km, 0), k = Math.min(alt / 90, 1);
+      this.scene.background.setRGB(lerp(.36, .01, k), lerp(.56, .02, k), lerp(.85, .05, k));
+      this.stars.material.opacity = .85 * Math.max(0, (k - .25) / .75);      // blue sky below ~25 km, no stars
+      const floating = c.phase === 'floating', aboard = c.t >= c.tRecovery;
+      const sz = this._place(c.splashKm, 0);
+      this.retSea.position.copy(sz.pos); this._orient(this.retSea, sz.up, sz.fwd, 0);
+      // recovery ship: on station beside the predicted point, steams to the capsule after splashdown, bow towards it
+      const transit = c.shipKm * 1000 / c.shipMs, u = sstep((c.t - c.tSplash) / transit), along = lerp(c.shipKm, -0.56, u);
+      this.ship.position.copy(sz.pos).add(sz.side.clone().multiplyScalar(along)).add(sz.fwd.clone().multiplyScalar(0.36));
+      this._basis(this.ship, sz.side.clone().negate(), sz.up);
+      // capsule: heat shield first along the velocity; hanging heat-shield-down under the canopies; afloat; then on deck
+      const g = this._place(c.x_km, alt), gam = THREE.MathUtils.degToRad(c.fpa_deg);
+      const vdir = g.fwd.clone().multiplyScalar(Math.cos(gam)).add(g.up.clone().multiplyScalar(Math.sin(gam))).normalize();
+      const aft = floating ? sz.up.clone() : vdir.clone().negate();
+      let pos = floating ? sz.pos.clone().add(sz.up.clone().multiplyScalar(0.004 + Math.sin(this.t * 1.7) * 0.002)) : g.pos.clone();
+      if (aboard) pos = this.ship.position.clone().add(sz.side.clone().multiplyScalar(0.56)).add(sz.up.clone().multiplyScalar(this.shipDeckKm + 0.012)).add(sz.fwd.clone().multiplyScalar(-0.12));   // on deck under the crane
+      this.rcap.position.copy(pos); this.rcap.quaternion.setFromUnitVectors(V(0, 1, 0), aft);
+      const heat = Math.min(c.heat_kw_m2 / 900, 1), fl = 1 + Math.sin(this.t * 31) * .08;
+      this.rPlasma.visible = this.rWake.visible = heat > .01;
+      this.rPlasma.material.opacity = .9 * heat; this.rPlasma.scale.set(fl, .55 * fl, fl);
+      this.rWake.material.opacity = .5 * heat; this.rWake.scale.set(1, .5 + .7 * heat, 1);
+      const fill = (chute, f) => { const { canopy, lines } = chute.userData; canopy.scale.set(.15 + .85 * f, .55 + .45 * f, .15 + .85 * f); lines.scale.set(.15 + .85 * f, 1, .15 + .85 * f); };
+      this.rDrogue.visible = c.phase === 'drogue'; if (this.rDrogue.visible) fill(this.rDrogue, sstep((c.t - c.tDrogue) / 1.0));
+      this.rMain.visible = c.phase === 'main'; if (this.rMain.visible) fill(this.rMain, sstep((c.t - c.tMain) / 4.0));
+      const ts = c.t - c.tSplash; this.rSplash.visible = ts > 0 && ts < 25;
+      if (this.rSplash.visible) { this.rSplash.scale.setScalar(0.04 * (1 + ts * 0.5)); this.rSplash.material.opacity = .8 * (1 - ts / 25); this.rSplash.position.set(0, 0.002, 0); }
+      const afloat = floating && !aboard;
+      this.rDye.visible = afloat; if (afloat) { const d = sstep(ts / 90); this.rDye.scale.setScalar(0.02 + 0.13 * d); this.rDye.material.opacity = .7 * d; }
+      this.rFloat.visible = floating;
+      this.rBeacon.visible = !floating || aboard ? false : Math.sin(this.t * 6) > .6;
+      // cameras: side-on through the entry with the plasma trailing, close on the drogue, wide on the main canopy,
+      // low over the water for splashdown and recovery
+      let from, at;
+      if (aboard) {           // the ship with the capsule on deck, from off its quarter
+        from = this.ship.position.clone().add(sz.fwd.clone().multiplyScalar(-1.7)).add(sz.side.clone().multiplyScalar(1.6)).add(sz.up.clone().multiplyScalar(.55));
+        at = pos.clone().add(sz.side.clone().multiplyScalar(-.25));
+      } else if (floating) {  // low over the water: capsule, dye and canopy in front, the ship coming up behind
+        from = sz.pos.clone().add(sz.fwd.clone().multiplyScalar(-.5)).add(sz.side.clone().multiplyScalar(-.3)).add(sz.up.clone().multiplyScalar(.1));
+        at = sz.pos.clone().add(sz.side.clone().multiplyScalar(.35)).add(sz.fwd.clone().multiplyScalar(.15)).add(sz.up.clone().multiplyScalar(.03));
+      } else if (c.phase === 'main') {
+        from = pos.clone().add(g.side.clone().multiplyScalar(1.05)).add(g.fwd.clone().multiplyScalar(.35)).add(g.up.clone().multiplyScalar(.1));
+        at = pos.clone().add(g.up.clone().multiplyScalar(.26));
+      } else if (c.phase === 'drogue') {
+        from = pos.clone().add(g.side.clone().multiplyScalar(.55)).add(g.fwd.clone().multiplyScalar(.18)).add(g.up.clone().multiplyScalar(.06));
+        at = pos.clone().add(g.up.clone().multiplyScalar(.13));
+      } else {
+        from = pos.clone().add(g.side.clone().multiplyScalar(.62)).add(aft.clone().multiplyScalar(.12)).add(g.up.clone().multiplyScalar(.1));
+        at = pos.clone().add(aft.clone().multiplyScalar(.13));
+      }
+      const minR = this.earthR + 0.03; if (from.length() < minR) from.setLength(minR);       // never below the sea
+      this.camPos.copy(from); this.camTarget.copy(at);
+      this.camera.position.copy(from); this.camera.up.copy(from.clone().normalize()); this.camera.lookAt(at);
+      this.renderer.render(this.scene, this.camera);
+    }
     _loadCad() {
       /* Team CAD (scripts/cad_to_glb.py): booster.glb / upper.glb in metres, Y up, base at the origin.
          Inside the vehicle groups 1 unit = 1/3 m (procedural build scale), so the CAD gets scale 3. */
@@ -202,7 +314,8 @@
         // GLB holds them stowed, flat on the skin with the free edge towards the nose; they swing out about the tangential
         // hinge axis to the angle of the CAD (32 deg), driven by the twin's deployment fraction.
         if (meta.drag) loader.load('static/models/drag.glb?v=1', g => {
-          const finMat = new THREE.MeshStandardMaterial({ color: 0xaab0b9, roughness: .42, metalness: .7, side: THREE.DoubleSide });
+          // heat-tinted Inconel: the panels sit at the engine end, and a darker metal reads against the white skin
+          const finMat = new THREE.MeshStandardMaterial({ color: 0x6a5a4a, roughness: .34, metalness: .85, side: THREE.DoubleSide });
           g.scene.traverse(o => { if (o.isMesh) { if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); o.material = o.name === 'drag_ring' || (o.parent && o.parent.name === 'drag_ring') ? dark : finMat; } });
           this.cadDrag = [];
           meta.drag.forEach(info => { const node = g.scene.getObjectByName(info.name); if (!node) return;
@@ -283,14 +396,26 @@
         const lz = this._place(this.landingZoneKm || 0, 0); this.barge.position.copy(lz.pos); this._orient(this.barge, lz.up, lz.fwd, 0);
         const g = gb || gu, smp = s.booster || s.upper;
         if (gb && s.booster.alt_km < 4 && ['landing_burn', 'descent', 'landed'].includes(s.booster.phase)) {
-          camFrom = lz.pos.clone().add(lz.side.clone().multiplyScalar(1.45)).add(lz.fwd.clone().multiplyScalar(.9)).add(lz.up.clone().multiplyScalar(.42));   // off the deck corner: legs and struts visible
-          camAt = gb.pos.clone().add(gb.up.clone().multiplyScalar(.3));
+          // off the deck corner: legs and struts visible; after touchdown the camera pushes in on the gear and drag fins
+          const push = s.touchAge != null ? lerp(1, .5, sstep(s.touchAge / 10)) : 1;
+          camFrom = lz.pos.clone().add(lz.side.clone().multiplyScalar(1.45 * push)).add(lz.fwd.clone().multiplyScalar(.9 * push)).add(lz.up.clone().multiplyScalar(.42 * push));
+          camAt = gb.pos.clone().add(gb.up.clone().multiplyScalar(lerp(.12, .3, push)));
         } else if (gb) {
           // close on the separation, the flip and the divert burn, then ease out for the coast and the entry
           const far = Math.max(2.5, Math.min(smp.alt_km * .06, 7)), e = Math.min(Math.max((sepAge - 14) / 10, 0), 1), d = lerp(3.4, far, e * e * (3 - 2 * e));
           camFrom = g.pos.clone().add(g.side.clone().multiplyScalar(d * .8)).add(g.fwd.clone().multiplyScalar(-d * .5)).add(g.up.clone().multiplyScalar(d * .3));
           camAt = g.pos.clone().add(gb.axis.clone().multiplyScalar(this.stackH * .5 * Math.exp(-sepAge / 20)));
           if (gu) { const toUp = this.upper.position.clone().sub(camAt), du = toUp.length(); camAt.add(toUp.multiplyScalar(.35 * Math.exp(-du / 2.5))); }
+          // drag fins: at 100 km the chase camera is kilometres away and the panels are a few pixels, so the director
+          // dollies in on the engine end while they open (blend in from 5 s before, out from 6 s after the command)
+          const w = s.finsAge != null ? sstep((s.finsAge + 5) / 3) * (1 - sstep((s.finsAge - 6) / 3)) : 0;
+          if (w > 0) {
+            const A = gb.axis, Sd = gb.side, F = new THREE.Vector3().crossVectors(Sd, A).normalize(), base = this.booster.position;
+            const near = Sd.clone().multiplyScalar(.27).add(F.clone().multiplyScalar(.12)).add(A.clone().multiplyScalar(-.04));
+            const far = camFrom.clone().sub(base), dist = Math.exp(lerp(Math.log(far.length()), Math.log(near.length()), w));   // log dolly
+            camFrom = base.clone().add(far.normalize().lerp(near.clone().normalize(), w).normalize().multiplyScalar(dist));
+            camAt.lerp(base.clone().add(A.clone().multiplyScalar(.05)), w);
+          }
         } else {
           const d = Math.max(2.0, smp.alt_km * .12);
           camFrom = g.pos.clone().add(g.side.clone().multiplyScalar(d * .8)).add(g.fwd.clone().multiplyScalar(-d * .5)).add(g.up.clone().multiplyScalar(d * .3));
@@ -393,7 +518,6 @@
       const cap = new THREE.Mesh(new THREE.ConeGeometry(2.2, 3.2, 32), this._std(0xd0d4da, { metalness: .5, roughness: .4 })); cap.position.y = 1.6; this.capsule.add(cap);
       const shield = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 1.8, .6, 32), this._std(0x4a2a1a, { roughness: .9 })); this.capsule.add(shield);
       this.plasma = new THREE.Mesh(new THREE.SphereGeometry(3.4, 24, 24), new THREE.MeshBasicMaterial({ color: 0xff7a30, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending })); this.capsule.add(this.plasma);
-      this.chute = new THREE.Mesh(new THREE.SphereGeometry(5, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), this._std(0xff7f2a, { side: THREE.DoubleSide, roughness: .9 })); this.chute.position.y = 11; this.chute.visible = false; this.capsule.add(this.chute);
       this.capsule.position.set(0, 21.5, 0); this.capsuleState = 'docked'; this.capsuleT = 0;
       // relays + ground stations as points on the Earth limb
       this.relays = []; this.links = new THREE.Group(); g.add(this.links);
@@ -457,15 +581,15 @@
       if (state !== this.capsuleState) { this.capsuleState = state; this.capsuleT = 0; }
       this.capsuleT += dt; const c = this.capsule, T = this.capsuleT;
       const earthTop = this.earth.position.y + 420;
-      if (state === 'docked') { c.position.set(0, 21.5, 0); c.rotation.set(0, this.lelp.rotation.y, 0); this.plasma.material.opacity = 0; this.chute.visible = false; c.visible = true; return; }
+      if (state === 'docked') { c.position.set(0, 21.5, 0); c.rotation.set(0, this.lelp.rotation.y, 0); this.plasma.material.opacity = 0; c.visible = true; return; }
       c.visible = true;
       if (state === 'sep') { c.position.lerp(V(-8, 26, 6), .02); c.rotation.z = lerp(c.rotation.z, .3, .02); }
       else if (state === 'deorbit') { c.position.lerp(V(-30, 12, 20), .01); c.rotation.z = lerp(c.rotation.z, 2.6, .02); }
-      else if (state === 'entry') { c.position.lerp(V(-70, earthTop + 70, 40), .006); c.rotation.z = lerp(c.rotation.z, 2.9, .02); this.plasma.material.opacity = lerp(this.plasma.material.opacity, .75 + Math.sin(T * 25) * .15, .1); this.plasma.scale.setScalar(1 + Math.sin(T * 13) * .12); }
-      else if (state === 'chute') { this.plasma.material.opacity = lerp(this.plasma.material.opacity, 0, .05); this.chute.visible = true; c.rotation.z = lerp(c.rotation.z, 3.14, .03); c.position.lerp(V(-90, earthTop + 30, 50), .004); }
-      else if (state === 'landed') { this.chute.visible = false; this.plasma.material.opacity = 0; c.visible = false; }
+      else { this.plasma.material.opacity = 0; c.visible = false; }   // entry onwards: far below the station, shown by updateReturn()
     }
-    setPhase(p) { if (p === this.phase) return; this.phase = p; this.launch.visible = p === 'launch'; this.ops.visible = p === 'ops';
+    setPhase(p) { if (p === this.phase) return; this.phase = p; this.launch.visible = p === 'launch' || p === 'return'; this.ops.visible = p === 'ops';
+      const ret = p === 'return'; this.ret.visible = ret; [this.booster, this.upper, this.pad, this.barge, this.plume].forEach(o => { o.visible = !ret; });
+      if (ret) return;
       if (p === 'ops') { this.camera.up.set(0, 1, 0); this.camPos.set(60, 20, 60); this.camTarget.set(0, 8, 0); this._camSnap = true; } else { const g = this._place(0, 0); this.camPos.copy(g.pos.clone().add(g.side.clone().multiplyScalar(1.4)).add(g.up.clone().multiplyScalar(.5))); this.camTarget.copy(g.pos); } }
     setSolar(d) { this._solarDeployed = d; }
     setLandingZone(km) { this.landingZoneKm = km; }

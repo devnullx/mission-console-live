@@ -49,6 +49,9 @@
   const ATTACK17 = X.atkCmds.filter((e) => e.data.target === 'module-' + MOD);
   const tCapsule = tOf((e) => e.code === 'CAPSULE_LOAD'), tCapSep = tOf((e) => e.code === 'CAPSULE_SEP'), tSplash = tOf((e) => e.code === 'SPLASHDOWN'), tHand = tOf((e) => e.code === 'SAMPLE_HANDOVER');
   const tLab = tOf((e) => e.code === 'MODE' && /-> CENTRAL_ANALYSIS/.test(e.text));
+  // where the sample is on its way home (key times from the twin's capsule model)
+  const returnState = (t) => t >= tHand ? 'WITH YOUR COURIER' : t >= X.tRecovery ? 'ON THE RECOVERY SHIP' : t >= tSplash ? 'IN THE WATER'
+    : t >= X.tMain ? 'UNDER MAIN CANOPY' : t >= X.tDrogue ? 'UNDER DROGUE' : t >= X.tEI ? 'RE-ENTRY' : t >= tCapSep ? 'COASTING TO ENTRY' : 'IN RETURN CAPSULE';
   const MARKS = ev.filter((e) => e.t >= T0 && (e.seg === 'CUSTOMER' || e.seg === 'RETURN' || (e.data && e.data.target === 'module-' + MOD) || ['LIFTOFF', 'TOUCHDOWN', 'INTRUSION', 'CONTAIN'].includes(e.code) || (e.code === 'ORBIT' && e.seg === 'ORBIT')));
 
   $('steps').innerHTML = STEPS.map((s) => `<li><i></i><span>${s.label}</span><span class="st">—</span></li>`).join('');
@@ -93,7 +96,7 @@
   let auditN = -1, delivN = -1;
   function panels(t, f, fi) {
     set('met-sign', t < 0 ? 'T−' : 'T+'); set('met', clock(t)); set('rate', '×' + (S.rate >= 10 ? Math.round(S.rate) : S.rate.toFixed(1)));
-    const phase = t < 0 ? 'PRE-LAUNCH' : t < X.tSeco ? 'LAUNCH' : t < X.opsStart ? 'IN ORBIT' : t >= tHand ? 'COMPLETE' : t >= tSplash ? 'RECOVERY' : t >= tCapSep ? 'RETURNING' : nice(f.platform.mode);
+    const phase = t < 0 ? 'PRE-LAUNCH' : t < X.tSeco ? 'LAUNCH' : t < X.opsStart ? 'IN ORBIT' : t >= tHand ? 'COMPLETE' : t >= tSplash ? 'RECOVERY' : t >= X.tEI ? 'RE-ENTRY' : t >= tCapSep ? 'RETURNING' : nice(f.platform.mode);
     set('phase-pill', phase); cls('phase-pill', 'chip ' + (t >= tHand ? 'good' : 'info'));
     const m = f ? f.modules[MOD - 1] : null, inCapsule = t >= tCapsule;
     if (m && !inCapsule) {
@@ -106,7 +109,7 @@
       const ce = lastEvent(t, (e) => e.seg === 'RETURN' && /(\d+(?:\.\d)?) C\b/.test(e.text)), ct = ce ? +ce.text.match(/(\d+(?:\.\d)?) C\b/)[1] : 4.0;
       set('m-t', ct.toFixed(1)); set('m-t-sub', 'return capsule cold chain, 4 °C'); cls('m-t-sub', 'hero-sub ok');
       set('m-p', '—'); set('m-seal', 'SEALED'); set('m-heat', '—'); set('m-sp', '4 °C');
-      set('m-state', t >= tHand ? 'WITH YOU' : t >= tSplash ? 'RECOVERED' : t >= tCapSep ? 'RE-ENTRY' : 'IN RETURN CAPSULE'); cls('m-state', 'chip push ' + (t >= tHand ? 'good' : 'info'));
+      set('m-state', returnState(t)); cls('m-state', 'chip push ' + (t >= tHand ? 'good' : 'info'));
     } else {
       ['m-t', 'm-p', 'm-seal', 'm-heat', 'm-sp'].forEach((id) => set(id, '—')); set('m-t-sub', 'protocol 37.0 ± 0.3 once in orbit'); cls('m-t-sub', 'hero-sub');
       set('m-state', t < 0 ? 'ON THE PAD' : t < X.tSeco ? 'RIDING TO ORBIT' : 'IN ORBIT'); cls('m-state', 'chip push');
@@ -137,7 +140,7 @@
     const tiles = [['ATTACKS ON YOUR MODULE', t < X.tIntr ? '—' : `${blocked} / ${n} BLOCKED`, t < X.tIntr ? '' : blocked === n ? 'good' : 'bad'],
       ['CULTURE HEALTH', health == null ? '—' : health + ' %', health == null ? '' : health > 90 ? 'good' : 'bad'],
       ['CUSTODY LEDGER', led ? (led.data.ok ? 'VERIFIED' : 'TAMPER CAUGHT') : 'HASH-CHAINED', led ? (led.data.ok ? 'good' : 'bad') : ''],
-      ['SAMPLE RETURN', t >= tHand ? 'DELIVERED' : t >= tSplash ? 'RECOVERED' : t >= tCapSep ? 'RE-ENTRY' : t >= tCapsule ? 'IN CAPSULE' : 'PENDING', t >= tHand ? 'good' : '']];
+      ['SAMPLE RETURN', t >= tHand ? 'HANDED OVER' : t >= tCapsule ? returnState(t).replace('COASTING TO ENTRY', 'COASTING').replace('IN RETURN CAPSULE', 'IN CAPSULE') : 'PENDING', t >= tHand ? 'good' : '']];
     const html = tiles.map(([l, v, k]) => `<div class="sc ${k}"><span>${l}</span><b>${v}</b></div>`).join('');
     if ($('scorecard').dataset.h !== html) { $('scorecard').innerHTML = html; $('scorecard').dataset.h = html; }
     if (!S.task) { const cap = lastEvent(t, (e) => e.seg === 'CUSTOMER' || e.seg === 'RETURN' || e.seg === 'LAUNCH' || e.seg === 'ORBIT' || (e.data && e.data.target === 'module-' + MOD) || (e.code === 'ARM' && /17/.test(e.text)));
@@ -196,9 +199,12 @@
   function frame(dt, now) {
     const t = S.t, launch = t < X.opsStart, doPanels = S.dirty || now - S.lastPanels > 120;
     let f = null, fi = -1;
+    const cap = launch ? null : R.capsuleAt(M, t);
     if (!launch) { const o = R.opsFrame(M, t); f = o.f; fi = o.i;
-      if (!S.task) { scene.setPhase('ops'); scene.setSolar(!!lastEvent(t, (e) => e.code === 'SOLAR')); scene.updateOps(o.view, o.states, f.gate.isolated || [], dt, { capsuleState: R.capsuleState(M, t), cam: 'arm' }); } }
+      if (!S.task && cap) { scene.setPhase('return'); scene.updateReturn(cap, dt); }
+      else if (!S.task) { scene.setPhase('ops'); scene.setSolar(!!lastEvent(t, (e) => e.code === 'SOLAR')); scene.updateOps(o.view, o.states, f.gate.isolated || [], dt, { capsuleState: R.capsuleState(M, t), cam: 'arm' }); } }
     else if (!S.task) { const L = R.launchState(M, t); scene.setPhase('launch'); scene.updateLaunch(t > X.tTouch + 20 ? { upper: L.upper, sepAtt: L.sepAtt, sepAge: L.sepAge } : L, !!L.upper, dt); }
+    if (doPanels) { $('ret-readout').hidden = !cap || !!S.task; if (cap && !S.task) set('ret-readout', R.capsuleReadout(cap)); }
     if (S.task) stepTask(dt);
     $('track-fill').style.width = $('track-head').style.left = (R.t2x(M, t) * 100).toFixed(3) + '%';
     if (doPanels) { panels(t, f, fi); S.lastPanels = now; S.dirty = false; }

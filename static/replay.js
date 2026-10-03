@@ -52,6 +52,11 @@
       s.att = s.phase === 'coast' ? lerp(X.sepAtt, -Math.PI / 2, smooth((s.t - X.tMeco) / Math.max(X.tFlip - X.tMeco, 1)))
         : s.phase === 'boostback' || dy >= 0 ? -Math.PI / 2 : Math.atan2(-dx, -dy) * clamp(s.speed_ms / 40, 0, 1); });
     // the attack window gets its own stretch of the timeline; launch and coast are stretched and compressed
+    const cm = M.capsule_meta || null;
+    X.cap = (M.capsule || []).slice().sort((a, b) => a.t - b.t);
+    X.tEI = cm ? cm.t_entry_interface : Infinity; X.tDrogue = cm ? cm.t_drogue : Infinity; X.tMain = cm ? cm.t_main : Infinity;
+    X.tSplash = cm ? cm.t_splash : Infinity; X.tRecovery = cm ? cm.t_recovery : Infinity; X.tPeak = tOf('PEAK_HEATING', Infinity);
+    X.retShot = cm && X.cap.length ? [X.tEI - 20, X.tRecovery + 60] : null;
     X.atk = isFinite(X.tIntr);
     if (X.atk) { X.tAtk0 = X.tIntr - 30;
       X.tAtk1 = Math.max(...ev.filter((e) => e.t >= X.tIntr && e.t < X.tIntr + 900 && (e.seg === 'ATTACK' || e.code === 'CONTAIN' || e.code === 'KEYS' || e.code === 'LEDGER_TAMPER')).map((e) => e.t)) + 30;
@@ -94,7 +99,7 @@
     return o;
   }
   function launchState(M, t) {
-    const X = M.x, st = X.by.stack || [], up = X.by.upper || [], bo = X.by.booster || [], L = { sepAtt: X.sepAtt, sepAge: t - X.tMeco };
+    const X = M.x, st = X.by.stack || [], up = X.by.upper || [], bo = X.by.booster || [], L = { sepAtt: X.sepAtt, sepAge: t - X.tMeco, finsAge: t - X.tFins, touchAge: t - X.tTouch };
     if (up.length && t >= up[0].t) {
       L.upper = t > up[up.length - 1].t ? Object.assign({}, up[up.length - 1], { throttle: 0, phase: 'orbit', g_load: 0 }) : sampleAt(up, t);
       if (bo.length && t >= bo[0].t) L.booster = t >= X.tTouch
@@ -121,21 +126,47 @@
     const arm = Object.assign({}, a, { joints: a.joints.map((v, j) => lerp(v, b.joints[j], k)), ring_deg: a.ring_deg + dr * k });
     return { f, i, states, view: { t: f.t, modules: f.modules, comms: f.comms, gate: f.gate, platform: Object.assign({}, f.platform, { arm }) } };
   }
+  const CAPNUM = ['alt_km', 'speed_ms', 'x_km', 'fpa_deg', 'g_load', 'heat_kw_m2', 'mach'];
+  function capsuleAt(M, t) {      // capsule state for the 3-D return shot, or null outside it
+    const X = M.x, C = X.cap; if (!X.retShot || t < X.retShot[0] || t >= X.retShot[1]) return null;
+    const i = lastBefore(C, t), a = C[Math.max(i, 0)], b = C[i + 1], cm = M.capsule_meta, o = {};
+    if (!b || t >= X.tSplash) Object.assign(o, C[C.length - 1]);
+    else { const k = clamp((t - a.t) / (b.t - a.t), 0, 1); for (const f of CAPNUM) o[f] = lerp(a[f], b[f], k); }
+    o.phase = t < X.tEI ? 'coast' : t < X.tDrogue ? 'entry' : t < X.tMain ? 'drogue' : t < X.tSplash ? 'main' : 'floating';
+    return Object.assign(o, { t, tDrogue: X.tDrogue, tMain: X.tMain, tSplash: X.tSplash, tRecovery: X.tRecovery,
+      splashKm: cm.splash_downrange_km, shipKm: cm.ship_offset_km, shipMs: cm.ship_speed_ms });
+  }
   function capsuleState(M, t) { const rc = lastEvent(M, t, (e) => e.seg === 'RETURN' || e.code === 'SAMPLE_HANDOVER'); return rc ? CAPSULE[rc.code] || 'docked' : 'docked'; }
   function autoRate(M, t) {
     const X = M.x;
     if (t < 0) return 1.5;
     if (t < X.tMeco - 4) return 8;
     if (t < X.tFlip + 9) return 2;                   // MECO, separation, flip, divert burn
-    if (t < X.tFins - 5) return 30;                  // coast over the top
+    if (t < X.tFins - 12) return 30;                 // coast over the top
+    if (t < X.tFins + 9) return 1.2;                 // drag fins open: close-up, close to real time
     if (t < X.tLandBurn - 5) return 10;              // fins, entry burn, aerodynamic descent
     if (t < X.tTouch + 12) return 3;                 // landing burn and touchdown
     if (t < X.tSeco - 40) return 300;                // upper-stage coast to apogee
     if (t < X.opsStart) return 20;                   // circularisation
+    if (X.retShot && t >= X.retShot[0] && t < X.retShot[1]) {   // the return shot: entry, drogue, main, splashdown, ship
+      if (t < X.tDrogue - 8) return Math.abs(t - X.tPeak) < 40 ? 8 : 15;
+      if (t < X.tMain - 5) return 25;
+      if (t < X.tSplash - 20) return 20;
+      if (t < X.tSplash + 15) return 8;
+      return 120;
+    }
     for (const [a, b, v] of X.slow) if (t >= a && t <= b) return v;
     const F = M.frames, i = lastBefore(F, t);
     return i >= 0 && F[i].platform.arm.busy ? 40 : 300;
   }
+  const CAP_PHASE = { coast: 'COASTING TO ENTRY', entry: 'ENTRY', drogue: 'DROGUE', main: 'MAIN CANOPY', floating: 'IN THE WATER' };
+  function capsuleReadout(c) {      // one line of live capsule numbers for the 3-D view
+    if (c.t >= c.tRecovery) return 'CAPSULE ABOARD THE RECOVERY SHIP · cold chain 4 °C';
+    if (c.phase === 'floating') return `CAPSULE IN THE WATER · recovery ship ${Math.max(0, c.shipKm - (c.t - c.tSplash) * c.shipMs / 1000).toFixed(1)} km away`;
+    const alt = c.alt_km >= 10 ? c.alt_km.toFixed(1) : c.alt_km.toFixed(2), v = c.speed_ms >= 1000 ? (c.speed_ms / 1000).toFixed(2) + ' km/s' : Math.round(c.speed_ms) + ' m/s';
+    const q = c.heat_kw_m2 >= 1000 ? (c.heat_kw_m2 / 1000).toFixed(2) + ' MW/m²' : c.heat_kw_m2 >= 1 ? Math.round(c.heat_kw_m2) + ' kW/m²' : '';
+    return ['CAPSULE · ' + CAP_PHASE[c.phase], alt + ' km', v, c.g_load >= 0.05 ? c.g_load.toFixed(1) + ' g' : '', q].filter(Boolean).join(' · ');
+  }
   window.Replay = { T0, MILESTONES, lerp, clamp, smooth, pad2, hms, clock, met, esc, km, nice, lastBefore, load, prepare, t2x, x2t, lastEvent,
-                    sampleAt, launchState, moduleState, opsFrame, capsuleState, autoRate };
+                    sampleAt, launchState, moduleState, opsFrame, capsuleState, capsuleAt, capsuleReadout, autoRate };
 })();

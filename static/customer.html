@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/style.css?v=31">
-<link rel="stylesheet" href="/static/customer.css?v=31">
+<link rel="stylesheet" href="/static/style.css?v=33">
+<link rel="stylesheet" href="/static/customer.css?v=33">
 </head>
 <body class="loading customer">
 
@@ -63,7 +63,7 @@
     <div id="stage">
       <canvas id="view3d"></canvas>
       <div class="stage-top">
-        <div id="overlay-caption" class="hud-chip"></div>
+        <div class="stage-left"><div id="overlay-caption" class="hud-chip"></div><div id="ret-readout" class="hud-chip readout" hidden></div></div>
         <div class="stage-tools"><span class="chip info" id="live-chip" hidden>LIVE TASK · your request</span></div>
       </div>
       <div id="gl-note" class="hud-chip" hidden>3-D view unavailable in this browser (WebGL); telemetry panels are live.</div>
@@ -167,9 +167,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script>
-<script src="/static/scene.js?v=31"></script>
-<script src="/static/hydrate.js?v=31"></script>
-<script src="/static/replay.js?v=31"></script>
-<script src="/static/customer.js?v=31"></script>
+<script src="/static/scene.js?v=33"></script>
+<script src="/static/hydrate.js?v=33"></script>
+<script src="/static/replay.js?v=33"></script>
+<script src="/static/customer.js?v=33"></script>
 </body>
 </html>

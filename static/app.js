@@ -89,7 +89,7 @@
     set('mode-pill', pill); cls('mode-pill', 'chip info');
     // booster recovery
     cls('booster-box', b ? '' : 'off');
-    set('booster-phase', b ? (b.phase === 'entry_coast' && b.fins > 0.05 ? 'FINS OUT' : BOOSTER_PHASE[b.phase] || nice(b.phase).toUpperCase()) : 'ATTACHED');
+    set('booster-phase', b ? (b.fins > 0.01 && b.fins < 0.99 ? 'DRAG FINS OPENING' : b.phase === 'entry_coast' && b.fins >= 0.99 ? 'DRAG FINS OPEN' : BOOSTER_PHASE[b.phase] || nice(b.phase).toUpperCase()) : 'ATTACHED');
     cls('booster-phase', 'chip ' + (!b ? '' : b.phase === 'landed' ? 'good' : 'info'));
     const fins = b ? b.fins || 0 : 0, legs = !b ? 0 : b.phase === 'landed' ? 1 : b.phase === 'landing_burn' ? clamp((1.3 - b.alt_km) / 0.9, 0, 1) : 0;
     if (b) {
@@ -101,9 +101,12 @@
     const dfin = meta.drag_fins || { open_deg: 32 };
     set('b-fins', fins >= .99 ? `OPEN ${Math.round(dfin.open_deg)}° · STEERING` : fins > 0 ? 'OPENING ' + Math.round(fins * dfin.open_deg) + '°' : 'STOWED');
     set('b-legs', legs >= .99 ? 'LOCKED · 115°' : legs > 0 ? 'DEPLOYING ' + Math.round(legs * 115) + '°' : 'STOWED');
-    $$('#fins i').forEach((el) => el.style.transform = `rotate(${90 - dfin.open_deg * fins}deg)`); $('fins').classList.toggle('out', fins > .5);
-    $$('#legs i').forEach((el) => el.style.transform = `rotate(${90 - 55 * legs}deg)`); $('legs').classList.toggle('out', legs > .5);
+    // side-view gauges: both parts hinge near the engine end and lie along the skin, free end up, when stowed
+    const gauge = (id, hx, hy, len, deg) => { const a = deg * Math.PI / 180, el = $(id); el.setAttribute('x2', (hx + len * Math.sin(a)).toFixed(1)); el.setAttribute('y2', (hy - len * Math.cos(a)).toFixed(1)); };
+    gauge('fins-line', 12, 25, 18, dfin.open_deg * fins); $('fins-svg').classList.toggle('out', fins > .02);
+    gauge('legs-line', 12, 16, 15, 115 * legs); $('legs-svg').classList.toggle('out', legs > .02);
     X.miles.forEach((m) => { const el = $('ms-' + m.code); if (el) cls(el, t >= m.t ? 'done' : ''); });
+    $('ret-readout').hidden = true;
     const cap = lastEvent(t, (e) => e.seg === 'LAUNCH' || e.seg === 'BOOSTER' || e.seg === 'ORBIT');
     set('overlay-caption', cap ? `${nice(cap.code)} · ${cap.text}` : `${meta.vehicle || 'RUPAK'} on the pad · ${meta.site || ''}`);
     if (S.tab.drawer === 'flight') drawFlight(t);
@@ -147,7 +150,7 @@
 
   // ---------- lab operations ----------
   let opsStates = [], sparkKey = '';
-  function panelOps(t, f, fi) {
+  function panelOps(t, f, fi, capS) {
     const M = D(), p = f.platform, A = p.arm;
     set('plat-mode', nice(p.mode)); set('mode-pill', nice(p.mode)); cls('mode-pill', 'chip');
     set('p-alt', p.alt_km + ' km'); set('p-batt', p.battery + ' %'); set('p-labt', Number(p.lab_t).toFixed(1) + ' °C');
@@ -201,7 +204,9 @@
     if (S.follow.left) { if (tgtId) S.sel = tgtId; else if (!A.busy && !lastEvent(t, (e) => e.data && e.data.final && e.data.final !== 'EXECUTE' && t - e.t < 90)) S.sel = 17;
       setTab('left', A.busy ? 'dexter' : 'module', true); }
     if (S.follow.drawer) setTab('drawer', dLast ? 'stack' : 'ground', true);
-    hud(t, nice(p.mode), A.busy ? `DEXTER-L · MODULE ${A.module} · ${A.step}` : `${p.active_modules} modules active · ${p.eclipse ? 'eclipse' : 'sunlit'}`, cap ? cap.text.slice(0, 90) : '');
+    $('ret-readout').hidden = !capS; if (capS) set('ret-readout', R.capsuleReadout(capS));
+    if (capS) hud(t, R.capsuleReadout(capS).split(' · ').slice(0, 2).join(' · '), R.capsuleReadout(capS).split(' · ').slice(2).join(' · '), cap ? cap.text.slice(0, 90) : '');
+    else hud(t, nice(p.mode), A.busy ? `DEXTER-L · MODULE ${A.module} · ${A.step}` : `${p.active_modules} modules active · ${p.eclipse ? 'eclipse' : 'sunlit'}`, cap ? cap.text.slice(0, 90) : '');
   }
   function panelModule(f, fi, t) {
     const m = f.modules[S.sel - 1]; if (!m) return; const pr = m.protocol || {}, st = moduleState(m), pay = m.payload || {};
@@ -313,11 +318,12 @@
       if (panels) panelLaunch(t, L);
     } else {
       const o = R.opsFrame(M, t); f = o.f; opsStates = o.states;
-      const panelsNow = panels || S.dirty;
+      const panelsNow = panels || S.dirty, cap = R.capsuleAt(M, t);
       if (panelsNow) { $('panel-launch').hidden = true; $('panel-platform').hidden = false; }
-      scene.setPhase('ops'); scene.setSolar(!!lastEvent(t, (e) => e.code === 'SOLAR'));
-      scene.updateOps(o.view, opsStates, f.gate.isolated || [], dt, { capsuleState: R.capsuleState(M, t) });
-      if (panelsNow) panelOps(t, f, o.i);
+      if (cap) { scene.setPhase('return'); scene.updateReturn(cap, dt); }      // entry interface to recovery: true-scale return shot
+      else { scene.setPhase('ops'); scene.setSolar(!!lastEvent(t, (e) => e.code === 'SOLAR'));
+        scene.updateOps(o.view, opsStates, f.gate.isolated || [], dt, { capsuleState: R.capsuleState(M, t) }); }
+      if (panelsNow) panelOps(t, f, o.i, cap);
     }
     $('track-fill').style.width = $('track-head').style.left = (t2x(t) * 100).toFixed(3) + '%';
     if (panels || S.dirty) { panelClock(t); panelSentinel(t); panelFeed(t); panelScore(t, f); S.lastPanels = now; S.dirty = false; }
