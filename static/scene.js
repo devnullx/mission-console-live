@@ -247,7 +247,7 @@
         const lz = this._place(this.landingZoneKm || 0, 0); this.barge.position.copy(lz.pos); this._orient(this.barge, lz.up, lz.fwd, 0);
         const g = gb || gu, smp = s.booster || s.upper;
         if (gb && s.booster.alt_km < 4 && ['landing_burn', 'descent'].includes(s.booster.phase)) {
-          camFrom = lz.pos.clone().add(lz.side.clone().multiplyScalar(1.4)).add(lz.fwd.clone().multiplyScalar(.9)).add(lz.up.clone().multiplyScalar(.35));
+          camFrom = lz.pos.clone().add(lz.side.clone().multiplyScalar(.85)).add(lz.fwd.clone().multiplyScalar(.55)).add(lz.up.clone().multiplyScalar(.22));   // ~1 km from the deck: legs visible
           camAt = gb.pos.clone().add(gb.up.clone().multiplyScalar(.25));
         } else {
           const d = Math.max(2.0, smp.alt_km * .12);
