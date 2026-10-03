@@ -27,13 +27,6 @@
       g.lineWidth = 1 + Math.random() * 2; g.beginPath(); const x = Math.random() * 256, y = Math.random() * 256; g.moveTo(x, y); g.lineTo(x + (Math.random() - .5) * 40, y + (Math.random() - .5) * 40); g.stroke(); }
     const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
   }
-  function latticeTexture() { // open lattice of a grid fin (alpha-tested)
-    const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
-    g.clearRect(0, 0, 128, 128); g.strokeStyle = '#c9ccd1'; g.lineWidth = 7;
-    g.strokeRect(4, 4, 120, 120);
-    g.lineWidth = 4; for (let k = -128; k <= 128; k += 26) { g.beginPath(); g.moveTo(k, 0); g.lineTo(k + 128, 128); g.stroke(); g.beginPath(); g.moveTo(k + 128, 0); g.lineTo(k, 128); g.stroke(); }
-    const t = new THREE.CanvasTexture(c); t.anisotropy = 4; return t;
-  }
   function stars(n, r) {
     const g = new THREE.BufferGeometry(), p = new Float32Array(n * 3);
     for (let i = 0; i < n; i++) { const u = Math.random() * 2 - 1, th = Math.random() * Math.PI * 2, s = Math.sqrt(1 - u * u); p.set([r * s * Math.cos(th), r * u, r * s * Math.sin(th)], i * 3); }
@@ -176,15 +169,15 @@
         const bb = new THREE.Box3(); root.traverse(o => { if (o.isMesh) { o.geometry.computeBoundingBox(); bb.union(o.geometry.boundingBox); } });
         grp.userData.cadHeight = (bb.max.y - bb.min.y) * S;   // metres x S = group units (independent of the group's own scale)
       };
-      // booster: CAD body, 4 legs and their 4 support struts as separate nodes so they can deploy (scripts/cad_parts.py)
+      // booster: CAD body, 4 legs with their support struts and the 4 drag fins as separate nodes so they can deploy
+      // (scripts/cad_parts.py, scripts/cad_drag.py)
       loader.load('static/models/booster_body.glb?v=1', g => {
         attach(this.booster, g, this.booster.children.filter(c => c !== this.bFlame));
         this.legs.forEach(l => l.visible = false); this.fins.forEach(f => f.visible = false); this.engines.visible = false;
         this.bFlame.position.y = -0.5;
         this.cadBoosterH = this.booster.userData.cadHeight; this.stackH = this.cadBoosterH * this.vehScale;
-        this._buildGridFins(this.cadBoosterH);
       }, undefined, () => {});
-      fetch('static/models/parts.json').then(r => r.json()).then(meta => {
+      fetch('static/models/parts.json?v=2').then(r => r.json()).then(meta => {
         this.cadLegs = []; this.cadStruts = [];
         const prep = (g) => g.scene.traverse(o => { if (o.isMesh) { if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); o.material = dark; o.material.side = THREE.DoubleSide; } });
         const tangent = (deg) => { const a = THREE.MathUtils.degToRad(deg); return V(-Math.sin(a), 0, Math.cos(a)).normalize(); };
@@ -205,26 +198,22 @@
             node.position.set(0, len * S, 0); node.scale.setScalar(S); pivot.add(node); this.booster.add(pivot);
             this.cadStruts.push({ pivot, axis: tangent(info.angle_deg), len, rB: info.radius, yB: h[1] - len, yH: leg.hinge[1], s: h[1] - leg.hinge[1] }); });
         }, undefined, () => {});
+        // Drag mechanism (scripts/cad_drag.py): four 1.04 x 0.41 m panels hinged on the base ring between the legs. The
+        // GLB holds them stowed, flat on the skin with the free edge towards the nose; they swing out about the tangential
+        // hinge axis to the angle of the CAD (32 deg), driven by the twin's deployment fraction.
+        if (meta.drag) loader.load('static/models/drag.glb?v=1', g => {
+          const finMat = new THREE.MeshStandardMaterial({ color: 0xaab0b9, roughness: .42, metalness: .7, side: THREE.DoubleSide });
+          g.scene.traverse(o => { if (o.isMesh) { if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); o.material = o.name === 'drag_ring' || (o.parent && o.parent.name === 'drag_ring') ? dark : finMat; } });
+          this.cadDrag = [];
+          meta.drag.forEach(info => { const node = g.scene.getObjectByName(info.name); if (!node) return;
+            const pivot = new THREE.Group(), h = info.hinge; pivot.position.set(h[0] * S, h[1] * S, h[2] * S);
+            node.position.set(0, 0, 0); node.scale.setScalar(S); pivot.add(node); this.booster.add(pivot);
+            this.cadDrag.push({ pivot, axis: tangent(info.angle_deg), open: THREE.MathUtils.degToRad(info.deploy_deg) }); });
+          const ring = g.scene.getObjectByName('drag_ring'); if (ring) { ring.scale.setScalar(S); this.booster.add(ring); }
+        }, undefined, () => {});
       }).catch(() => {});
       this.legDeploy = 0; this.finDeploy = 0;
       loader.load('static/models/upper.glb?v=3', g => { attach(this.upper, g, this.upper.children.filter(c => c !== this.uFlame)); }, undefined, () => {});
-    }
-    _buildGridFins(hUnits) {
-      /* The CAD carries no aerodynamic surfaces; the RUPAK spec calls for grid fins with rotary encoders, so four
-         lattice panels sit on the interstage, 45 deg off the legs: folded flat against the body on ascent, rotated out
-         to horizontal for the descent (deployment fraction comes from the twin). Group units: 3 per metre. */
-      if (this.gridFins) return;
-      this.gridFins = [];
-      const U = 3.0, mat = new THREE.MeshStandardMaterial({ color: 0xb9bdc4, metalness: .75, roughness: .4, map: latticeTexture(), transparent: true, alphaTest: .45, side: THREE.DoubleSide });
-      const frame = new THREE.MeshStandardMaterial({ color: 0x3b3f46, metalness: .7, roughness: .5 });
-      for (let i = 0; i < 4; i++) {
-        const a = THREE.MathUtils.degToRad(-150.3 + 45 + i * 90);
-        const pivot = new THREE.Group(); pivot.position.set(Math.cos(a) * 0.64 * U, hUnits - 0.9 * U, Math.sin(a) * 0.64 * U); pivot.rotation.y = -a;   // local x = radial
-        const hinge = new THREE.Group(); pivot.add(hinge);
-        const panel = new THREE.Mesh(new THREE.BoxGeometry(0.07 * U, 1.0 * U, 0.8 * U), mat); panel.position.set(0.06 * U, -0.5 * U, 0); hinge.add(panel);
-        const yoke = new THREE.Mesh(new THREE.BoxGeometry(0.14 * U, 0.14 * U, 0.5 * U), frame); hinge.add(yoke);
-        this.booster.add(pivot); this.gridFins.push(hinge);
-      }
     }
     _emit(pos, dir, n, spread, speed) {
       const u = this.plume.userData, p = this.plume.geometry.attributes.position.array;
@@ -314,15 +303,16 @@
       this.renderer.render(this.scene, this.camera);
     }
     _deploy(legs, fins, k) {
-      /* Landing gear and grid fins. Legs rotate 115 deg about their base hinge; each telescoping strut stays pinned to the
-         body at its lower end and to the leg at its upper end, so it swings out and extends (2.06 m -> 3.7 m). */
+      /* Landing gear and drag fins. Legs rotate 115 deg about their base hinge; each telescoping strut stays pinned to the
+         body at its lower end and to the leg at its upper end, so it swings out and extends (2.06 m -> 3.7 m). The drag
+         fins open about their hinge on the base ring to the angle of the CAD. */
       this.legDeploy = lerp(this.legDeploy || 0, legs, k); this.finDeploy = lerp(this.finDeploy || 0, fins, k);
       const th = THREE.MathUtils.degToRad(115) * this.legDeploy;
       if (this.cadLegs) this.cadLegs.forEach(l => l.pivot.quaternion.setFromAxisAngle(l.axis, -th));
       if (this.cadStruts) this.cadStruts.forEach(c => {
         const dr = c.s * Math.sin(th), dy = c.yH + c.s * Math.cos(th) - c.yB;         // leg attachment point relative to the body anchor
         c.pivot.quaternion.setFromAxisAngle(c.axis, -Math.atan2(dr, dy)); c.pivot.scale.set(1, Math.hypot(dr, dy) / c.len, 1); });
-      if (this.gridFins) this.gridFins.forEach(h => h.rotation.z = Math.PI / 2 * this.finDeploy);
+      if (this.cadDrag) this.cadDrag.forEach(d => d.pivot.quaternion.setFromAxisAngle(d.axis, -d.open * this.finDeploy));
       if (!this.cadLegs && !this.cadBoosterH) {   // procedural fallback while the CAD is loading
         this.fins.forEach(f => f.rotation.z = lerp(Math.PI / 2, 0, this.finDeploy)); this.legs.forEach(l => l.rotation.z = -0.55 * this.legDeploy); }
     }

@@ -16,7 +16,7 @@
   const lastBefore = (arr, t) => { let lo = 0, hi = arr.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (arr[m].t <= t) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
 
   const T0 = -15;                                         // the replay starts at T-15 s
-  const MILESTONES = [['LIFTOFF', 'LIFTOFF'], ['MAXQ', 'MAX-Q'], ['MECO', 'MECO'], ['SEP', 'STAGE SEP'], ['BOOSTBACK_START', 'DIVERT BURN'], ['FINS_DEPLOY', 'GRID FINS'], ['SECO1', 'SECO-1'],
+  const MILESTONES = [['LIFTOFF', 'LIFTOFF'], ['MAXQ', 'MAX-Q'], ['MECO', 'MECO'], ['SEP', 'STAGE SEP'], ['BOOSTBACK_START', 'DIVERT BURN'], ['FINS_DEPLOY', 'DRAG FINS'], ['SECO1', 'SECO-1'],
     ['ENTRY_BURN', 'ENTRY BURN'], ['LANDING_BURN', 'LANDING BURN'], ['TOUCHDOWN', 'TOUCHDOWN'], ['SES2', 'SES-2'], ['ORBIT', 'ORBIT']];
   const CAPSULE = { CAPSULE_LOAD: 'docked', CAPSULE_SEP: 'sep', DEORBIT_BURN: 'deorbit', ENTRY_INTERFACE: 'entry', PEAK_HEATING: 'entry', DROGUE: 'chute', MAIN_CHUTE: 'chute', SPLASHDOWN: 'landed', RECOVERY: 'landed', SAMPLE_HANDOVER: 'landed' };
 

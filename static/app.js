@@ -66,7 +66,8 @@
     $('track-marks').innerHTML = X.marks.map((e) => `<i class="${e.level}" style="left:${(t2x(e.t) * 100).toFixed(2)}%"></i>`).join('');
     $('milestones').innerHTML = X.miles.map((m) => `<div id="ms-${m.code}"><span>${m.label}</span><b>${pad2(Math.floor(m.t / 60))}:${pad2(Math.floor(m.t % 60))}</b></div>`).join('');
     $('facts').innerHTML = [['SITE', (meta.site || '').split(' (')[0].replace('APJ Abdul ', '')], ['TARGET ORBIT', meta.orbit || '—'], ['LAUNCH AZIMUTH', (meta.launch_azimuth_deg || '—') + '°'],
-      ['LANDING BARGE', X.lz ? X.lz.toFixed(0) + ' km downrange' : '—'], ['STAGE 1', (meta.engines || 9) + ' × Shakti · GP-300']].map(([k, v]) => `<div><span>${k}</span><b>${esc(v)}</b></div>`).join('');
+      ['LANDING BARGE', X.lz ? X.lz.toFixed(0) + ' km downrange' : '—'], ['STAGE 1', (meta.engines || 9) + ' × Shakti · GP-300'],
+      ['DRAG FINS', meta.drag_fins ? `${meta.drag_fins.count} × ${meta.drag_fins.length_m.toFixed(2)} m · ${Math.round(meta.drag_fins.open_deg)}° · drag ×${meta.drag_fins.drag_area_ratio.toFixed(2)}` : '—']].map(([k, v]) => `<div><span>${k}</span><b>${esc(v)}</b></div>`).join('');
     $('stab').innerHTML = L ? `Legs 4 × 3.87 m at ${L.deploy_deg}° with telescoping struts · span <b>${L.span_m} m</b> · nozzle clearance <b>${L.nozzle_clearance_m} m</b> · tip-over <b>${L.tip_angle_deg}°</b> against ${L.deck_roll_deg}° deck roll · ${L.leg_load_kn} kN per leg · <b class="${L.stable ? 'ok' : 'bad'}">${L.stable ? 'STABLE' : 'UNSTABLE'}</b>` : '';
     const links = M.frames.length ? M.frames[0].comms.links : {};
     STATIONS.forEach(([id]) => { const l = links[id]; if (!l) return; set('stb-' + id, l.band); set('str-' + id, (l.rate_bps / 1e6).toFixed(1) + ' M / ' + (l.uplink_bps / 1e3).toFixed(0) + ' k'); });
@@ -80,7 +81,7 @@
     const M = D(), X = M.x, meta = M.launch_meta || {}, hero = L.upper || L.stack, b = L.booster;
     set('launch-body', L.upper ? 'VIBHU UPPER STAGE + LELP-1' : `STACK · ${meta.engines || 9} × SHAKTI`);
     set('v-speed', Math.round(hero.speed_ms * 3.6).toLocaleString('en-US')); set('v-alt', hero.alt_km.toFixed(1));
-    set('v-dr', km(hero.downrange_km)); set('v-thr', Math.round(hero.throttle * 100) + ' %');
+    set('v-dr', km(hero.downrange_km)); set('v-dr-lbl', hero.downrange_km >= 1000 ? 'RANGE' : 'DOWNRANGE'); set('v-thr', Math.round(hero.throttle * 100) + ' %');
     set('v-q', hero.q_kpa.toFixed(1) + ' kPa'); set('v-g', (hero.g_load || 0).toFixed(1) + ' g');
     set('v-prop', hero.prop_pct.toFixed(0) + ' %'); $('m-prop').style.width = clamp(hero.prop_pct, 0, 100) + '%';
     set('v-prop-lbl', L.upper ? 'S2 PROPELLANT' : 'S1 PROPELLANT');
@@ -97,9 +98,10 @@
       set('b-prop', b.prop_pct.toFixed(1) + ' %'); set('b-g', (b.g_load || 0).toFixed(1) + ' g'); set('b-q', b.q_kpa.toFixed(1) + ' kPa');
       set('b-heat', Math.round(b.heat_kw_m2 || 0) + ' kW/m²'); set('b-thr', Math.round(b.throttle * 100) + ' %');
     } else ['b-speed', 'b-alt', 'b-dr', 'b-prop', 'b-g', 'b-q', 'b-heat', 'b-thr'].forEach((id) => set(id, '—'));
-    set('b-fins', fins >= .99 ? 'OUT · STEERING' : fins > 0 ? 'DEPLOYING ' + Math.round(fins * 100) + ' %' : 'STOWED');
+    const dfin = meta.drag_fins || { open_deg: 32 };
+    set('b-fins', fins >= .99 ? `OPEN ${Math.round(dfin.open_deg)}° · STEERING` : fins > 0 ? 'OPENING ' + Math.round(fins * dfin.open_deg) + '°' : 'STOWED');
     set('b-legs', legs >= .99 ? 'LOCKED · 115°' : legs > 0 ? 'DEPLOYING ' + Math.round(legs * 115) + '°' : 'STOWED');
-    $$('#fins i').forEach((el) => el.style.transform = `rotate(${90 - 78 * fins}deg)`); $('fins').classList.toggle('out', fins > .5);
+    $$('#fins i').forEach((el) => el.style.transform = `rotate(${90 - dfin.open_deg * fins}deg)`); $('fins').classList.toggle('out', fins > .5);
     $$('#legs i').forEach((el) => el.style.transform = `rotate(${90 - 55 * legs}deg)`); $('legs').classList.toggle('out', legs > .5);
     X.miles.forEach((m) => { const el = $('ms-' + m.code); if (el) cls(el, t >= m.t ? 'done' : ''); });
     const cap = lastEvent(t, (e) => e.seg === 'LAUNCH' || e.seg === 'BOOSTER' || e.seg === 'ORBIT');

@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/style.css?v=30">
+<link rel="stylesheet" href="/static/style.css?v=31">
 </head>
 <body class="loading" data-mode="sentinel">
 
@@ -55,7 +55,7 @@
           <div class="hero"><span class="lbl">ALTITUDE</span><span class="hero-num"><span id="v-alt">0.0</span><span class="unit">km</span></span></div>
         </div>
         <div class="kv">
-          <div><span>DOWNRANGE</span><b id="v-dr">0.0 km</b></div>
+          <div><span id="v-dr-lbl">DOWNRANGE</span><b id="v-dr">0.0 km</b></div>
           <div><span>THROTTLE</span><b id="v-thr">0 %</b></div>
           <div><span>DYNAMIC Q</span><b id="v-q">0.0 kPa</b></div>
           <div><span>G-LOAD</span><b id="v-g">1.0 g</b></div>
@@ -75,7 +75,7 @@
             <div><span>THROTTLE</span><b id="b-thr">—</b></div>
           </div>
           <div class="mech">
-            <div class="mech-item"><span class="lbl">GRID FINS</span><span class="fins" id="fins"><i></i><i></i><i></i><i></i></span><b id="b-fins">STOWED</b></div>
+            <div class="mech-item"><span class="lbl">DRAG FINS</span><span class="fins" id="fins"><i></i><i></i><i></i><i></i></span><b id="b-fins">STOWED</b></div>
             <div class="mech-item"><span class="lbl">LANDING LEGS</span><span class="legs" id="legs"><i></i><i></i><i></i><i></i></span><b id="b-legs">STOWED</b></div>
           </div>
           <div class="stab" id="stab"></div>
@@ -281,9 +281,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script>
-<script src="/static/scene.js?v=30"></script>
-<script src="/static/hydrate.js?v=30"></script>
-<script src="/static/replay.js?v=30"></script>
-<script src="/static/app.js?v=30"></script>
+<script src="/static/scene.js?v=31"></script>
+<script src="/static/hydrate.js?v=31"></script>
+<script src="/static/replay.js?v=31"></script>
+<script src="/static/app.js?v=31"></script>
 </body>
 </html>

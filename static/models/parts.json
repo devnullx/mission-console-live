@@ -90,5 +90,63 @@
    "length": 2.062,
    "radius": 0.68
   }
+ ],
+ "drag": [
+  {
+   "name": "drag0",
+   "hinge": [
+    -0.15586554276012662,
+    0.37221484953642586,
+    -0.6065524498797965
+   ],
+   "angle_deg": -104.7,
+   "length": 1.037,
+   "width": 0.405,
+   "thickness": 0.037,
+   "deploy_deg": 32.1,
+   "stowed_inner_radius": 0.608
+  },
+  {
+   "name": "drag1",
+   "hinge": [
+    0.6065524498797972,
+    0.37221484953642586,
+    -0.15586554276012612
+   ],
+   "angle_deg": -14.7,
+   "length": 1.037,
+   "width": 0.405,
+   "thickness": 0.037,
+   "deploy_deg": 32.1,
+   "stowed_inner_radius": 0.608
+  },
+  {
+   "name": "drag2",
+   "hinge": [
+    0.15586554276012674,
+    0.3722148495364258,
+    0.606552449879798
+   ],
+   "angle_deg": 75.3,
+   "length": 1.037,
+   "width": 0.405,
+   "thickness": 0.037,
+   "deploy_deg": 32.1,
+   "stowed_inner_radius": 0.608
+  },
+  {
+   "name": "drag3",
+   "hinge": [
+    -0.6065524498797972,
+    0.37221484953642586,
+    0.1558655427601272
+   ],
+   "angle_deg": 165.3,
+   "length": 1.037,
+   "width": 0.405,
+   "thickness": 0.037,
+   "deploy_deg": 32.1,
+   "stowed_inner_radius": 0.608
+  }
  ]
 }
