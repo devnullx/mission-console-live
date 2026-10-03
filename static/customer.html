@@ -2,135 +2,174 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Customer Panel</title>
+<title>Customer Console · LELP-1</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/style.css?v=25">
-<link rel="stylesheet" href="/static/customer.css?v=25">
+<link rel="stylesheet" href="/static/style.css?v=30">
+<link rel="stylesheet" href="/static/customer.css?v=30">
 </head>
-<body class="customer">
+<body class="loading customer">
+
+<div id="loading" role="status">
+  <div class="ld-brand">SPACE PHILIC</div>
+  <div class="ld-msg" id="ld-msg">Loading your experiment…</div>
+  <div class="ld-bar"><i></i></div>
+  <div class="ld-sub" id="ld-sub">LELP-1 · module 17</div>
+</div>
 
 <header id="topbar">
   <div class="brand">
     <span class="brand-main">SPACE PHILIC</span>
-    <span class="brand-sub">CUSTOMER PANEL · LELP-1</span>
+    <span class="brand-sub">CUSTOMER CONSOLE · LELP-1</span>
   </div>
   <div class="who">
-    <div class="who-name" id="cust-name">Adriana · Zurich Biotech Lab</div>
-    <div class="who-sub">Experiment SC-ORG-1 · stem-cell organoids · module <span id="cust-mod">17</span> (L) · identity <span id="cust-fp" class="mono">—</span></div>
+    <b>Adriana · Zurich Biotech Lab</b>
+    <span>Experiment SC-ORG-1 · stem-cell organoids · module 17 (large bay) · requests signed with ML-DSA-87</span>
   </div>
-  <div class="clock"><span class="clock-label">T+</span><span id="met">00:00:00</span><span id="phase-pill" class="pill">PRE-LAUNCH</span></div>
-  <div class="scenario"><a class="toggle" href="/">MISSION CONSOLE</a></div>
+  <div class="clock" aria-label="Mission elapsed time">
+    <span class="clock-label" id="met-sign">T−</span><span id="met">00:00:15</span>
+    <span id="phase-pill" class="chip">PRE-LAUNCH</span>
+  </div>
+  <div class="actions"><a class="btn" href="/" title="The operator's view of the whole mission">MISSION CONSOLE</a></div>
 </header>
 
-<main id="cmain">
-  <section class="col">
-    <div class="panel">
-      <h2>YOUR SAMPLE <span class="h-sub">live from module 17</span></h2>
-      <div class="hero-row">
-        <div class="hero"><div class="hero-label">TEMPERATURE</div><div class="hero-num"><span id="m-t">—</span><span class="unit">°C</span></div><div class="hero-sub">protocol 37.0 ± 0.5</div></div>
-        <div class="hero"><div class="hero-label">VIABILITY</div><div class="hero-num"><span id="m-h">—</span><span class="unit">%</span></div><div class="hero-sub" id="m-h-sub">—</div></div>
-      </div>
-      <div class="kv-grid">
-        <div><span>PRESSURE</span><b id="m-p">—</b></div>
-        <div><span>CONTAINMENT</span><b id="m-seal">—</b></div>
-        <div><span>STATE</span><b id="m-state">—</b></div>
-        <div><span>HEATER</span><b id="m-heat">—</b></div>
-      </div>
-      <h3>TEMPERATURE · LAST 2 H</h3>
-      <svg id="chart-t" viewBox="0 0 360 120" aria-label="Module 17 temperature over time"></svg>
-      <h3>VIABILITY</h3>
-      <svg id="chart-h" viewBox="0 0 360 70" aria-label="Module 17 viability over time"></svg>
-    </div>
-    <div class="panel">
-      <h2>EXPERIMENT PROTOCOL <span class="h-sub">SC-ORG-1</span></h2>
-      <ol class="steps" id="steps"></ol>
-    </div>
-  </section>
-
-  <section class="col">
-    <div class="panel">
-      <h2>MISSION JOURNEY <span class="h-sub">launch → orbit → lab → return</span></h2>
-      <div class="journey" id="journey"></div>
-    </div>
-    <div class="panel">
-      <h2>DATA DELIVERED TO YOU <span class="h-sub">Leuk ground station, Switzerland</span></h2>
-      <ul class="deliveries" id="deliveries"></ul>
-      <div class="kv-grid three">
-        <div><span>REPORTS</span><b id="d-n">0</b></div>
-        <div><span>IMAGING FRAMES</span><b id="d-frames">0</b></div>
-        <div><span>DATA</span><b id="d-mb">0 MB</b></div>
-      </div>
-    </div>
-    <div class="panel">
-      <h2>SAMPLE RETURN <span class="h-sub">return capsule, cold chain 4 °C</span></h2>
-      <div class="return" id="return"></div>
-    </div>
-  </section>
-
-  <section class="col">
-    <div class="panel" id="ctl">
-      <h2>CONTROL DEXTER-L <span class="h-sub">task-level · Sentinel-authorised</span></h2>
-      <div class="ctl-row">
-        <select id="ctl-module" title="Module">
-          <option value="17">Module 17 · yours (stem-cell organoids)</option>
-          <option value="3">Module 3 · Basel Pharma Research (not yours)</option>
-        </select>
-      </div>
-      <div class="ctl-row tasks">
-        <button data-task="transfer_to_lab">FETCH TO LAB</button>
-        <button data-task="image">IMAGING PASS</button>
-        <button data-task="return">RETURN TO SLOT</button>
-        <button data-task="full">FULL CYCLE</button>
-        <button id="ctl-abort" class="danger">ABORT</button>
-      </div>
-      <div class="verdict" id="verdict" hidden>
-        <div class="v-head"><span class="v-final">—</span><span class="v-paths">A — · B —</span></div>
-        <div class="v-why"></div>
-        <div class="v-ack" hidden><span>Awaiting MCC operator sign-off (first task this pass)…</span><button id="ctl-ack">MCC ACKNOWLEDGES (DEMO)</button></div>
-      </div>
-      <div class="armlive" id="armlive" hidden>
-        <div class="al-head"><span id="al-step">—</span><span id="al-t" class="mono">0 s</span></div>
-        <div class="al-bar"><i id="al-prog"></i></div>
-        <svg id="arm-svg" viewBox="0 0 360 240" aria-label="Dexter-L side view"></svg>
-        <div class="joints" id="ctl-joints"></div>
-        <div class="kv-grid">
-          <div><span>WRIST F/T</span><b id="al-ft">—</b></div>
-          <div><span>TIP SPEED</span><b id="al-tip">—</b></div>
-          <div><span>GRIP · UMBILICAL</span><b id="al-grip">—</b></div>
-          <div><span>FIDUCIAL</span><b id="al-fid">—</b></div>
-          <div><span>MODULE TEMP</span><b id="al-temp">—</b></div>
-          <div><span>ARM POWER</span><b id="al-pow">—</b></div>
+<main id="main">
+  <section id="left">
+    <div class="panel" id="panel-sample">
+      <div class="panel-h"><h2>YOUR SAMPLE</h2><span class="h-sub">module 17</span><span class="chip push" id="m-state">ON THE PAD</span></div>
+      <div class="panel-b">
+        <div class="hero-row">
+          <div class="hero"><span class="lbl">TEMPERATURE</span><span class="hero-num"><span id="m-t">—</span><span class="unit">°C</span></span><span class="hero-sub" id="m-t-sub">protocol 37.0 ± 0.3</span></div>
+          <div class="hero"><span class="lbl">VIABILITY</span><span class="hero-num"><span id="m-h">—</span><span class="unit">%</span></span><span class="hero-sub" id="m-h-sub">—</span></div>
         </div>
-        <ol class="al-log" id="al-log"></ol>
+        <div class="kv">
+          <div><span>PRESSURE</span><b id="m-p">—</b></div>
+          <div><span>SEAL</span><b id="m-seal">—</b></div>
+          <div><span>HEATER</span><b id="m-heat">—</b></div>
+          <div><span>SETPOINT</span><b id="m-sp">—</b></div>
+        </div>
+        <div class="sub-h"><h3>TEMPERATURE · °C</h3><span class="h-sub">last 2 h · band = protocol</span></div>
+        <svg class="chart" id="chart-t" aria-label="Module 17 temperature over the last two hours"></svg>
+        <div class="sub-h"><h3>VIABILITY · %</h3><span class="h-sub">last 2 h</span></div>
+        <svg class="chart short" id="chart-h" aria-label="Module 17 culture viability over the last two hours"></svg>
+        <div class="sub-h"><h3>PROTOCOL SC-ORG-1</h3></div>
+        <ol class="steps" id="steps"></ol>
       </div>
     </div>
-    <div class="panel">
-      <h2>WHO TOUCHED YOUR EXPERIMENT <span class="h-sub">Sentinel command audit, signed ledger</span></h2>
-      <p class="note">Every command that could affect module 17 had to pass post-quantum signature checks <em>and</em> the mission guardian. Blocked attempts are shown too.</p>
-      <ol id="audit" class="audit"></ol>
-      <div class="kv-grid three">
-        <div><span>AUTHORISED</span><b id="a-ok">0</b></div>
-        <div><span>BLOCKED</span><b id="a-bad">0</b></div>
-        <div><span>LEDGER</span><b id="a-ledger">—</b></div>
+  </section>
+
+  <section id="center">
+    <div id="stage">
+      <canvas id="view3d"></canvas>
+      <div class="stage-top">
+        <div id="overlay-caption" class="hud-chip"></div>
+        <div class="stage-tools"><span class="chip info" id="live-chip" hidden>LIVE TASK · your request</span></div>
+      </div>
+      <div id="gl-note" class="hud-chip" hidden>3-D view unavailable in this browser (WebGL); telemetry panels are live.</div>
+    </div>
+    <div class="panel" id="drawer">
+      <div class="tabs"><span class="tabs-title">CONTROL DEXTER-L</span><span class="tabs-note" id="ctl-note">task-level requests · each one is signed and has to pass Sentinel</span></div>
+      <div class="panel-b">
+        <div class="ctl">
+          <div class="ctl-req">
+            <select id="ctl-module" aria-label="Module">
+              <option value="17">Module 17 · yours · organoids</option>
+              <option value="3">Module 3 · another customer's</option>
+            </select>
+            <div class="tasks">
+              <button class="btn" data-task="transfer_to_lab" title="Fetch the module and dock it on the translation rig">FETCH TO LAB</button>
+              <button class="btn" data-task="image" title="Imaging / analysis pass on the module in the rig">IMAGING PASS</button>
+              <button class="btn" data-task="return" title="Return the module to its slot and release">RETURN TO SLOT</button>
+              <button class="btn" data-task="full" title="Fetch, analyse in the central lab, return">FULL CYCLE</button>
+              <button class="btn danger" id="ctl-abort" title="Stop the arm where it is, brakes on">ABORT</button>
+            </div>
+          </div>
+          <div class="verdict" id="verdict">
+            <div class="dec-final" id="v-final">NO REQUEST YET</div>
+            <div class="dec-t" id="v-paths"></div>
+            <div class="dec-why" id="v-why">Pick a task. Path A checks your signature, ownership and the lab rules; Path B is the mission guardian.</div>
+            <div class="v-ack" id="v-ack" hidden><button class="btn" id="ctl-ack">MCC SIGNS OFF (DEMO)</button><span>operator sign-off needed</span></div>
+          </div>
+          <div class="armlive" id="armlive">
+            <div class="al-head"><span id="al-step">Arm idle · stowed</span><span id="al-t" class="mono"></span></div>
+            <div class="meter"><i id="al-prog" style="width:0"></i></div>
+            <div class="kv">
+              <div><span>GRIP</span><b id="al-grip">—</b></div>
+              <div><span>UMBILICAL</span><b id="al-umb">—</b></div>
+              <div><span>MODULE</span><b id="al-temp">—</b></div>
+              <div><span>WRIST F</span><b id="al-ft">—</b></div>
+            </div>
+            <div class="al-log" id="al-log"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="right">
+    <div class="panel" id="panel-right">
+      <div class="tabs" id="right-tabs">
+        <button data-tab="data" class="on">DATA</button>
+        <button data-tab="audit">AUDIT</button>
+        <button data-tab="return">JOURNEY</button>
+      </div>
+      <div class="panel-b">
+        <div class="tabpane" data-pane="data">
+          <div class="stats">
+            <div class="stat"><span>REPORTS</span><b id="d-n">0</b></div>
+            <div class="stat"><span>FRAMES</span><b id="d-frames">0</b></div>
+            <div class="stat"><span>DATA</span><b id="d-mb">0 MB</b></div>
+          </div>
+          <div class="sub-h"><h3>ORGANOID IMAGING</h3><span class="h-sub" id="img-cap">no frames yet</span></div>
+          <svg class="vials" id="vials" aria-label="Organoid size per vial, rendered from the twin's analysis results"></svg>
+          <div class="img-note">Schematic rendered from the twin's analysis values (24 vials), not camera frames.</div>
+          <div class="sub-h"><h3>DELIVERED TO YOU</h3><span class="h-sub">via Leuk, Switzerland</span></div>
+          <ul class="deliveries" id="deliveries"></ul>
+        </div>
+        <div class="tabpane" data-pane="audit" hidden>
+          <p class="note">Every command that could touch module 17 had to pass the post-quantum signature check and the mission guardian. Refused attempts are listed too.</p>
+          <div class="stats">
+            <div class="stat"><span>ALLOWED</span><b id="a-ok">0</b></div>
+            <div class="stat"><span>REFUSED</span><b id="a-bad">0</b></div>
+            <div class="stat"><span>LEDGER</span><b id="a-ledger">—</b></div>
+          </div>
+          <ol id="audit" class="audit"></ol>
+        </div>
+        <div class="tabpane" data-pane="return" hidden>
+          <ol class="journey" id="journey"></ol>
+          <div class="sub-h"><h3>SAMPLE RETURN</h3><span class="h-sub">capsule · 4 °C cold chain</span></div>
+          <div class="return" id="return"></div>
+        </div>
       </div>
     </div>
   </section>
 </main>
 
 <footer id="timeline">
-  <div class="controls">
-    <button id="btn-play" title="Play/Pause (space)">▶</button>
-    <select id="speed" title="Replay speed">
-      <option value="1">1×</option><option value="20">20×</option><option value="60" selected>60×</option><option value="300">300×</option>
-    </select>
+  <div class="transport">
+    <button class="btn icon primary" id="btn-play" title="Play / pause (space)" aria-label="Play">▶</button>
+    <div class="seg" id="speed" role="group" aria-label="Replay speed">
+      <button data-speed="auto" class="on" title="Director pacing: slows down for the key moments">AUTO</button>
+      <button data-speed="1">1×</button><button data-speed="60">60×</button><button data-speed="300">300×</button>
+    </div>
+    <span class="rate" id="rate">×1</span>
   </div>
-  <div class="track" id="track"><div class="track-fill" id="track-fill"></div><div class="track-marks" id="track-marks"></div></div>
+  <div class="track" id="track" role="slider" aria-label="Mission timeline" tabindex="0">
+    <div class="track-bands" id="track-bands"></div>
+    <div class="track-fill" id="track-fill"></div>
+    <div class="track-marks" id="track-marks"></div>
+    <div class="track-head" id="track-head"></div>
+    <div class="track-tip" id="track-tip" hidden></div>
+  </div>
   <div class="scorecard" id="scorecard"></div>
 </footer>
 
-<script src="/static/hydrate.js?v=25"></script>
-<script src="/static/customer.js?v=25"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script>
+<script src="/static/scene.js?v=30"></script>
+<script src="/static/hydrate.js?v=30"></script>
+<script src="/static/replay.js?v=30"></script>
+<script src="/static/customer.js?v=30"></script>
 </body>
 </html>

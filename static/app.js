@@ -1,235 +1,378 @@
-/* Mission console: replays the twin's event stream + frames with its own clock. */
+/* Mission console: replays the twin's event stream and telemetry frames on its own clock.
+   Markup: index.html · styles: style.css · 3-D: scene.js · data: api/mission/{mode}.json (compact; hydrate.js rebuilds it).
+   Hooks for recording and debugging: window.__console = { seek, play, setTab, setMode, state, data }. */
 (async function () {
+  'use strict';
   const $ = (id) => document.getElementById(id);
-  const data = {};
-  const load = async (m) => window.hydrateMission(await (await fetch('api/mission/' + m + '.json')).json());
-  data.sentinel = await load('sentinel');   // the crypto-only baseline is fetched only when it is asked for
+  const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+  const set = (id, v) => { const el = typeof id === 'string' ? $(id) : id; if (!el) return; v = String(v); if (el.textContent !== v) el.textContent = v; };
+  const cls = (id, c) => { const el = typeof id === 'string' ? $(id) : id; if (el && el.className !== c) el.className = c; };
+  const R = window.Replay, { T0, MILESTONES, lerp, clamp, pad2, hms, clock, met, esc, km, nice, lastBefore, sampleAt } = R;
 
-  const S = { mode: 'sentinel', t: 0, playing: false, speed: 20, lastWall: performance.now(), feedIdx: 0, lastDecision: null };
-  const scene = new Scene3D($('view3d')); window.scene = scene;
-  const SEG_ORDER = ['LAUNCH', 'BOOSTER', 'ORBIT', 'OPS', 'COMMS', 'SENTINEL', 'RETURN', 'EOM'];
-  const ARM = ['identify', 'unlock', 'capture', 'transfer', 'dock', 'position', 'analyse', 'return', 'record'];
-  const STATIONS = [['ISTRAC', 'ISTRAC Bengaluru', 'IN'], ['LEUK', 'Leuk', 'CH'], ['ESOC', 'ESOC Darmstadt', 'DE'], ['RELAY-1', 'Relay 1', 'MESH'], ['RELAY-2', 'Relay 2', 'MESH']];
+  // ---------- constants ----------
+  const PHASES = ['LAUNCH', 'BOOSTER', 'ORBIT', 'OPS', 'RETURN', 'EOM'];
+  const PHASE_LABEL = { LAUNCH: 'LAUNCH', BOOSTER: 'BOOSTER LANDING', ORBIT: 'ORBIT INSERTION', OPS: 'LAB OPERATIONS', RETURN: 'SAMPLE RETURN', EOM: 'MISSION COMPLETE' };
+  const ARM_STEPS = ['identify', 'unlock', 'capture', 'transfer', 'dock', 'position', 'analyse', 'return', 'record'];
+  const JOINT_LIM = [180, 100, 90, 150, 120, 180, 180];
+  const STATIONS = [['ISTRAC', 'ISTRAC Bengaluru', 'IN'], ['LEUK', 'Leuk', 'CH'], ['ESOC', 'ESOC Darmstadt', 'DE'], ['RELAY-1', 'Relay 1', 'ISL'], ['RELAY-2', 'Relay 2', 'ISL']];
   const QUEUE = [['safety', 'SAFETY'], ['housekeeping', 'HOUSEKEEPING'], ['experiment_status', 'EXP. STATUS'], ['science_raw', 'SCIENCE RAW'], ['science_products', 'PRODUCTS'], ['logs', 'LOGS']];
+  const OSI = [
+    ['7 APP', 'MO 520 · PUS E-70-41C · CFDP 727', 'AND-gate · ML-DSA-87 · ledger'],
+    ['6 PRES', 'Space Packet 133.0 · XTCE 660', 'AES-256-GCM per command + sequence'],
+    ['5 SESS', 'CFDP transactions · pass schedule', 'ML-KEM-1024 per pass · revocation'],
+    ['4 TRAN', 'COP-1 232.1 · CFDP class 2', 'replay counters'],
+    ['3 NET', 'IP over CCSDS 702.1 · BPv7 734.2 (DTN)', 'zero-visibility relays · containment'],
+    ['2 LINK', 'TC 232.0 · AOS 732.0 · Prox-1 211.0 · SDLS 355.0', 'SDLS keys from the PQ session'],
+    ['1 PHY', 'RF 401.0 · S / X / Ka · LDPC 131.0', 'jamming: detect and reroute'],
+  ];
+  const CAT = { LAUNCH: 'flight', BOOSTER: 'flight', ORBIT: 'flight', RETURN: 'flight', EOM: 'flight', OPS: 'lab', CUSTOMER: 'lab', COMMS: 'comms', SENTINEL: 'sentinel', ATTACK: 'sentinel' };
+  const BOOSTER_PHASE = { coast: 'FLIP', boostback: 'DIVERT BURN', entry_coast: 'COAST', entry_burn: 'ENTRY BURN', descent: 'AERO DESCENT', landing_burn: 'LANDING BURN', landed: 'LANDED' };
+  const UPPER_PHASE = { burn: 'S2 BURN 1', burn1: 'S2 BURN 1', coast: 'COAST', burn2: 'S2 BURN 2', orbit: 'ORBIT' };
 
+  // ---------- state ----------
+  const data = {};
+  const S = { mode: 'sentinel', t: T0, playing: false, speed: 'auto', rate: 1.5, lastWall: performance.now(), lastPanels: 0, dirty: true, feedIdx: 0,
+              sel: 17, tab: { left: 'dexter', drawer: 'flight' }, follow: { left: true, drawer: true }, phase: null, error: null };
   const D = () => data[S.mode];
-  const tEnd = () => D().events[D().events.length - 1].t + 30;
-  const opsStart = () => D().frames[0].t;
-  const fmtT = (t) => { t = Math.max(0, Math.floor(t)); const h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60; return [h, m, s].map(x => String(x).padStart(2, '0')).join(':'); };
-  const lastBefore = (arr, t, key = 't') => { let lo = 0, hi = arr.length - 1, r = -1; while (lo <= hi) { const mid = (lo + hi) >> 1; if (arr[mid][key] <= t) { r = mid; lo = mid + 1; } else hi = mid - 1; } return r; };
 
-  // ---------- static build ----------
-  $('stations').innerHTML = STATIONS.map(s => `<div class="station" id="st-${s[0]}"><span class="flag">${s[2]}</span><b>${s[1]}</b><span class="det" id="std-${s[0]}">—</span><span class="det" id="stb-${s[0]}">—</span></div>`).join('');
-  $('queue').innerHTML = QUEUE.map(q => `<span class="ql">${q[1]}</span><span class="qb"><i id="qb-${q[0]}" style="width:0"></i></span><span class="qv" id="qv-${q[0]}">0 MB</span>`).join('');
-  $('arm-steps').innerHTML = ARM.map(() => '<span></span>').join('');
-  const JN = ['J1', 'J2', 'J3', 'J4', 'J5', 'J6', 'J7'];
-  $('joints').innerHTML = JN.map(j => `<div><i><b style="height:0"></b></i><em>0°</em>${j}</div>`).join('');
-  $('modgrid').innerHTML = Array.from({ length: 32 }, (_, i) => `<div class="mod" id="mod-${i + 1}"><span>${i + 1}</span><span class="mt">—</span></div>`).join('');
-  $('traj-legend').innerHTML = `<span><i style="background:var(--s1)"></i>stack / upper stage</span><span><i style="background:var(--s2)"></i>booster</span>`;
+  // ---------- data: load + derive ----------
+  const load = (mode) => R.load(mode, (n, e) => { set('ld-msg', 'Waiting for the mission twin…'); set('ld-sub', 'attempt ' + n + ' · ' + e.message); });
+  const t2x = (t) => R.t2x(D(), t), x2t = (x) => R.x2t(D(), x), lastEvent = (t, pred) => R.lastEvent(D(), t, pred);
+  const launchState = (t) => R.launchState(D(), t), autoRate = (t) => R.autoRate(D(), t), moduleState = R.moduleState;
 
-  function buildTimeline() {
-    const end = tEnd();
-    $('track-marks').innerHTML = D().events.filter(e => e.level !== 'info' || ['LIFTOFF', 'MECO', 'SEP', 'SECO'].includes(e.code))
-      .map(e => `<i class="${e.level}" style="left:${(e.t / end * 100).toFixed(2)}%" title="${fmtT(e.t)} ${e.code}"></i>`).join('');
-    const segs = {}; D().events.forEach(e => { if (!(e.seg in segs)) segs[e.seg] = e.t; });
-    let lastX = -10;
-    $('track-segs').innerHTML = Object.entries(segs).filter(([k]) => k !== 'COMMS' && k !== 'SENTINEL' && k !== 'ATTACK')
-      .map(([k, t]) => { const x = t / end * 100; if (x - lastX < 5) return ''; lastX = x; return `<span style="left:${x.toFixed(2)}%">${k === 'RETURN' ? 'SAMPLE RETURN' : k}</span>`; }).join('');
-    const sc = D().scorecard, good = S.mode === 'sentinel';
-    $('scorecard').innerHTML = [
-      ['ATTACK CMDS EXECUTED', `${sc.attack_executed} / ${sc.attack_commands}`, sc.attack_executed === 0],
-      ['FORGED / REPLAY ACCEPTED', sc.forged_or_replayed_accepted, sc.forged_or_replayed_accepted === 0],
-      ['CONTAINMENT', sc.containment_s == null ? 'none' : sc.containment_s + ' s', sc.containment_s != null],
-      ['CULTURES LOST', sc.cultures_lost, sc.cultures_lost === 0],
-    ].map(([l, v, ok]) => `<div class="sc ${ok ? 'good' : 'bad'}"><span>${l}</span><b>${v}</b></div>`).join('');
+  // ---------- boot ----------
+  try { data.sentinel = await load('sentinel'); }
+  catch (e) { set('ld-msg', 'Could not load the mission data'); set('ld-sub', e.message + ' · reload the page to retry'); return; }
+
+  const stub = { setPhase() {}, updateLaunch() {}, updateOps() {}, setSolar() {}, setLandingZone() {}, _resize() {} };
+  let scene = stub;
+  try { scene = new window.Scene3D($('view3d')); } catch (e) { console.warn('3-D view unavailable:', e); $('gl-note').hidden = false; }
+  window.scene = scene;
+  $('view3d').addEventListener('webglcontextlost', (e) => { e.preventDefault(); $('gl-note').hidden = false; set('gl-note', '3-D view paused by the browser (graphics context lost); telemetry continues.'); });
+  $('view3d').addEventListener('webglcontextrestored', () => { $('gl-note').hidden = true; });
+
+  // ---------- static DOM ----------
+  $('modgrid').innerHTML = Array.from({ length: 32 }, (_, i) => `<div class="mod" id="mod-${i + 1}" data-id="${i + 1}"><span>${i + 1}</span><span class="mt">—</span></div>`).join('');
+  $('arm-steps').innerHTML = ARM_STEPS.map((s) => `<li>${s.toUpperCase()}</li>`).join('');
+  $('joints').innerHTML = JOINT_LIM.map((_, k) => `<div><i><b style="height:0"></b></i><em>0°</em>J${k + 1}</div>`).join('');
+  $('stations').tBodies[0].innerHTML = STATIONS.map(([id, name, cc]) => `<tr id="st-${id}"><td><b>${name}</b> <span class="cc">${cc}</span></td><td class="opt3" id="stb-${id}">—</td><td class="num opt2" id="str-${id}">—</td>` +
+    `<td class="num" id="ste-${id}">—</td><td class="num opt" id="stg-${id}">—</td><td class="num opt3" id="stn-${id}">—</td><td class="num" id="stm-${id}">—</td><td id="sts-${id}">—</td></tr>`).join('');
+  $('queue').innerHTML = QUEUE.map(([id, label]) => `<span class="ql">${label}</span><span class="qb"><i id="qb-${id}" style="width:0"></i></span><span class="qv" id="qv-${id}">0.0 MB</span>`).join('');
+  $('osi').tBodies[0].innerHTML = OSI.map((r) => `<tr><td>${r[0]}</td><td>${r[1]}</td><td class="sen">${r[2]}</td></tr>`).join('');
+
+  function buildForMode() {          // everything that depends on the loaded mission (rebuilt on a scenario switch)
+    const M = D(), X = M.x, meta = M.launch_meta || {}, L = meta.landing;
+    $('track-bands').innerHTML = X.bands.map(([a, b, label, c]) => { const x0 = t2x(a) * 100, x1 = t2x(b) * 100; return `<span class="${c}" style="left:${x0.toFixed(2)}%;width:${(x1 - x0).toFixed(2)}%">${label}</span>`; }).join('');
+    $('track-marks').innerHTML = X.marks.map((e) => `<i class="${e.level}" style="left:${(t2x(e.t) * 100).toFixed(2)}%"></i>`).join('');
+    $('milestones').innerHTML = X.miles.map((m) => `<div id="ms-${m.code}"><span>${m.label}</span><b>${pad2(Math.floor(m.t / 60))}:${pad2(Math.floor(m.t % 60))}</b></div>`).join('');
+    $('facts').innerHTML = [['SITE', (meta.site || '').split(' (')[0].replace('APJ Abdul ', '')], ['TARGET ORBIT', meta.orbit || '—'], ['LAUNCH AZIMUTH', (meta.launch_azimuth_deg || '—') + '°'],
+      ['LANDING BARGE', X.lz ? X.lz.toFixed(0) + ' km downrange' : '—'], ['STAGE 1', (meta.engines || 9) + ' × Shakti · GP-300']].map(([k, v]) => `<div><span>${k}</span><b>${esc(v)}</b></div>`).join('');
+    $('stab').innerHTML = L ? `Legs 4 × 3.87 m at ${L.deploy_deg}° with telescoping struts · span <b>${L.span_m} m</b> · nozzle clearance <b>${L.nozzle_clearance_m} m</b> · tip-over <b>${L.tip_angle_deg}°</b> against ${L.deck_roll_deg}° deck roll · ${L.leg_load_kn} kN per leg · <b class="${L.stable ? 'ok' : 'bad'}">${L.stable ? 'STABLE' : 'UNSTABLE'}</b>` : '';
+    const links = M.frames.length ? M.frames[0].comms.links : {};
+    STATIONS.forEach(([id]) => { const l = links[id]; if (!l) return; set('stb-' + id, l.band); set('str-' + id, (l.rate_bps / 1e6).toFixed(1) + ' M / ' + (l.uplink_bps / 1e3).toFixed(0) + ' k'); });
+    set('sentinel-sub', S.mode === 'sentinel' ? 'PQ signature AND guardian' : 'baseline: signature only');
+    scene.setLandingZone(X.lz);
+    chartCache = {}; sparkKey = '';
   }
 
-  // ---------- render ----------
-  function render() {
-    const t = S.t, ev = D().events, end = tEnd();
-    $('met').textContent = fmtT(t);
-    $('track-fill').style.width = (t / end * 100) + '%';
-    // segments
-    let cur = 'LAUNCH'; for (const e of ev) { if (e.t > t) break; if (SEG_ORDER.includes(e.seg)) cur = e.seg; }
-    const launchDone = t > opsStart();
-    if (launchDone && cur !== 'EOM') cur = (lastEvent(t, e => e.seg === 'RETURN' && e.code !== 'SAMPLE_HANDOVER')) ? 'RETURN'
-      : (lastEvent(t, e => e.seg === 'SENTINEL' && e.code !== 'EXECUTE' && e.code !== 'PLAN' && t - e.t < 120)) ? 'SENTINEL'
-      : (lastEvent(t, e => e.seg === 'COMMS' && e.code === 'DELIVERED' && t - e.t < 60)) ? 'COMMS' : 'OPS';
-    document.querySelectorAll('#segments span').forEach(s => { const i = SEG_ORDER.indexOf(s.dataset.seg), c = SEG_ORDER.indexOf(cur); s.className = i < c ? 'done' : i === c ? 'now' : ''; });
+  // ---------- launch ----------
+  function panelLaunch(t, L) {
+    const M = D(), X = M.x, meta = M.launch_meta || {}, hero = L.upper || L.stack, b = L.booster;
+    set('launch-body', L.upper ? 'VIBHU UPPER STAGE + LELP-1' : `STACK · ${meta.engines || 9} × SHAKTI`);
+    set('v-speed', Math.round(hero.speed_ms * 3.6).toLocaleString('en-US')); set('v-alt', hero.alt_km.toFixed(1));
+    set('v-dr', km(hero.downrange_km)); set('v-thr', Math.round(hero.throttle * 100) + ' %');
+    set('v-q', hero.q_kpa.toFixed(1) + ' kPa'); set('v-g', (hero.g_load || 0).toFixed(1) + ' g');
+    set('v-prop', hero.prop_pct.toFixed(0) + ' %'); $('m-prop').style.width = clamp(hero.prop_pct, 0, 100) + '%';
+    set('v-prop-lbl', L.upper ? 'S2 PROPELLANT' : 'S1 PROPELLANT');
+    const pill = L.upper ? (UPPER_PHASE[L.upper.phase] || 'ASCENT') : t < -3 ? 'COUNTDOWN' : t < 0 ? 'IGNITION' : 'ASCENT';
+    set('mode-pill', pill); cls('mode-pill', 'chip info');
+    // booster recovery
+    cls('booster-box', b ? '' : 'off');
+    set('booster-phase', b ? (b.phase === 'entry_coast' && b.fins > 0.05 ? 'FINS OUT' : BOOSTER_PHASE[b.phase] || nice(b.phase).toUpperCase()) : 'ATTACHED');
+    cls('booster-phase', 'chip ' + (!b ? '' : b.phase === 'landed' ? 'good' : 'info'));
+    const fins = b ? b.fins || 0 : 0, legs = !b ? 0 : b.phase === 'landed' ? 1 : b.phase === 'landing_burn' ? clamp((1.3 - b.alt_km) / 0.9, 0, 1) : 0;
+    if (b) {
+      set('b-speed', Math.round(b.speed_ms * 3.6).toLocaleString('en-US') + ' km/h'); set('b-alt', b.alt_km < 10 ? b.alt_km.toFixed(2) + ' km' : b.alt_km.toFixed(1) + ' km');
+      const gap = Math.abs(X.lz - b.downrange_km); set('b-dr', b.phase === 'landed' ? 'ON DECK · ' + (meta.touchdown_miss_m != null ? meta.touchdown_miss_m.toFixed(0) + ' m' : '') : gap < 1 ? Math.round(gap * 1000) + ' m' : gap.toFixed(1) + ' km');
+      set('b-prop', b.prop_pct.toFixed(1) + ' %'); set('b-g', (b.g_load || 0).toFixed(1) + ' g'); set('b-q', b.q_kpa.toFixed(1) + ' kPa');
+      set('b-heat', Math.round(b.heat_kw_m2 || 0) + ' kW/m²'); set('b-thr', Math.round(b.throttle * 100) + ' %');
+    } else ['b-speed', 'b-alt', 'b-dr', 'b-prop', 'b-g', 'b-q', 'b-heat', 'b-thr'].forEach((id) => set(id, '—'));
+    set('b-fins', fins >= .99 ? 'OUT · STEERING' : fins > 0 ? 'DEPLOYING ' + Math.round(fins * 100) + ' %' : 'STOWED');
+    set('b-legs', legs >= .99 ? 'LOCKED · 115°' : legs > 0 ? 'DEPLOYING ' + Math.round(legs * 115) + '°' : 'STOWED');
+    $$('#fins i').forEach((el) => el.style.transform = `rotate(${90 - 78 * fins}deg)`); $('fins').classList.toggle('out', fins > .5);
+    $$('#legs i').forEach((el) => el.style.transform = `rotate(${90 - 55 * legs}deg)`); $('legs').classList.toggle('out', legs > .5);
+    X.miles.forEach((m) => { const el = $('ms-' + m.code); if (el) cls(el, t >= m.t ? 'done' : ''); });
+    const cap = lastEvent(t, (e) => e.seg === 'LAUNCH' || e.seg === 'BOOSTER' || e.seg === 'ORBIT');
+    set('overlay-caption', cap ? `${nice(cap.code)} · ${cap.text}` : `${meta.vehicle || 'RUPAK'} on the pad · ${meta.site || ''}`);
+    if (S.tab.drawer === 'flight') drawFlight(t);
+    hud(t, `${Math.round(hero.speed_ms * 3.6).toLocaleString('en-US')} km/h`, `${hero.alt_km.toFixed(1)} km · ${pill}`, b && b.phase !== 'landed' ? `BOOSTER ${$('booster-phase').textContent} · ${b.alt_km.toFixed(1)} km` : (cap ? nice(cap.code) : ''));
+  }
 
-    if (!launchDone) renderLaunch(t); else renderOps(t);
-    renderSentinel(t); renderFeed(t);
-    if (document.body.classList.contains('cinema')) {
-      $('hud-met').textContent = fmtT(t); $('hud-seg').textContent = cur === 'RETURN' ? 'SAMPLE RETURN' : cur === 'BOOSTER' ? 'BOOSTER RTLS' : cur === 'OPS' ? 'LAB OPS' : cur;
-      if (!launchDone) { $('hud-a').textContent = $('v-speed').textContent + ' km/h'; $('hud-b').textContent = $('v-alt').textContent + ' km · ' + $('mode-pill').textContent; $('hud-c2').textContent = $('booster-phase').textContent !== '—' ? 'BOOSTER ' + $('booster-phase').textContent + ' · ' + $('b-alt').textContent : $('overlay-caption').textContent; }
-      else { $('hud-a').textContent = $('mode-pill').textContent; $('hud-b').textContent = $('arm-now').textContent; $('hud-c2').textContent = $('overlay-caption').textContent.slice(0, 90); }
+  // ---------- flight charts (SVG drawn at pixel size; planned path faint, flown path solid) ----------
+  let chartCache = {};
+  const size = (svg) => { const r = svg.getBoundingClientRect(); return [Math.max(140, Math.round(r.width)), Math.max(70, Math.round(r.height))]; };
+  function drawFlight(t) {
+    const X = D().x, st = X.by.stack || [], up = X.by.upper || [], bo = X.by.booster || [];
+    const C1 = '#3987e5', C2 = '#d95926', m = { l: 30, r: 10, t: 8, b: 17 };
+    const poly = (pts, color, faint) => pts ? `<polyline fill="none" stroke="${color}" stroke-width="${faint ? 1.2 : 2}" ${faint ? 'stroke-opacity=".38" stroke-dasharray="3 3"' : 'stroke-linejoin="round" stroke-linecap="round"'} points="${pts}"/>` : '';
+    const dot = (x, y, color) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4" fill="${color}" stroke="#1d1f21" stroke-width="2"/>`;
+    for (const which of ['traj', 'spd']) {
+      const svg = $(which), [W, H] = size(svg), key = which + W + 'x' + H;
+      const fx = which === 'traj' ? (s) => s.downrange_km / X.xMax : (s) => s.t / X.tChart, fy = which === 'traj' ? (s) => s.alt_km / X.yMax : (s) => s.speed_ms / 1000 / X.vMax;
+      const px = (u) => m.l + u * (W - m.l - m.r), py = (v) => H - m.b - v * (H - m.t - m.b);
+      const path = (arr, upTo) => { let out = ''; for (const s of arr) { if (s.t > upTo) break; const u = fx(s); if (u > 1.08) break; out += px(u).toFixed(1) + ',' + py(fy(s)).toFixed(1) + ' '; } return out; };
+      if (!chartCache[key]) {   // axes, grid and the planned paths only change with the size
+        const xt = which === 'traj' ? [0, X.xMax / 3, 2 * X.xMax / 3, X.xMax].map((v) => [v / X.xMax, Math.round(v)]) : [0, 100, 200, 300, 400, 500].filter((v) => v <= X.tChart).map((v) => [v / X.tChart, v + ' s']);
+        const yStep = which === 'traj' ? 50 : 2, yMax = which === 'traj' ? X.yMax : X.vMax, yt = []; for (let v = 0; v <= yMax + 1e-9; v += yStep) yt.push([v / yMax, v]);
+        let g = `<svg xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="clip-${which}"><rect x="${m.l}" y="${m.t - 4}" width="${W - m.l - m.r + 6}" height="${H - m.t - m.b + 4}"/></clipPath></defs>`;
+        g += yt.map(([v, lab]) => `<line x1="${m.l}" x2="${W - m.r}" y1="${py(v)}" y2="${py(v)}" class="grid"/><text x="${m.l - 5}" y="${py(v) + 3.5}" text-anchor="end" class="tick">${lab}</text>`).join('');
+        g += xt.map(([u, lab]) => `<text x="${px(u)}" y="${H - 4}" text-anchor="middle" class="tick">${lab}</text>`).join('');
+        if (which === 'traj') g += `<rect x="${px(X.lz / X.xMax) - 7}" y="${py(0) - 2}" width="14" height="4" fill="#fab219"/><text x="${px(X.lz / X.xMax)}" y="${py(0) - 6}" text-anchor="middle" class="tick">BARGE</text>`;
+        else g += [['MECO', X.tMeco], ['ENTRY', (X.miles.find((q) => q.code === 'ENTRY_BURN') || {}).t], ['LANDING', X.tLandBurn]].filter((q) => q[1] != null)
+          .map(([lab, tt]) => `<line x1="${px(tt / X.tChart)}" x2="${px(tt / X.tChart)}" y1="${m.t + 8}" y2="${H - m.b}" class="guide"/><text x="${px(tt / X.tChart)}" y="${m.t + 5}" text-anchor="middle" class="tick">${lab}</text>`).join('');
+        g += `<g clip-path="url(#clip-${which})">` + poly(path(st, 1e9) + path(up, 1e9), C1, true) + poly(path(bo, 1e9), C2, true) + '</g>';
+        chartCache[key] = g.replace('<svg xmlns="http://www.w3.org/2000/svg">', '');
+        svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      }
+      const now = (arr) => (arr.length && t >= arr[0].t ? sampleAt(arr, Math.min(t, arr[arr.length - 1].t)) : null);
+      const hs = now(up) || now(st), bs = t >= X.tTouch && bo.length ? bo[bo.length - 1] : now(bo);
+      let live = `<g clip-path="url(#clip-${which})">` + poly(path(st, t) + path(up, t), C1) + poly(path(bo, t), C2);
+      if (hs && fx(hs) <= 1.02) live += dot(px(fx(hs)), py(fy(hs)), C1);
+      if (bs) live += dot(px(Math.min(fx(bs), 1)), py(which === 'spd' && t >= X.tTouch ? 0 : fy(bs)), C2);
+      svg.innerHTML = chartCache[key] + live + '</g>';
     }
   }
-  function lastEvent(t, pred) { const ev = D().events; for (let i = lastBefore(ev, t); i >= 0; i--) if (pred(ev[i])) return ev[i]; return null; }
 
-  // ----- launch -----
-  const byBody = {};
-  function indexLaunch() { for (const m of Object.keys(data)) { if (byBody[m]) continue; byBody[m] = {}; for (const s of data[m].launch) (byBody[m][s.body] = byBody[m][s.body] || []).push(s); } }
-  function renderLaunch(t) {
-    $('panel-launch').hidden = false; $('panel-platform').hidden = true; scene.setPhase('launch');
-    const L = byBody[S.mode], latest = {}; for (const b in L) { const i = lastBefore(L[b], t); if (i >= 0) latest[b] = L[b][i]; }
-    const hasSep = !!latest.upper;
-    const hero = hasSep ? latest.upper : latest.stack;
-    $('launch-body').textContent = hasSep ? 'VIBHU UPPER STAGE + LELP-1' : 'STACK · 9 × SHAKTI';
-    if (hero) {
-      $('v-speed').textContent = Math.round(hero.speed_ms * 3.6).toLocaleString(); $('v-alt').textContent = hero.alt_km.toFixed(1);
-      $('v-dr').textContent = hero.downrange_km.toFixed(1) + ' km'; $('v-thr').textContent = Math.round(hero.throttle * 100) + ' %';
-      $('v-prop').textContent = hero.prop_pct.toFixed(1) + ' %'; $('v-q').textContent = hero.q_kpa.toFixed(1) + ' kPa';
-      $('m-prop').style.width = hero.prop_pct + '%';
-    }
-    $('mode-pill').textContent = hero ? hero.phase.toUpperCase().replace('_', ' ') : 'PAD';
-    const b = latest.booster; $('booster-box').style.opacity = b ? 1 : .35;
-    $('booster-phase').textContent = b ? b.phase.toUpperCase().replace('_', ' ') : '—';
-    if (b) { $('b-speed').textContent = Math.round(b.speed_ms * 3.6).toLocaleString() + ' km/h'; $('b-alt').textContent = b.alt_km.toFixed(1) + ' km';
-      $('b-dr').textContent = Math.abs(b.downrange_km).toFixed(1) + ' km'; $('b-prop').textContent = b.prop_pct.toFixed(1) + ' %';
-      $('b-fins').textContent = b.fins >= 1 ? 'DEPLOYED' : b.fins > 0 ? 'DEPLOYING' : 'STOWED'; $('b-g').textContent = (b.g_load || 0).toFixed(1) + ' g';
-      $('b-q').textContent = b.q_kpa.toFixed(1) + ' kPa'; $('b-heat').textContent = Math.round(b.heat_kw_m2 || 0) + ' kW/m²';
-      document.querySelectorAll('#fins i').forEach(f => f.style.transform = `rotate(${90 - 90 * (b.fins || 0)}deg)`);
-      const legsOut = (b.phase === 'landing_burn' && b.alt_km < 1.2) || b.phase === 'landed' || b.speed_ms < 1;
-      $('b-legs').textContent = legsOut ? 'DEPLOYED 115°' : 'STOWED';
-      const L = (D().launch_meta || {}).landing; if (L) $('stab').innerHTML = `LANDING STABILITY · legs 4 × 3.87 m @ ${L.deploy_deg}° · span <b>${L.span_m} m</b> · nozzle clearance <b>${L.nozzle_clearance_m} m</b> · tip-over <b>${L.tip_angle_deg}°</b> vs deck roll ${L.deck_roll_deg}° · ${L.leg_load_kn} kN/leg · ${L.stable ? '<b style="color:var(--good)">STABLE</b>' : '<b style="color:var(--crit)">UNSTABLE</b>'}`; }
-    drawTraj(t, L);
-    scene.setLandingZone((D().launch_meta || {}).landing_zone_km || 0);
-    scene.updateLaunch(latest, hasSep);
-    $('overlay-caption').textContent = hasSep ? `BOOSTER TO DOWNRANGE BARGE AT ${(D().launch_meta || {}).landing_zone_km || '—'} KM (BAY OF BENGAL) · VIBHU UPPER STAGE: BURN, COAST, CIRCULARISE AT ${(D().launch_meta || {}).target_alt_km || 550} KM` : `RUPAK ASCENT FROM APJ ABDUL KALAM ISLAND, ODISHA · ${(D().launch_meta || {}).engines || 28} × SHAKTI ON GP-300 · TARGET ${(D().launch_meta || {}).orbit || '550 KM SSO'}`;
-  }
-  function drawTraj(t, L) {
-    const xmax = Math.max(220, ...['stack', 'upper', 'booster'].flatMap(b => (L[b] || []).filter(s => s.t <= t).map(s => Math.abs(s.downrange_km))));
-    const W = 320, H = 150, px = (x) => 20 + x / xmax * (W - 30), py = (y) => H - 18 - y / 210 * (H - 28);
-    const line = (arr, color) => { const pts = arr.filter(s => s.t <= t).map(s => `${px(Math.abs(s.downrange_km)).toFixed(1)},${py(s.alt_km).toFixed(1)}`); return pts.length > 1 ? `<polyline fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" points="${pts.join(' ')}"/>` : ''; };
-    const dot = (arr, color) => { const i = lastBefore(arr, t); if (i < 0) return ''; const s = arr[i]; return `<circle cx="${px(Math.abs(s.downrange_km))}" cy="${py(s.alt_km)}" r="4" fill="${color}" stroke="#1a1a19" stroke-width="2"/>`; };
-    const grid = [0, 50, 100, 150, 200].map(y => `<line x1="20" x2="${W - 10}" y1="${py(y)}" y2="${py(y)}" stroke="#2e2e2c"/><text x="2" y="${py(y) + 3}" font-size="8" fill="#8a897f" font-family="IBM Plex Mono">${y}</text>`).join('')
-      + [0, Math.round(xmax / 2 / 50) * 50, Math.round(xmax / 50) * 50].map(x => `<text x="${px(x) - 6}" y="${H - 4}" font-size="8" fill="#8a897f" font-family="IBM Plex Mono">${x}</text>`).join('');
-    $('traj').innerHTML = grid + line(L.stack || [], '#3987e5') + line(L.upper || [], '#3987e5') + line(L.booster || [], '#d95926') + dot(L.upper || L.stack || [], '#3987e5') + dot(L.booster || [], '#d95926')
-      + `<text x="${W - 60}" y="12" font-size="8" fill="#8a897f" font-family="IBM Plex Mono">ALT km / DOWNRANGE km</text>`;
-  }
-
-  // ----- ops -----
-  function moduleState(m) {
-    if (m.state === 'isolated' || m.health < 0.5) return 'crit';
-    if (m.state === 'in_transfer' || m.state === 'in_lab') return 'move';
-    if (!m.state || m.state === 'stowed') return 'idle';
-    if (m.health < 0.9 || !m.sealed) return 'warn';
-    return 'good';
-  }
-  let lastFrameT = -1;
-  function renderOps(t) {
-    $('panel-launch').hidden = true; $('panel-platform').hidden = false; scene.setPhase('ops');
-    const F = D().frames, i = lastBefore(F, t); if (i < 0) return; const f = F[i], p = f.platform;
-    $('plat-mode').textContent = p.mode; $('mode-pill').textContent = p.mode;
-    $('p-alt').textContent = p.alt_km + ' km'; $('p-batt').textContent = p.battery + ' %'; $('p-labt').textContent = p.lab_t + ' °C';
-    $('p-sun').textContent = p.eclipse ? 'ECLIPSE' : 'SUNLIT'; $('p-active').textContent = p.active_modules; $('p-isol').textContent = p.isolated.length ? p.isolated.join(', ') : 'none';
-    const stepI = ARM.indexOf(p.arm.step), A = p.arm;
-    document.querySelectorAll('#arm-steps span').forEach((s, k) => s.className = A.busy ? (k < stepI ? 'done' : k === stepI ? 'now' : '') : '');
-    $('arm-now').textContent = A.busy ? `module ${A.module} · ${A.step} · ${Math.round(A.step_t || 0)} / ${A.step_dur || 0} s` : `idle · stowed · ${A.cycles || 0} cycles`;
+  // ---------- lab operations ----------
+  let opsStates = [], sparkKey = '';
+  function panelOps(t, f, fi) {
+    const M = D(), p = f.platform, A = p.arm;
+    set('plat-mode', nice(p.mode)); set('mode-pill', nice(p.mode)); cls('mode-pill', 'chip');
+    set('p-alt', p.alt_km + ' km'); set('p-batt', p.battery + ' %'); set('p-labt', Number(p.lab_t).toFixed(1) + ' °C');
+    set('p-sun', p.eclipse ? 'ECLIPSE' : 'SUNLIT'); set('p-active', p.active_modules); set('p-isol', p.isolated.length ? p.isolated.join(', ') : 'none');
+    // modules
+    const tgt = lastEvent(t, (e) => e.data && e.data.final && e.data.final !== 'EXECUTE' && t - e.t < 25 && /^module-/.test(e.data.target || ''));
+    const tgtId = tgt ? +tgt.data.target.split('-')[1] : 0;
+    f.modules.forEach((m, k) => { const el = $('mod-' + m.id); cls(el, 'mod ' + opsStates[k] + (m.id === S.sel ? ' sel' : '') + (m.id === tgtId ? ' tgt' : ''));
+      set(el.lastChild, m.state === 'stowed' ? m.size : m.t.toFixed(1)); });
+    // Dexter-L
+    const stepI = ARM_STEPS.indexOf(A.step);
+    $$('#arm-steps li').forEach((li, k) => cls(li, A.busy ? (k < stepI ? 'done' : k === stepI ? 'now' : '') : ''));
+    set('arm-now', A.busy ? `MODULE ${A.module} · ${nice(A.task || 'cycle').toUpperCase()} · ${A.step} ${Math.round(A.step_t || 0)} / ${A.step_dur || 0} s${A.requested_by && A.requested_by !== 'MCC' ? ' · for ' + A.requested_by.split(' /')[0] : ''}`
+      : `IDLE · stowed, brakes on · ${A.cycles || 0} cycle${A.cycles === 1 ? '' : 's'} flown`);
     if (A.joints) {
-      document.querySelectorAll('#joints div').forEach((d, k) => { const lim = [180, 100, 90, 150, 120, 180, 180][k]; const v = A.joints[k];
-        d.querySelector('b').style.height = (Math.min(Math.abs(v), lim) / lim * 100) + '%'; d.querySelector('i').className = Math.abs(A.torques[k]) > 0.3 ? 'hot' : ''; d.querySelector('em').textContent = v.toFixed(0) + '°'; });
-      $('d-tau').textContent = A.tau_max + ' N·m'; $('d-tip').textContent = A.tip_mps + ' m/s'; $('d-ft').textContent = `${A.ft_n} N · ${A.ft_nm} N·m`;
-      $('d-fid').textContent = A.busy ? Math.round(A.fiducial * 100) + ' %' : '—'; $('d-grip').textContent = `${A.grip ? 'LATCHED' : 'OPEN'} · ${A.umbilical ? 'MATED' : 'OFF'}`;
-      $('d-pow').textContent = `${A.power_w} W · ${A.brakes ? 'ON' : 'OFF'}`; $('d-react').textContent = A.reaction_nm + ' N·m'; $('d-cyc').textContent = A.cycles;
-      const ih = $('inhand'); ih.hidden = !A.grip;
-      if (A.grip && A.module) { const m = f.modules[A.module - 1]; $('ih-name').textContent = `Module ${m.id} · ${m.payload.kind} · ${m.customer}`;
-        $('ih-det').textContent = `${m.payload.mass_kg} kg · ${m.payload.vials} vials · ${m.payload.containment} · ${m.t} °C on umbilical power · ${m.protocol && m.protocol.mode === 'cycle' ? 'thermal-cycling protocol' : 'constant-temperature protocol'}`; }
+      $$('#joints div').forEach((d, k) => { const v = A.joints[k]; d.querySelector('b').style.height = (Math.min(Math.abs(v), JOINT_LIM[k]) / JOINT_LIM[k] * 100) + '%';
+        cls(d.querySelector('i'), Math.abs(A.torques[k]) > 0.3 ? 'hot' : ''); set(d.querySelector('em'), v.toFixed(0) + '°'); });
+      set('d-ring', Number(A.ring_deg || 0).toFixed(0) + '°'); set('d-tip', A.tip_mps + ' m/s'); set('d-tau', A.tau_max + ' N·m'); set('d-ft', A.ft_n + ' N');
+      set('d-grip', A.grip ? 'LATCHED' : 'OPEN'); set('d-umb', A.umbilical ? 'MATED' : 'OFF'); set('d-fid', A.busy ? Math.round(A.fiducial * 100) + ' %' : '—');
+      set('d-pow', A.power_w + ' W'); set('d-react', A.reaction_nm + ' N·m'); set('d-cyc', A.cycles);
+      $('inhand').hidden = !A.grip;
+      if (A.grip && A.module) { const m = f.modules[A.module - 1]; set('ih-name', `Module ${m.id} · ${m.payload.kind} · ${m.customer}`);
+        set('ih-det', `${m.payload.mass_kg} kg · ${m.payload.vials} vials · ${m.payload.containment} · ${m.t.toFixed(1)} °C held on umbilical power`); }
     }
-    const states = f.modules.map(moduleState);
-    if (f.t !== lastFrameT) {
-      f.modules.forEach((m, k) => { const el = $('mod-' + m.id); el.className = 'mod ' + states[k]; el.lastChild.textContent = m.state === 'stowed' ? m.size : m.t.toFixed(1) + '°'; el.title = `${m.exp} · ${m.t} °C · ${m.p} kPa · health ${m.health}` + (m.protocol ? ` · ${m.protocol.mode === 'cycle' ? 'thermal cycling (eclipse-synced), ' + m.protocol.cycles + ' cycles' : 'constant ' + m.protocol.setpoint + ' °C'}${m.protocol.crystal_um ? ' · crystals ' + m.protocol.crystal_um + ' µm' : ''}` : ''); });
-      lastFrameT = f.t;
-    }
-    // comms
-    const vis = f.comms.visible, iso = f.gate.isolated;
-    STATIONS.forEach(s => { const el = $('st-' + s[0]); el.className = 'station' + (iso.includes(s[0]) ? ' isolated' : vis.includes(s[0]) ? ' on' : '');
-      const L = (f.comms.links || {})[s[0]]; if (!L) return;
-      $('std-' + s[0]).textContent = `${L.band} · ${(L.rate_bps / 1e6).toFixed(1)} Mbps ↓ ${(L.uplink_bps / 1e3).toFixed(0)} kbps ↑ · ${L.coding}`;
-      const b = L.budget; $('stb-' + s[0]).innerHTML = b ? `el ${b.el_deg}° · ${b.range_km} km · Eb/N0 <b>${b.ebn0_db}</b> dB · margin <b>${b.margin_db}</b> dB · SA${L.sdls_sa} · ${L.pq_session}` : `${L.std}`; });
+    panelModule(f, fi, t);
     // subsystems
-    const ss = p.eps ? p : null;
-    if (ss) { const e = p.eps, tc = p.tcs, ad = p.adcs, cd = p.cdh, pr = p.prop;
-      $('ss-eps-sun').textContent = e.sun; $('ss-eps-gen').textContent = e.gen_w + ' W'; $('ss-eps-load').textContent = e.load_w + ' W'; $('ss-eps-v').textContent = e.bus_v + ' V'; $('ss-eps-soc').textContent = e.soc + ' %';
-      $('ss-tcs-lab').textContent = tc.lab_c + ' °C'; $('ss-tcs-rad').textContent = tc.radiator_c + ' °C'; $('ss-tcs-heat').textContent = tc.heaters_w + ' W'; $('ss-tcs-bus').textContent = tc.bus_c + ' °C';
-      $('ss-adcs-mode').textContent = ad.mode; $('ss-adcs-err').textContent = ad.err_deg + '°'; $('ss-adcs-rate').textContent = ad.rate_dps + ' °/s'; $('ss-adcs-rw').textContent = ad.wheel_rpm.join(' / ') + ' rpm'; $('ss-adcs-orbit').textContent = p.alt_km + ' km';
-      $('ss-cdh-obc').textContent = 'OBC-' + cd.obc; $('ss-cdh-cpu').textContent = cd.cpu_pct + ' %'; $('ss-cdh-sto').textContent = cd.storage_gb + ' GB'; $('ss-cdh-up').textContent = cd.uptime_h + ' h'; $('ss-cdh-led').textContent = f.gate.ledger_entries + ' entries';
-      $('ss-prop-kg').textContent = pr.prop_kg + ' kg'; $('ss-prop-dv').textContent = pr.dv_ms + ' m/s'; $('ss-prop-bar').textContent = pr.tank_bar + ' bar'; $('ss-prop-next').textContent = 'orbit trim T+' + fmtT(Math.ceil((t + 1) / 7200) * 7200); }
-    // OSI stack: highlight the layer the latest Sentinel decision acted on
-    const dLast = lastEvent(t, e => e.data && e.data.final && t - e.t < 60);
-    const hot = !dLast ? -1 : dLast.data.reasons.some(r => /signature|identity|replay|key does not/.test(r)) ? (dLast.data.reasons.some(r => /replay/.test(r)) ? 3 : 0) : dLast.data.reasons.some(r => /route|isolated/.test(r)) ? 4 : 0;
-    document.querySelectorAll('#osi li').forEach((li, k) => li.classList.toggle('hot', k === hot));
+    if (p.eps) { const e = p.eps, tc = p.tcs, ad = p.adcs, cd = p.cdh, pr = p.prop;
+      set('ss-eps-sun', e.sun); set('ss-eps-gen', e.gen_w + ' W'); set('ss-eps-load', e.load_w + ' W'); set('ss-eps-v', e.bus_v + ' V'); set('ss-eps-soc', e.soc + ' %');
+      set('ss-tcs-lab', tc.lab_c + ' °C'); set('ss-tcs-rad', tc.radiator_c + ' °C'); set('ss-tcs-heat', tc.heaters_w + ' W'); set('ss-tcs-bus', tc.bus_c + ' °C');
+      set('ss-adcs-mode', ad.mode); set('ss-adcs-err', ad.err_deg + '°'); set('ss-adcs-rate', ad.rate_dps + ' °/s'); set('ss-adcs-rw', Math.round(ad.wheel_rpm.reduce((x, y) => x + y, 0) / ad.wheel_rpm.length) + ' rpm'); set('ss-adcs-arm', (ad.arm_reaction_nm || 0) + ' N·m');
+      set('ss-cdh-obc', 'OBC-' + cd.obc); set('ss-cdh-cpu', cd.cpu_pct + ' %'); set('ss-cdh-sto', cd.storage_gb + ' GB'); set('ss-cdh-up', cd.uptime_h + ' h'); set('ss-cdh-led', f.gate.ledger_entries);
+      set('ss-prop-kg', pr.prop_kg + ' kg'); set('ss-prop-dv', pr.dv_ms + ' m/s'); set('ss-prop-bar', pr.tank_bar + ' bar'); set('ss-prop-orbit', p.alt_km + ' km SSO'); }
+    // ground segment
+    const vis = f.comms.visible || [], iso = f.gate.isolated || [];
+    STATIONS.forEach(([id]) => { const l = (f.comms.links || {})[id], b = l && l.budget, isIso = iso.includes(id), on = vis.includes(id);
+      cls('st-' + id, isIso ? 'isolated' : on ? 'on' : '');
+      set('ste-' + id, b ? b.el_deg + '°' : '—'); set('stg-' + id, b ? Math.round(b.range_km).toLocaleString('en-US') + ' km' : '—');
+      set('stn-' + id, b ? b.ebn0_db + ' dB' : '—'); set('stm-' + id, b ? '+' + b.margin_db + ' dB' : '—');
+      set('sts-' + id, isIso ? 'ISOLATED' : on && l ? `SA ${l.sdls_sa} · ML-KEM-1024` : '—'); cls('sts-' + id, isIso ? 'bad' : on ? '' : 'dim'); });
     const maxQ = Math.max(1e6, ...Object.values(f.comms.queue));
-    QUEUE.forEach(q => { const v = f.comms.queue[q[0]] || 0; $('qb-' + q[0]).style.width = (v / maxQ * 100) + '%'; $('qv-' + q[0]).textContent = (v / 1e6).toFixed(1) + ' MB'; });
-    $('c-total').textContent = f.comms.total_mb + ' MB'; $('c-relay').textContent = f.comms.relayed_mb + ' MB'; $('c-q').textContent = f.comms.queued_packets;
-    scene.setSolar(!!lastEvent(t, e => e.code === 'SOLAR'));
-    const rc = lastEvent(t, e => e.seg === 'RETURN' || e.code === 'SAMPLE_HANDOVER');
-    const capsuleState = !rc ? 'docked' : { CAPSULE_LOAD: 'docked', CAPSULE_SEP: 'sep', DEORBIT_BURN: 'deorbit', ENTRY_INTERFACE: 'entry', PEAK_HEATING: 'entry', DROGUE: 'chute', MAIN_CHUTE: 'chute', SPLASHDOWN: 'landed', RECOVERY: 'landed', SAMPLE_HANDOVER: 'landed' }[rc.code] || 'docked';
-    scene.updateOps(f, states, iso, 1 / 60, { capsuleState });
-    const cap = lastEvent(t, e => e.seg === 'OPS' || e.seg === 'ATTACK' || e.seg === 'RETURN' || e.seg === 'CUSTOMER' || e.code === 'CONTAIN');
-    $('overlay-caption').textContent = cap ? `${cap.code} · ${cap.text}` : `${p.mode}`;
+    QUEUE.forEach(([id]) => { const v = f.comms.queue[id] || 0; $('qb-' + id).style.width = (v / maxQ * 100) + '%'; set('qv-' + id, (v / 1e6).toFixed(1) + ' MB'); });
+    set('c-total', f.comms.total_mb.toFixed(0) + ' MB'); set('c-relay', f.comms.relayed_mb.toFixed(0) + ' MB');
+    $('drawer-note').dataset.k = ''; set('drawer-note', (vis.length ? 'in view: ' + vis.join(' · ') : 'no station in view') + ' · ' + f.comms.queued_packets + ' pkts queued');
+    // link stack: the layer the latest refused command was caught on
+    const dLast = lastEvent(t, (e) => e.data && e.data.final && e.data.final !== 'EXECUTE' && t - e.t < 90), why = dLast ? dLast.data.reasons.join(' ') : '';
+    const hot = !dLast ? -1 : /replay/.test(why) ? 3 : /route|isolated|relay/i.test(why) ? 4 : 0;
+    $$('#osi tbody tr').forEach((tr, k) => cls(tr, k === hot ? 'hot' : ''));
+    // caption + automatic tab following
+    const cap = lastEvent(t, (e) => e.seg === 'OPS' || e.seg === 'ATTACK' || e.seg === 'RETURN' || e.seg === 'CUSTOMER' || e.code === 'CONTAIN');
+    set('overlay-caption', cap ? `${nice(cap.code)} · ${cap.text}` : nice(p.mode));
+    if (S.follow.left) { if (tgtId) S.sel = tgtId; else if (!A.busy && !lastEvent(t, (e) => e.data && e.data.final && e.data.final !== 'EXECUTE' && t - e.t < 90)) S.sel = 17;
+      setTab('left', A.busy ? 'dexter' : 'module', true); }
+    if (S.follow.drawer) setTab('drawer', dLast ? 'stack' : 'ground', true);
+    hud(t, nice(p.mode), A.busy ? `DEXTER-L · MODULE ${A.module} · ${A.step}` : `${p.active_modules} modules active · ${p.eclipse ? 'eclipse' : 'sunlit'}`, cap ? cap.text.slice(0, 90) : '');
+  }
+  function panelModule(f, fi, t) {
+    const m = f.modules[S.sel - 1]; if (!m) return; const pr = m.protocol || {}, st = moduleState(m), pay = m.payload || {};
+    set('md-title', 'Module ' + m.id); set('md-size', m.size === 'L' ? 'large bay' : 'medium bay');
+    set('md-state', nice(m.state || 'stowed').toUpperCase()); cls('md-state', 'chip ' + ({ good: 'good', warn: 'warn', crit: 'alert', move: 'info', idle: '' }[st]));
+    set('md-sub', `${pay.kind || nice(m.exp)} · ${m.customer || 'unassigned'}`);
+    set('md-t', m.t.toFixed(2) + ' °C'); set('md-sp', pr.setpoint ? pr.setpoint + ' °C' : '—'); set('md-p', m.p + ' kPa'); set('md-seal', m.sealed ? 'SEALED' : 'BREACH');
+    set('md-h', Math.round(m.health * 100) + ' %'); set('md-heat', m.heater_w + ' W'); set('md-proto', pr.mode === 'cycle' ? 'cycling' : 'constant');
+    set('md-cyc', pr.mode === 'cycle' ? pr.cycles + (pr.crystal_um ? ' · ' + pr.crystal_um + ' µm' : '') : '—');
+    set('md-note', [pay.vials ? pay.vials + ' vials' : '', pay.mass_kg ? pay.mass_kg + ' kg' : '', pay.containment, pay.interface, pr.groups].filter(Boolean).join(' · '));
+    if (S.tab.left !== 'module') return;
+    const key = S.mode + ':' + S.sel + ':' + Math.floor(fi / 3); if (key === sparkKey) return; sparkKey = key;
+    const svg = $('md-spark'), [W, H] = size(svg), F = D().frames, i0 = Math.max(0, fi - 720), pts = [];
+    for (let i = i0; i <= fi; i += 6) pts.push(F[i].modules[S.sel - 1].t);
+    pts.push(m.t);
+    let lo = Math.min(...pts), hi = Math.max(...pts); if (hi - lo < 1) { const c = (hi + lo) / 2; lo = c - .5; hi = c + .5; }
+    const px = (k) => 4 + k / Math.max(pts.length - 1, 1) * (W - 44), py = (v) => H - 5 - (v - lo) / (hi - lo) * (H - 10);
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.innerHTML = `<polyline fill="none" stroke="#3987e5" stroke-width="1.6" stroke-linejoin="round" points="${pts.map((v, k) => px(k).toFixed(1) + ',' + py(v).toFixed(1)).join(' ')}"/>` +
+      `<circle cx="${px(pts.length - 1)}" cy="${py(m.t)}" r="3" fill="#3987e5"/><text x="${W - 2}" y="${py(hi) + 4}" text-anchor="end" class="tick">${hi.toFixed(1)}°</text><text x="${W - 2}" y="${py(lo) + 2}" text-anchor="end" class="tick">${lo.toFixed(1)}°</text>`;
   }
 
-  // ----- sentinel panel -----
-  function renderSentinel(t) {
-    const d = lastEvent(t, e => e.data && e.data.final);
-    const F = D().frames, fi = lastBefore(F, t); const g = fi >= 0 ? F[fi].gate : null;
-    if (g) { $('g-exec').textContent = g.executed; $('g-block').textContent = g.blocked; $('g-held').textContent = g.held + g.escalated; $('g-ledger').textContent = g.ledger_entries + ' entries'; }
+  // ---------- Sentinel ----------
+  function panelSentinel(t) {
+    const M = D(), d = lastEvent(t, (e) => e.data && e.data.final), fi = lastBefore(M.frames, t), g = fi >= 0 ? M.frames[fi].gate : null;
+    set('g-exec', g ? g.executed : 0); set('g-block', g ? g.blocked : 0); set('g-held', g ? g.held + g.escalated : 0); set('g-ledger', (g ? g.ledger_entries : 0) + ' entries');
     const pa = $('path-a'), pb = $('path-b'), dec = $('decision');
-    if (!d) { pa.className = 'gate-path'; pb.className = 'gate-path'; return; }
-    const x = d.data;
-    pa.className = 'gate-path ' + (x.A === 'PASS' ? 'pass' : 'block'); pa.lastElementChild.textContent = x.A;
-    pb.className = 'gate-path ' + ({ PASS: 'pass', VETO: 'block', HOLD: 'hold', ESCALATE: 'hold', SKIPPED: 'skip' }[x.B] || 'skip'); pb.lastElementChild.textContent = x.B === 'SKIPPED' ? (S.mode === 'baseline' ? 'NOT PRESENT' : 'NOT REACHED') : x.B;
-    dec.className = 'decision ' + x.final; dec.children[0].textContent = x.final;
-    dec.children[1].textContent = `${x.issuer} → ${x.verb} ${x.target} ${x.params || ''}  [via ${x.route}]`;
-    dec.children[2].textContent = x.reasons.slice(-3).join(' · ');
-    const c = lastEvent(t, e => e.code === 'CONTAIN');
-    const box = $('contain'); box.hidden = !c || t - c.t > 900;
-    if (c) { const el = Math.min(t - c.t, c.data.elapsed); $('contain-t').textContent = el.toFixed(1);
-      const steps = box.querySelectorAll('.contain-steps span'); const marks = [0, c.data.isolate, c.data.revoke, c.data.elapsed];
-      steps.forEach((s, k) => s.className = el >= marks[k] ? 'done' : ''); $('contain-node').textContent = `${c.data.node} · ${c.data.reason}`; }
-    const l = lastEvent(t, e => e.code === 'LEDGER' || e.code === 'LEDGER_TAMPER');
-    const ls = $('g-ledger-state'); if (l) { ls.textContent = l.data.ok ? 'CHAIN OK' : 'TAMPER DETECTED @' + l.data.bad; ls.className = 'pill ' + (l.data.ok ? 'ok' : 'bad'); }
+    if (!d) { cls(pa, 'gate-path'); cls(pb, 'gate-path'); set(pa.children[1], '—'); set(pb.children[1], S.mode === 'baseline' ? 'NOT PRESENT' : '—'); cls(dec, 'decision');
+      set(dec.querySelector('.dec-final'), 'NO COMMANDS YET'); set('dec-t', ''); set(dec.children[1], ''); set(dec.children[2], 'Every uplink command must pass both paths before it executes.'); }
+    else { const x = d.data;
+      cls(pa, 'gate-path ' + (x.A === 'PASS' ? 'pass' : 'block')); set(pa.children[1], x.A);
+      cls(pb, 'gate-path ' + ({ PASS: 'pass', VETO: 'block', HOLD: 'hold', ESCALATE: 'hold' }[x.B] || 'skip')); set(pb.children[1], x.B === 'SKIPPED' ? (S.mode === 'baseline' ? 'NOT PRESENT' : 'NOT REACHED') : x.B);
+      cls(dec, 'decision ' + x.final); set(dec.querySelector('.dec-final'), x.final); set('dec-t', met(d.t));
+      set(dec.children[1], `${x.issuer} → ${x.verb} ${x.target} ${x.params || ''} · via ${x.route}`); set(dec.children[2], x.reasons.slice(-3).join(' · ')); }
+    const c = lastEvent(t, (e) => e.code === 'CONTAIN'), box = $('contain'); box.hidden = !c || t - c.t > 900;
+    if (c && !box.hidden) { const el = Math.min(t - c.t, c.data.elapsed); set('contain-t', el.toFixed(1));
+      const marks = [0, c.data.isolate, c.data.revoke, c.data.elapsed]; $$('.contain-steps span', box).forEach((s, k) => cls(s, el >= marks[k] ? 'done' : '')); set('contain-node', `${c.data.node} · ${c.data.reason}`); }
+    const l = lastEvent(t, (e) => e.code === 'LEDGER' || e.code === 'LEDGER_TAMPER'), ls = $('g-ledger-state');
+    set(ls, l ? (l.data.ok ? 'CHAIN VERIFIED' : 'TAMPER AT ENTRY ' + l.data.bad) : 'HASH-CHAINED'); cls(ls, 'chip ' + (l ? (l.data.ok ? 'good' : 'alert') : ''));
   }
 
-  // ----- feed -----
-  function renderFeed(t) {
+  // ---------- event feed ----------
+  function feedRow(e) {
+    const d = e.data && e.data.final ? e.data : null, chip = d ? d.final : ({ alert: 'alert', warn: 'warn', good: 'good' }[e.level] || '');
+    const body = d ? `<span class="fcmd">${esc(d.issuer)} → ${esc(d.verb)} ${esc(d.target)} ${esc(d.params || '')}</span><span class="fwhy">A ${d.A} · B ${d.B === 'SKIPPED' ? '—' : d.B} · via ${esc(d.route)} · ${esc(d.reasons[d.reasons.length - 1] || '')}</span>` : esc(e.text);
+    return `<li data-cat="${CAT[e.seg] || 'lab'}"><span class="ft">${(e.t < 0 ? '−' : '') + hms(Math.abs(e.t))}</span><span class="fb"><span class="chip ${chip}">${esc(d ? d.final : nice(e.code))}</span>${body}</span></li>`;
+  }
+  function panelFeed(t) {
     const ev = D().events, feed = $('feed');
-    if (S.feedIdx > 0 && ev[S.feedIdx - 1].t > t) { feed.innerHTML = ''; S.feedIdx = 0; }     // scrubbed backwards
-    while (S.feedIdx < ev.length && ev[S.feedIdx].t <= t) {
-      const e = ev[S.feedIdx++]; if (e.code === 'AOS' || e.code === 'LOS') continue;
-      const li = document.createElement('li'); li.className = e.level;
-      li.innerHTML = `<span class="ft">${fmtT(e.t)}</span><span><span class="fc">${e.code}</span>${e.text}</span>`;
-      feed.prepend(li); if (feed.children.length > 60) feed.lastChild.remove();
+    if (S.feedIdx > 0 && ev[S.feedIdx - 1].t > t) { feed.innerHTML = ''; S.feedIdx = 0; }       // scrubbed backwards
+    let html = '';
+    while (S.feedIdx < ev.length && ev[S.feedIdx].t <= t) { const e = ev[S.feedIdx++]; if (e.code === 'AOS' || e.code === 'LOS' || e.t < T0 - 600) continue; html = feedRow(e) + html; }
+    if (html) { feed.insertAdjacentHTML('afterbegin', html); while (feed.children.length > 90) feed.lastChild.remove(); }
+  }
+
+  // ---------- scorecard, stepper, clock, HUD ----------
+  function panelScore(t, f) {
+    const M = D(), X = M.x, sc = M.scorecard, tiles = [];
+    if (!X.atk || t < X.tIntr) tiles.push(['ATTACK CMDS EXECUTED', '—', '']);
+    else { const done = t >= X.tAtk1; let n = 0, ex = 0; for (const e of X.atkCmds) { if (e.t > t) break; n++; if (e.data.final === 'EXECUTE') ex++; }
+      n = done ? sc.attack_commands : Math.min(n, sc.attack_commands); ex = done ? sc.attack_executed : Math.min(ex, sc.attack_executed); tiles.push(['ATTACK CMDS EXECUTED', `${ex} / ${n}`, ex === 0 ? 'good' : 'bad']); }
+    const fr = lastEvent(t, (e) => e.code === 'REPLAY' || e.code === 'FORGED');
+    tiles.push(['FORGED / REPLAY ACCEPTED', fr ? sc.forged_or_replayed_accepted : '—', fr ? (sc.forged_or_replayed_accepted === 0 ? 'good' : 'bad') : '']);
+    const c = lastEvent(t, (e) => e.code === 'CONTAIN' || e.code === 'NO_CONTAINMENT');
+    tiles.push(['CONTAINMENT', !c ? '—' : c.code === 'CONTAIN' ? sc.containment_s + ' s' : 'NONE', !c ? '' : c.code === 'CONTAIN' ? 'good' : 'bad']);
+    const lost = f ? f.modules.filter((m) => m.health < 0.5).length : 0;
+    tiles.push(['CULTURES LOST', f ? lost : '—', f ? (lost === 0 ? 'good' : 'bad') : '']);
+    const html = tiles.map(([l, v, k]) => `<div class="sc ${k}"><span>${l}</span><b>${v}</b></div>`).join('');
+    if ($('scorecard').dataset.h !== html) { $('scorecard').innerHTML = html; $('scorecard').dataset.h = html; }
+  }
+  function phaseAt(t) { const X = D().x; return t < X.tMeco ? 0 : t < X.tTouch ? 1 : t < X.opsStart ? 2 : t < X.tReturn ? 3 : t < X.tEom ? 4 : 5; }
+  function panelClock(t) {
+    set('met-sign', t < 0 ? 'T−' : 'T+'); set('met', clock(t));
+    const c = phaseAt(t); S.phase = PHASES[c];
+    $$('#segments li').forEach((li, i) => cls(li, i < c ? 'done' : i === c ? 'now' : ''));
+    if (c === 5) { set('mode-pill', 'MISSION COMPLETE'); cls('mode-pill', 'chip good'); }
+    set('rate', '×' + (S.rate >= 10 ? Math.round(S.rate) : S.rate.toFixed(1)));
+  }
+  function hud(t, a, b, c) { if (!document.body.classList.contains('cinema')) return;
+    set('hud-sign', t < 0 ? 'T−' : 'T+'); set('hud-met', clock(t)); set('hud-seg', PHASE_LABEL[PHASES[phaseAt(t)]]); set('hud-a', a); set('hud-b', b); set('hud-c2', c); }
+
+  // ---------- tabs ----------
+  function setTab(group, name, auto) {
+    if (!auto) { S.follow[group] = false; $(group + '-auto').classList.remove('on'); }
+    if (S.tab[group] === name && auto) return;
+    S.tab[group] = name; const bar = $(group + '-tabs');
+    $$('button[data-tab]', bar).forEach((b) => b.classList.toggle('on', b.dataset.tab === name));
+    $$('.tabpane', bar.parentElement).forEach((p) => { p.hidden = p.dataset.pane !== name; });
+    S.dirty = true; sparkKey = '';
+  }
+  for (const group of ['left', 'drawer']) {
+    $$('button[data-tab]', $(group + '-tabs')).forEach((b) => { b.onclick = () => setTab(group, b.dataset.tab, false); });
+    $(group + '-auto').onclick = () => { S.follow[group] = !S.follow[group]; $(group + '-auto').classList.toggle('on', S.follow[group]); S.dirty = true; };
+  }
+  $('modgrid').onclick = (e) => { const el = e.target.closest('.mod'); if (!el) return; S.sel = +el.dataset.id; setTab('left', 'module', false); };
+  $$('#feed-filters button').forEach((b) => { b.onclick = () => { $$('#feed-filters button').forEach((x) => x.classList.toggle('on', x === b)); $('feed').dataset.filter = b.dataset.f; }; });
+
+  // ---------- frame loop ----------
+  function frame(dt, now) {
+    const t = S.t, M = D(), X = M.x, launch = t < X.opsStart, panels = S.dirty || now - S.lastPanels > 110;
+    let f = null;
+    if (launch) {
+      const L = launchState(t);
+      if (panels) { $('panel-launch').hidden = false; $('panel-platform').hidden = true; if (S.follow.drawer) setTab('drawer', 'flight', true);
+        if ($('drawer-note').dataset.k !== 'legend') { $('drawer-note').dataset.k = 'legend'; $('drawer-note').innerHTML = '<i class="sw" style="background:var(--s1)"></i>stack / upper stage <i class="sw" style="background:var(--s2);margin-left:10px"></i>booster <span style="margin-left:10px">dashed = planned</span>'; } }
+      scene.setPhase('launch');
+      // 20 s after touchdown the shot leaves the barge and follows the upper stage to orbit
+      scene.updateLaunch(t > X.tTouch + 20 ? { upper: L.upper, sepAtt: L.sepAtt, sepAge: L.sepAge } : L, !!L.upper, dt);
+      if (panels) panelLaunch(t, L);
+    } else {
+      const o = R.opsFrame(M, t); f = o.f; opsStates = o.states;
+      const panelsNow = panels || S.dirty;
+      if (panelsNow) { $('panel-launch').hidden = true; $('panel-platform').hidden = false; }
+      scene.setPhase('ops'); scene.setSolar(!!lastEvent(t, (e) => e.code === 'SOLAR'));
+      scene.updateOps(o.view, opsStates, f.gate.isolated || [], dt, { capsuleState: R.capsuleState(M, t) });
+      if (panelsNow) panelOps(t, f, o.i);
     }
+    $('track-fill').style.width = $('track-head').style.left = (t2x(t) * 100).toFixed(3) + '%';
+    if (panels || S.dirty) { panelClock(t); panelSentinel(t); panelFeed(t); panelScore(t, f); S.lastPanels = now; S.dirty = false; }
   }
-
-  // ---------- clock ----------
   function tick(now) {
-    const dt = (now - S.lastWall) / 1000; S.lastWall = now;
-    if (S.playing) { S.t += dt * S.speed; if (S.t > tEnd()) { S.t = tEnd(); S.playing = false; $('btn-play').textContent = '▶'; } }
-    render(); requestAnimationFrame(tick);
+    const dt = Math.min((now - S.lastWall) / 1000, .25); S.lastWall = now;
+    try {
+      const target = S.speed === 'auto' ? autoRate(S.t) : S.speed;
+      S.rate = S.speed === 'auto' ? S.rate + (target - S.rate) * Math.min(1, dt * 5) : target;
+      if (S.playing) { S.t += dt * S.rate; if (S.t >= D().x.tEnd) { S.t = D().x.tEnd; play(false); } }
+      frame(dt, now);
+    } catch (e) { if (!S.error) { S.error = e; console.error(e); } }
+    requestAnimationFrame(tick);
   }
-  function seek(t) { S.t = Math.max(0, Math.min(t, tEnd())); $('feed').innerHTML = ''; $('feed').scrollTop = 0; S.feedIdx = 0; lastFrameT = -1; }
-  async function setMode(m) { if (!data[m]) { data[m] = await load(m); indexLaunch(); } S.mode = m; document.body.dataset.mode = m; $('btn-sentinel').classList.toggle('on', m === 'sentinel'); $('btn-baseline').classList.toggle('on', m === 'baseline'); buildTimeline(); seek(S.t); }
 
-  $('btn-play').onclick = () => { S.playing = !S.playing; $('btn-play').textContent = S.playing ? '❚❚' : '▶'; };
-  $('speed').onchange = (e) => S.speed = +e.target.value;
-  const jump = (dir) => { const ev = D().events.filter(e => e.level !== 'info' || e.seg !== 'COMMS'); const i = lastBefore(ev, S.t + (dir > 0 ? 0.01 : -0.01)); const n = ev[i + dir]; if (n) seek(n.t - 0.5); };
+  // ---------- transport ----------
+  function play(on) { S.playing = on; set('btn-play', on ? '❚❚' : '▶'); $('btn-play').setAttribute('aria-label', on ? 'Pause' : 'Play'); }
+  function seek(t) { S.t = clamp(t, T0, D().x.tEnd); $('feed').innerHTML = ''; S.feedIdx = 0; sparkKey = ''; S.dirty = true; if (S.speed === 'auto') S.rate = autoRate(S.t); }
+  function jump(dir) { const m = D().x.marks, i = lastBefore(m, S.t + (dir > 0 ? 0.6 : -0.6)), n = m[i + (dir > 0 ? 1 : 0)]; if (dir > 0 ? n : i >= 0) seek((dir > 0 ? n : m[i]).t - 0.5); else if (dir < 0) seek(T0); }
+  async function setMode(m) {
+    if (!data[m]) { const b = $('btn-' + m), label = b.textContent; b.textContent = 'LOADING…'; try { data[m] = await load(m); } catch (e) { b.textContent = label; return; } b.textContent = label; }
+    S.mode = m; document.body.dataset.mode = m; $('btn-sentinel').classList.toggle('on', m === 'sentinel'); $('btn-baseline').classList.toggle('on', m === 'baseline');
+    buildForMode(); seek(S.t);
+  }
+  $('btn-play').onclick = () => { if (!S.playing && S.t >= D().x.tEnd - 1) seek(T0); play(!S.playing); };
   $('btn-next').onclick = () => jump(1); $('btn-prev').onclick = () => jump(-1);
-  $('btn-broadcast').onclick = () => document.body.classList.toggle('broadcast');
-  const cinema = (on) => { document.body.classList.toggle('cinema', on); $('hud').hidden = !on; dispatchEvent(new Event('resize'));
-    try { if (on && !document.fullscreenElement) document.documentElement.requestFullscreen(); else if (!on && document.fullscreenElement) document.exitFullscreen(); } catch (e) {} };
+  $$('#speed button').forEach((b) => { b.onclick = () => { S.speed = b.dataset.speed === 'auto' ? 'auto' : +b.dataset.speed; $$('#speed button').forEach((x) => x.classList.toggle('on', x === b)); }; });
+  $('btn-sentinel').onclick = () => setMode('sentinel'); $('btn-baseline').onclick = () => setMode('baseline');
+  $('btn-broadcast').onclick = () => { document.body.classList.toggle('broadcast'); $('btn-broadcast').classList.toggle('on'); S.dirty = true; };
+  const cinema = (on) => { document.body.classList.toggle('cinema', on); $('hud').hidden = !on; S.dirty = true;
+    try { if (on && !document.fullscreenElement && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {}); else if (!on && document.fullscreenElement) document.exitFullscreen(); } catch (e) { /* fullscreen API not available: the layout still fills the window */ } };
   $('btn-cinema').onclick = () => cinema(!document.body.classList.contains('cinema'));
   document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && document.body.classList.contains('cinema')) cinema(false); });
-  $('btn-sentinel').onclick = () => setMode('sentinel'); $('btn-baseline').onclick = () => setMode('baseline');
-  $('track').onclick = (e) => { const r = e.currentTarget.getBoundingClientRect(); seek((e.clientX - r.left) / r.width * tEnd()); };
-  addEventListener('keydown', (e) => { if (e.target.tagName === 'SELECT') return;
-    if (e.code === 'Space') { e.preventDefault(); $('btn-play').click(); } else if (e.code === 'ArrowRight') jump(1); else if (e.code === 'ArrowLeft') jump(-1);
+
+  // timeline: click or drag to scrub, hover for the nearest event
+  const track = $('track'), tip = $('track-tip');
+  const trackT = (e) => { const r = track.getBoundingClientRect(); return [x2t(clamp((e.clientX - r.left) / r.width, 0, 1)), e.clientX - r.left, r.width]; };
+  let dragging = false;
+  track.addEventListener('pointerdown', (e) => { dragging = true; track.setPointerCapture(e.pointerId); seek(trackT(e)[0]); });
+  track.addEventListener('pointermove', (e) => {
+    const [t, x, w] = trackT(e); if (dragging) seek(t);
+    let best = null, bd = 9; for (const m of D().x.marks) { const d = Math.abs(t2x(m.t) * w - x); if (d < bd) { bd = d; best = m; } }
+    tip.hidden = false; tip.innerHTML = best ? `<b>${met(best.t)}</b>${esc(nice(best.code))} · ${esc(best.text.slice(0, 70))}` : `<b>${met(t)}</b>`;
+    const tw = tip.offsetWidth; tip.style.left = clamp(x, tw / 2, w - tw / 2) + 'px';
+  });
+  const endDrag = () => { dragging = false; }; track.addEventListener('pointerup', endDrag); track.addEventListener('pointercancel', endDrag);
+  track.addEventListener('pointerleave', () => { tip.hidden = true; });
+  addEventListener('keydown', (e) => { if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.code === 'Space') { e.preventDefault(); $('btn-play').click(); } else if (e.code === 'ArrowRight') { e.preventDefault(); jump(1); } else if (e.code === 'ArrowLeft') { e.preventDefault(); jump(-1); }
     else if (e.key === 'b' || e.key === 'B') $('btn-broadcast').click(); else if (e.key === 'f' || e.key === 'F') $('btn-cinema').click();
     else if (e.key === 'Escape' && document.body.classList.contains('cinema')) cinema(false); });
+  if (window.ResizeObserver) new ResizeObserver(() => { scene._resize(); chartCache = {}; sparkKey = ''; S.dirty = true; }).observe($('center'));
+  addEventListener('resize', () => { chartCache = {}; sparkKey = ''; S.dirty = true; });
 
-  indexLaunch(); buildTimeline(); seek(0); requestAnimationFrame(tick);
-  window.seekTo = seek; window.replayState = S;   // debug / recording hooks
+  buildForMode(); seek(T0);
+  document.body.classList.remove('loading');
+  requestAnimationFrame((now) => { S.lastWall = now; tick(now); });
+  window.__console = { seek, play, setTab, setMode, jump, state: S, data };
+  window.seekTo = seek; window.replayState = S;       // kept for the recording scripts
 })();

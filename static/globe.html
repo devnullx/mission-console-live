@@ -9,19 +9,19 @@
 <script src="https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/Cesium.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 <style>
-  html, body { margin: 0; height: 100%; background: #0d0d0d; font-family: Inter, system-ui, sans-serif; color: #fff; }
+  html, body { margin: 0; height: 100%; background: #0b0c0d; font-family: Inter, system-ui, sans-serif; color: #fff; }
   #cesiumContainer { position: absolute; inset: 0; }
-  #bar { position: absolute; left: 16px; top: 14px; z-index: 5; display: flex; gap: 10px; align-items: center; background: rgba(13,13,13,.7); border: 1px solid #2e2e2c; border-radius: 4px; padding: 8px 12px; font-size: 12px; }
+  #bar { position: absolute; left: 16px; top: 14px; z-index: 5; display: flex; gap: 10px; align-items: center; background: rgba(13,13,13,.7); border: 1px solid #2b2e31; border-radius: 5px; padding: 8px 12px; font-size: 12px; }
   #bar b { font-family: "IBM Plex Mono", monospace; letter-spacing: .1em; }
   #bar a { color: #3987e5; text-decoration: none; font-weight: 600; }
-  #note { position: absolute; right: 16px; top: 14px; z-index: 5; font-size: 11px; color: #c3c2b7; background: rgba(13,13,13,.7); border: 1px solid #2e2e2c; border-radius: 4px; padding: 8px 12px; max-width: 420px; line-height: 1.4; }
+  #note { position: absolute; right: 16px; top: 14px; z-index: 5; font-size: 11px; color: #bcc0c6; background: rgba(11,12,13,.72); border: 1px solid #2b2e31; border-radius: 4px; padding: 8px 12px; max-width: 420px; line-height: 1.4; }
   .cesium-viewer-bottom { display: none; }
 </style>
 </head>
 <body>
 <div id="cesiumContainer"></div>
-<div id="bar"><b>SPACE PHILIC · LELP-1 · GLOBE</b><span>true-scale WGS-84 Earth (CesiumJS) · twin trajectories as CZML</span><a href="index.html">MISSION CONSOLE →</a></div>
-<div id="note">Launch from APJ Abdul Kalam Island due east over the Bay of Bengal; booster to the barge, upper stage + LELP-1 to the mission orbit, relays, ground stations and the return capsule. Imagery: Natural Earth II (offline, no token). Play with the clock at the bottom.</div>
+<div id="bar"><b>SPACE PHILIC · LELP-1 · GLOBE</b><span>true-scale WGS-84 Earth (CesiumJS) · twin trajectories as CZML</span><a href="/">MISSION CONSOLE</a></div>
+<div id="note">Launch from Abdul Kalam Island, Odisha, on a 192° azimuth (south-south-west over the Bay of Bengal) to a 550 km sun-synchronous orbit: booster to the barge, upper stage and LELP-1 to orbit, relays, ground stations and the return capsule. True-scale WGS-84 globe, Natural Earth II imagery (offline, no token). Use the clock at the bottom to play.</div>
 <script>
 (async () => {
   const viewer = new Cesium.Viewer('cesiumContainer', {
@@ -36,7 +36,7 @@
   // follow buttons: free view by default; the bar offers tracking of each vehicle
   const bar = document.getElementById('bar');
   for (const [label, id] of [['FREE', null], ['STACK', 'Stack'], ['BOOSTER', 'Booster'], ['LELP-1', 'Upper stage + LELP-1'], ['CAPSULE', 'Return capsule']]) {
-    const b = document.createElement('button'); b.textContent = label; b.style.cssText = 'background:#232322;color:#fff;border:1px solid #2e2e2c;border-radius:3px;padding:4px 8px;font:600 10px Inter,sans-serif;cursor:pointer';
+    const b = document.createElement('button'); b.textContent = label; b.style.cssText = 'background:#1d1f21;color:#f4f5f6;border:1px solid #2b2e31;border-radius:4px;padding:5px 9px;font:600 10px Inter,sans-serif;letter-spacing:.08em;cursor:pointer';
     b.onclick = () => { viewer.trackedEntity = id ? ds.entities.getById(id) : undefined; }; bar.appendChild(b);
   }
 })();

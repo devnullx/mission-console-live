@@ -1,8 +1,10 @@
 /* 3-D scene for the mission console (three.js r128, no post-processing).
    Two sub-scenes: LAUNCH (pad -> ascent -> separation -> booster barge landing) and OPS (LELP over a
    textured Earth: modules, arm reaching the module in transfer, solar wings, relays, return capsule).
-   API used by app.js: new Scene3D(canvas); setPhase('launch'|'ops'); updateLaunch(latest, hasSep);
-   updateOps(frame, states, isolatedNodes, dt, ctx); setSolar(bool).
+   API used by app.js: new Scene3D(canvas); setPhase('launch'|'ops'); updateLaunch(latest, hasSep, dt);
+   updateOps(frame, states, isolatedNodes, dt, ctx); setSolar(bool); setLandingZone(km).
+   `latest` = { stack | upper, booster } telemetry samples; each may carry `att` (rad from the local vertical towards
+   downrange) and the object may carry `sepAtt` (stack attitude at separation) and `sepAge` (s since MECO).
    Swap meshes for CAD glTF later; keep the node names (rocket.*, lelp.modules[i], lelp.arm, capsule). */
 (function () {
   const TEX = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/';   // GitHub mirror, CORS ok
@@ -25,6 +27,13 @@
       g.lineWidth = 1 + Math.random() * 2; g.beginPath(); const x = Math.random() * 256, y = Math.random() * 256; g.moveTo(x, y); g.lineTo(x + (Math.random() - .5) * 40, y + (Math.random() - .5) * 40); g.stroke(); }
     const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
   }
+  function latticeTexture() { // open lattice of a grid fin (alpha-tested)
+    const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
+    g.clearRect(0, 0, 128, 128); g.strokeStyle = '#c9ccd1'; g.lineWidth = 7;
+    g.strokeRect(4, 4, 120, 120);
+    g.lineWidth = 4; for (let k = -128; k <= 128; k += 26) { g.beginPath(); g.moveTo(k, 0); g.lineTo(k + 128, 128); g.stroke(); g.beginPath(); g.moveTo(k + 128, 0); g.lineTo(k, 128); g.stroke(); }
+    const t = new THREE.CanvasTexture(c); t.anisotropy = 4; return t;
+  }
   function stars(n, r) {
     const g = new THREE.BufferGeometry(), p = new Float32Array(n * 3);
     for (let i = 0; i < n; i++) { const u = Math.random() * 2 - 1, th = Math.random() * Math.PI * 2, s = Math.sqrt(1 - u * u); p.set([r * s * Math.cos(th), r * u, r * s * Math.sin(th)], i * 3); }
@@ -33,7 +42,7 @@
   }
   function flame(r, len, color) {
     const grp = new THREE.Group();
-    const outer = new THREE.Mesh(new THREE.ConeGeometry(r, len, 20, 1, true), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: .55, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending }));
+    const outer = new THREE.Mesh(new THREE.ConeGeometry(r, len, 20, 1, true), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: .62, side: THREE.DoubleSide, depthWrite: false }));   // normal blending: stays orange against a daylight sky
     const core = new THREE.Mesh(new THREE.ConeGeometry(r * .5, len * .7, 16, 1, true), new THREE.MeshBasicMaterial({ color: C.flameCore, transparent: true, opacity: .9, depthWrite: false, blending: THREE.AdditiveBlending }));
     [outer, core].forEach(m => { m.rotation.x = Math.PI; m.position.y = -len / 2 * (m === core ? .7 : 1); grp.add(m); });
     grp.userData = { outer, core, len };
@@ -56,7 +65,7 @@
       this.camPos = V(0, 30, 120); this.camTarget = V(0, 20, 0);
       this.sun = new THREE.DirectionalLight(0xfff4e0, 2.4); this.sun.position.set(30000, 22000, 18000); this.scene.add(this.sun);
       this.scene.add(new THREE.HemisphereLight(0x9fb9ff, 0x1a1410, 0.7));
-      this.scene.add(stars(2600, 6.0e5));
+      this.stars = stars(2600, 6.0e5); this.scene.add(this.stars);
       this.loader = new THREE.TextureLoader(); this.loader.setCrossOrigin('anonymous');
       this.t = 0; this.phase = null;
       this._buildLaunch(); this._buildOps();
@@ -108,9 +117,13 @@
       this.pad.scale.setScalar(VS / 3.0);
       // barge (40x)
       this.barge = new THREE.Group(); g.add(this.barge);
-      const deck = new THREE.Mesh(new THREE.BoxGeometry(26, 1.2, 14), this._std(0x2c3340, { roughness: .8 })); deck.position.y = .6; this.barge.add(deck);
-      const mark = new THREE.Mesh(new THREE.RingGeometry(3.5, 4.2, 48), new THREE.MeshBasicMaterial({ color: 0xffd34d, side: THREE.DoubleSide })); mark.rotation.x = -Math.PI / 2; mark.position.y = 1.25; this.barge.add(mark);
-      this.barge.scale.setScalar(VS / 3.0);
+      // droneship: 30 x 18 m deck (3 units per metre), sized like a Falcon droneship for RUPAK's 8.25 m leg span
+      const deck = new THREE.Mesh(new THREE.BoxGeometry(90, 4, 54), this._std(0x2c3340, { roughness: .8 })); deck.position.y = 2; this.barge.add(deck);
+      const mark = new THREE.Mesh(new THREE.RingGeometry(13.4, 15, 64), new THREE.MeshBasicMaterial({ color: 0xffd34d, side: THREE.DoubleSide })); mark.rotation.x = -Math.PI / 2; mark.position.y = 4.06; this.barge.add(mark);
+      const dot = new THREE.Mesh(new THREE.CircleGeometry(1.6, 24), new THREE.MeshBasicMaterial({ color: 0xffd34d, side: THREE.DoubleSide })); dot.rotation.x = -Math.PI / 2; dot.position.y = 4.06; this.barge.add(dot);
+      [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(([sx, sz]) => { const pod = new THREE.Mesh(new THREE.BoxGeometry(7, 5, 7), this._std(0x4a5260, { roughness: .7 })); pod.position.set(sx * 40, 6.5, sz * 22); this.barge.add(pod); });
+      const sea2 = new THREE.Mesh(new THREE.CircleGeometry(90 / (VS / 3.0), 64), this._std(0x173a55, { roughness: .35, metalness: .15 })); sea2.rotation.x = -Math.PI / 2; sea2.position.y = .6; this.barge.add(sea2);   // 90 km of open water
+      this.barge.scale.setScalar(VS / 3.0); this.deckTop = 4.06;
       // vehicle (procedural fallback, replaced by the CAD); built at 3 units per metre, scaled to VS
       const skin = this._std(0xe6e6e0, { roughness: .45, metalness: .25 });
       this.booster = new THREE.Group(); g.add(this.booster);
@@ -163,30 +176,55 @@
         const bb = new THREE.Box3(); root.traverse(o => { if (o.isMesh) { o.geometry.computeBoundingBox(); bb.union(o.geometry.boundingBox); } });
         grp.userData.cadHeight = (bb.max.y - bb.min.y) * S;   // metres x S = group units (independent of the group's own scale)
       };
-      // booster: CAD body + 4 legs + 4 fins as separate nodes so they can deploy (scripts/cad_parts.py)
+      // booster: CAD body, 4 legs and their 4 support struts as separate nodes so they can deploy (scripts/cad_parts.py)
       loader.load('static/models/booster_body.glb?v=1', g => {
         attach(this.booster, g, this.booster.children.filter(c => c !== this.bFlame));
         this.legs.forEach(l => l.visible = false); this.fins.forEach(f => f.visible = false); this.engines.visible = false;
         this.bFlame.position.y = -0.5;
         this.cadBoosterH = this.booster.userData.cadHeight; this.stackH = this.cadBoosterH * this.vehScale;
+        this._buildGridFins(this.cadBoosterH);
       }, undefined, () => {});
       fetch('static/models/parts.json').then(r => r.json()).then(meta => {
-        this.cadLegs = []; this.cadFins = [];
-        const mount = (file, list, key, rotSign) => loader.load(file, g => {
-          g.scene.traverse(o => { if (o.isMesh) { if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); o.material = dark; o.material.side = THREE.DoubleSide; } });
-          meta[key].forEach(info => {
-            const node = g.scene.getObjectByName(info.name); if (!node) return;
-            const pivot = new THREE.Group(); const h = info.hinge; pivot.position.set(h[0] * S, h[1] * S, h[2] * S);
+        this.cadLegs = []; this.cadStruts = [];
+        const prep = (g) => g.scene.traverse(o => { if (o.isMesh) { if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); o.material = dark; o.material.side = THREE.DoubleSide; } });
+        const tangent = (deg) => { const a = THREE.MathUtils.degToRad(deg); return V(-Math.sin(a), 0, Math.cos(a)).normalize(); };
+        // legs: hinged 0.36 m above the exit plane, the foot swings out and down
+        loader.load('static/models/legs.glb?v=1', g => { prep(g);
+          meta.legs.forEach(info => { const node = g.scene.getObjectByName(info.name); if (!node) return;
+            const pivot = new THREE.Group(), h = info.hinge; pivot.position.set(h[0] * S, h[1] * S, h[2] * S);
             node.position.set(0, 0, 0); node.scale.setScalar(S); pivot.add(node); this.booster.add(pivot);
-            const ang = THREE.MathUtils.degToRad(info.angle_deg);
-            list.push({ pivot, axis: V(-Math.sin(ang), 0, Math.cos(ang)).normalize(), sign: rotSign });
-          });
+            this.cadLegs.push({ pivot, axis: tangent(info.angle_deg) }); });
         }, undefined, () => {});
-        mount('static/models/legs.glb?v=1', this.cadLegs, 'legs', -1);   // legs: hinge at the base, swing the foot out and down
-        mount('static/models/fins.glb?v=1', this.cadFins, 'fins', +1);   // fins: hinge at the top, blade swings outward
+        // Support struts: the thin 2 m rods of the CAD ("fin" nodes of parts.json, same azimuth as each leg) are the
+        // telescoping braces of the legs, not aerodynamic fins. The lower end is pinned to the body, the upper end to the
+        // leg 3.15 m from its hinge; the strut swings out and extends as the leg comes down (Falcon-style).
+        loader.load('static/models/fins.glb?v=1', g => { prep(g);
+          meta.fins.forEach((info, i) => { const node = g.scene.getObjectByName(info.name), leg = meta.legs[i]; if (!node || !leg) return;
+            const h = info.hinge, len = info.length, pivot = new THREE.Group();
+            pivot.position.set(h[0] * S, (h[1] - len) * S, h[2] * S);                     // body anchor = lower end of the rod
+            node.position.set(0, len * S, 0); node.scale.setScalar(S); pivot.add(node); this.booster.add(pivot);
+            this.cadStruts.push({ pivot, axis: tangent(info.angle_deg), len, rB: info.radius, yB: h[1] - len, yH: leg.hinge[1], s: h[1] - leg.hinge[1] }); });
+        }, undefined, () => {});
       }).catch(() => {});
       this.legDeploy = 0; this.finDeploy = 0;
       loader.load('static/models/upper.glb?v=3', g => { attach(this.upper, g, this.upper.children.filter(c => c !== this.uFlame)); }, undefined, () => {});
+    }
+    _buildGridFins(hUnits) {
+      /* The CAD carries no aerodynamic surfaces; the RUPAK spec calls for grid fins with rotary encoders, so four
+         lattice panels sit on the interstage, 45 deg off the legs: folded flat against the body on ascent, rotated out
+         to horizontal for the descent (deployment fraction comes from the twin). Group units: 3 per metre. */
+      if (this.gridFins) return;
+      this.gridFins = [];
+      const U = 3.0, mat = new THREE.MeshStandardMaterial({ color: 0xb9bdc4, metalness: .75, roughness: .4, map: latticeTexture(), transparent: true, alphaTest: .45, side: THREE.DoubleSide });
+      const frame = new THREE.MeshStandardMaterial({ color: 0x3b3f46, metalness: .7, roughness: .5 });
+      for (let i = 0; i < 4; i++) {
+        const a = THREE.MathUtils.degToRad(-150.3 + 45 + i * 90);
+        const pivot = new THREE.Group(); pivot.position.set(Math.cos(a) * 0.64 * U, hUnits - 0.9 * U, Math.sin(a) * 0.64 * U); pivot.rotation.y = -a;   // local x = radial
+        const hinge = new THREE.Group(); pivot.add(hinge);
+        const panel = new THREE.Mesh(new THREE.BoxGeometry(0.07 * U, 1.0 * U, 0.8 * U), mat); panel.position.set(0.06 * U, -0.5 * U, 0); hinge.add(panel);
+        const yoke = new THREE.Mesh(new THREE.BoxGeometry(0.14 * U, 0.14 * U, 0.5 * U), frame); hinge.add(yoke);
+        this.booster.add(pivot); this.gridFins.push(hinge);
+      }
     }
     _emit(pos, dir, n, spread, speed) {
       const u = this.plume.userData, p = this.plume.geometry.attributes.position.array;
@@ -202,53 +240,68 @@
       f.visible = on; if (!on) return;
       const s = (0.75 + 0.35 * throttle) * (1 + Math.sin(flicker * 37) * .06); f.scale.set(1, s, 1);
     }
-    updateLaunch(s, hasSep) {
-      const dt = 1 / 60; this.t += dt;
+    updateLaunch(s, hasSep, dt = 1 / 60) {
+      this.t += dt;
       const hero = s.upper || s.stack, alt = hero ? hero.alt_km : 0;
-      const k = Math.min(alt / 90, 1); this.scene.background.setRGB(lerp(.36, .01, k), lerp(.56, .02, k), lerp(.85, .05, k));
-      const placeVeh = (obj, smp, tilt) => { const g = this._place(smp.downrange_km, Math.max(smp.alt_km, 0)); obj.position.copy(g.pos); this._orient(obj, g.up, g.fwd, tilt); return g; };
+      const seen = hasSep && s.booster ? s.booster.alt_km : alt;       // the sky belongs to the vehicle the camera is on
+      const k = Math.min(seen / 90, 1); this.scene.background.setRGB(lerp(.36, .01, k), lerp(.56, .02, k), lerp(.85, .05, k));
+      this.stars.material.opacity = .85 * Math.max(0, (k - .25) / .75);                 // no stars in a daylight sky
+      const axisOf = (g, tilt) => g.up.clone().multiplyScalar(Math.cos(tilt)).add(g.fwd.clone().multiplyScalar(Math.sin(tilt)));
+      const placeVeh = (obj, smp, tilt, lift = 0) => { const g = this._place(smp.downrange_km, Math.max(smp.alt_km, 0) + lift); obj.position.copy(g.pos); this._orient(obj, g.up, g.fwd, tilt); g.axis = axisOf(g, tilt); return g; };
+      const DECK = this.deckTop * this.vehScale;                         // barge deck above the waterline (km at 40x)
       let camFrom = null, camAt = null;
       if (!hasSep) {
         const body = s.stack || { downrange_km: 0, alt_km: 0, throttle: 0 };
-        const tilt = Math.atan2(body.downrange_km, body.alt_km + 6) * .95;
+        const tilt = body.att != null ? body.att : Math.atan2(body.downrange_km, body.alt_km + 6) * .95;
         const g = placeVeh(this.booster, body, tilt);
         // the upper stage rides on top of the booster
-        const topDir = g.up.clone().multiplyScalar(Math.cos(tilt)).add(g.fwd.clone().multiplyScalar(Math.sin(tilt)));
-        this.upper.position.copy(g.pos).add(topDir.multiplyScalar(this.stackH)); this.upper.quaternion.copy(this.booster.quaternion);
+        this.upper.position.copy(g.pos).add(g.axis.clone().multiplyScalar(this.stackH)); this.upper.quaternion.copy(this.booster.quaternion);
         const on = body.throttle > 0; this._flameOn(this.bFlame, on, body.throttle, this.t); this.uFlame.visible = false;
-        if (on) this._emit(g.pos.clone().sub(g.up.clone().multiplyScalar(.04)), g.up.clone().negate(), alt < 3 ? 10 : 3, alt < 3 ? .03 : .01, alt < 3 ? .06 : .03);
-        const d = Math.max(1.6, alt * .09);                         // chase distance grows with altitude so the curvature shows
+        if (on) this._emit(g.pos.clone().sub(g.axis.clone().multiplyScalar(.04)), g.axis.clone().negate(), alt < 3 ? 10 : 3, alt < 3 ? .03 : .01, alt < 3 ? .06 : .03);
+        const d = Math.max(2.3, alt * .09);                         // whole stack in frame on the pad; chase distance grows with altitude so the curvature shows
         camFrom = g.pos.clone().add(g.side.clone().multiplyScalar(d * .8)).add(g.fwd.clone().multiplyScalar(-d * .45)).add(g.up.clone().multiplyScalar(d * .3));
-        camAt = g.pos.clone().add(g.up.clone().multiplyScalar(this.stackH * .6));
-        this.sepT = null;
+        camAt = g.pos.clone().add(g.axis.clone().multiplyScalar(this.stackH * .8));
+        this.sepT = null; this._deploy(0, 0, .2);
       } else {
         if (this.sepT === null) this.sepT = this.t;
-        const sepAge = this.t - this.sepT;
-        let gb = null, gu = null;
-        if (s.upper) { gu = placeVeh(this.upper, s.upper, lerp(0.4, 1.45, Math.min(sepAge / 6, 1))); this._flameOn(this.uFlame, s.upper.throttle > 0, s.upper.throttle, this.t); }
+        const sepAge = s.sepAge != null ? s.sepAge : (this.t - this.sepT) * 8;
+        let gb = null, gu = null, uTilt = 1.5;
+        if (s.upper) { uTilt = s.upper.att != null ? s.upper.att : lerp(0.8, 1.5, Math.min(sepAge / 8, 1));
+          gu = placeVeh(this.upper, s.upper, uTilt); this._flameOn(this.uFlame, s.upper.throttle > 0, s.upper.throttle, this.t); }
         if (s.booster) {
-          const b = s.booster; const retro = ['boostback', 'entry_coast', 'entry_burn', 'descent', 'landing_burn'].includes(b.phase);
-          gb = placeVeh(this.booster, b, b.phase === 'coast' ? .5 : (b.phase === 'boostback' ? Math.PI * .85 : 0.0));
-          this._flameOn(this.bFlame, b.throttle > 0, b.throttle, this.t);
-          if (b.throttle > 0) this._emit(gb.pos.clone(), gb.up.clone().negate(), 2, .01, .03);
-          const finsOut = ['entry_coast', 'entry_burn', 'descent', 'landing_burn'].includes(b.phase);
-          const legsOut = (b.phase === 'landing_burn' && b.alt_km < 1.2) || b.landed;
-          this.finDeploy = lerp(this.finDeploy, (b.fins != null ? b.fins : (finsOut ? 1 : 0)), .08);
-          this.legDeploy = lerp(this.legDeploy, legsOut ? 1 : 0, .06);
-          if (this.cadLegs) {
-            const LEG_DEPLOY = THREE.MathUtils.degToRad(115), FIN_DEPLOY = THREE.MathUtils.degToRad(70);
-            this.cadLegs.forEach(l => l.pivot.quaternion.setFromAxisAngle(l.axis, l.sign * LEG_DEPLOY * this.legDeploy));
-            this.cadFins.forEach(f => f.pivot.quaternion.setFromAxisAngle(f.axis, f.sign * FIN_DEPLOY * this.finDeploy));
-            // with the legs down the nozzles sit 1.28 m above the deck (docs/REENTRY.md): lift the body accordingly
-            if (b.alt_km < 0.05) { this.booster.position.add(gb.up.clone().multiplyScalar(0.0512 * this.legDeploy)); }
-          } else if (!this.cadBoosterH) { this.fins.forEach(f => f.rotation.z = lerp(f.rotation.z, finsOut ? 0 : Math.PI / 2, .06)); this.legs.forEach(l => l.rotation.z = lerp(l.rotation.z, legsOut ? -0.55 : 0, .08)); }
-          if (b.landed) this.bFlame.visible = false;
+          const b = s.booster, down = !!b.landed || b.phase === 'landed' || (b.alt_km <= 0.001 && b.speed_ms < 8);
+          const landing = down || b.phase === 'landing_burn';
+          const tilt = b.att != null ? b.att : (b.phase === 'coast' ? .5 : b.phase === 'boostback' ? -Math.PI / 2 : 0);
+          gb = placeVeh(this.booster, b, tilt, landing ? DECK : 0);
+          const burning = b.throttle > 0 && !down;
+          this._flameOn(this.bFlame, burning, b.throttle, this.t);
+          if (burning) this._emit(gb.pos.clone(), gb.axis.clone().negate(), 2, .01, .03);
+          const legsOut = down ? 1 : b.phase === 'landing_burn' ? Math.min(Math.max((1.3 - b.alt_km) / 0.9, 0), 1) : 0;
+          this._deploy(legsOut, b.fins != null ? b.fins : 0, .12);
+          // with the legs down the nozzles sit 1.28 m above the deck (docs/REENTRY.md): lift the body accordingly
+          if (landing) this.booster.position.add(gb.up.clone().multiplyScalar(0.0512 * this.legDeploy));
+          if (gu) {
+            /* Vehicles are drawn 40x, positions are 1:1. Right after separation the true gap (metres) is far smaller than
+               the models, so the upper stage is kept on the booster's nose and pulled away along the stack axis with the
+               same 40x gain, blending into its true position once the gap exceeds the model size. */
+            const sepAxis = axisOf(gb, s.sepAtt != null ? s.sepAtt : .8);
+            const rel = gu.pos.clone().sub(gb.pos), d = rel.length();
+            const w = Math.exp(-d / .3), dir = sepAxis.clone().multiplyScalar(w).add(rel.clone().normalize().multiplyScalar(1 - w)).normalize();
+            this.upper.position.copy(gb.pos).add(sepAxis.clone().multiplyScalar(this.stackH * (1 - Math.exp(-0.4 / Math.max(d, 1e-4)))))
+              .add(dir.multiplyScalar(d + 3.9 * (1 - Math.exp(-d / .1))));
+          }
         }
         const lz = this._place(this.landingZoneKm || 0, 0); this.barge.position.copy(lz.pos); this._orient(this.barge, lz.up, lz.fwd, 0);
         const g = gb || gu, smp = s.booster || s.upper;
-        if (gb && s.booster.alt_km < 4 && ['landing_burn', 'descent'].includes(s.booster.phase)) {
-          camFrom = lz.pos.clone().add(lz.side.clone().multiplyScalar(.85)).add(lz.fwd.clone().multiplyScalar(.55)).add(lz.up.clone().multiplyScalar(.22));   // ~1 km from the deck: legs visible
-          camAt = gb.pos.clone().add(gb.up.clone().multiplyScalar(.25));
+        if (gb && s.booster.alt_km < 4 && ['landing_burn', 'descent', 'landed'].includes(s.booster.phase)) {
+          camFrom = lz.pos.clone().add(lz.side.clone().multiplyScalar(1.45)).add(lz.fwd.clone().multiplyScalar(.9)).add(lz.up.clone().multiplyScalar(.42));   // off the deck corner: legs and struts visible
+          camAt = gb.pos.clone().add(gb.up.clone().multiplyScalar(.3));
+        } else if (gb) {
+          // close on the separation, the flip and the divert burn, then ease out for the coast and the entry
+          const far = Math.max(2.5, Math.min(smp.alt_km * .06, 7)), e = Math.min(Math.max((sepAge - 14) / 10, 0), 1), d = lerp(3.4, far, e * e * (3 - 2 * e));
+          camFrom = g.pos.clone().add(g.side.clone().multiplyScalar(d * .8)).add(g.fwd.clone().multiplyScalar(-d * .5)).add(g.up.clone().multiplyScalar(d * .3));
+          camAt = g.pos.clone().add(gb.axis.clone().multiplyScalar(this.stackH * .5 * Math.exp(-sepAge / 20)));
+          if (gu) { const toUp = this.upper.position.clone().sub(camAt), du = toUp.length(); camAt.add(toUp.multiplyScalar(.35 * Math.exp(-du / 2.5))); }
         } else {
           const d = Math.max(2.0, smp.alt_km * .12);
           camFrom = g.pos.clone().add(g.side.clone().multiplyScalar(d * .8)).add(g.fwd.clone().multiplyScalar(-d * .5)).add(g.up.clone().multiplyScalar(d * .3));
@@ -259,6 +312,19 @@
       this._stepPlume(dt);
       this.camera.position.copy(this.camPos); this.camera.up.copy(this.camPos.clone().normalize()); this.camera.lookAt(this.camTarget);
       this.renderer.render(this.scene, this.camera);
+    }
+    _deploy(legs, fins, k) {
+      /* Landing gear and grid fins. Legs rotate 115 deg about their base hinge; each telescoping strut stays pinned to the
+         body at its lower end and to the leg at its upper end, so it swings out and extends (2.06 m -> 3.7 m). */
+      this.legDeploy = lerp(this.legDeploy || 0, legs, k); this.finDeploy = lerp(this.finDeploy || 0, fins, k);
+      const th = THREE.MathUtils.degToRad(115) * this.legDeploy;
+      if (this.cadLegs) this.cadLegs.forEach(l => l.pivot.quaternion.setFromAxisAngle(l.axis, -th));
+      if (this.cadStruts) this.cadStruts.forEach(c => {
+        const dr = c.s * Math.sin(th), dy = c.yH + c.s * Math.cos(th) - c.yB;         // leg attachment point relative to the body anchor
+        c.pivot.quaternion.setFromAxisAngle(c.axis, -Math.atan2(dr, dy)); c.pivot.scale.set(1, Math.hypot(dr, dy) / c.len, 1); });
+      if (this.gridFins) this.gridFins.forEach(h => h.rotation.z = Math.PI / 2 * this.finDeploy);
+      if (!this.cadLegs && !this.cadBoosterH) {   // procedural fallback while the CAD is loading
+        this.fins.forEach(f => f.rotation.z = lerp(Math.PI / 2, 0, this.finDeploy)); this.legs.forEach(l => l.rotation.z = -0.55 * this.legDeploy); }
     }
 
     // ================= OPS: LELP in orbit =================
@@ -346,10 +412,11 @@
         [-1, 1].forEach(s => { const w = new THREE.Mesh(new THREE.BoxGeometry(4, .08, 1.4), this._std(0xffffff, { map: cells, metalness: .5 })); w.position.x = s * 3; r.add(w); });
         g.add(r); this.relays.push(r); });
       this.linkMat = { on: new THREE.LineBasicMaterial({ color: 0x5fd39a, transparent: true, opacity: .8 }), off: new THREE.LineBasicMaterial({ color: 0x9a3030, transparent: true, opacity: .8 }) };
+      this.relayLinks = this.relays.map(r => { const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints([V(0, 8, 0), r.position]), this.linkMat.on); l.visible = false; this.links.add(l); return l; });
     }
     updateOps(frame, states, isolatedNodes, dt, ctx = {}) {
       this.t += dt;
-      this.scene.background.setRGB(.02, .03, .06);
+      this.scene.background.setRGB(.02, .03, .06); this.stars.material.opacity = .85;
       this.lelp.rotation.y += dt * (ctx.cam === 'arm' ? .0 : .03); this.earth.rotation.y += dt * .004;
       const p = frame.platform, R = THREE.MathUtils.degToRad;
       // modules: colour + status LED
@@ -373,11 +440,9 @@
       // solar wings
       this.solar.scale.x = lerp(this.solar.scale.x, this._solarDeployed ? 1 : .05, .04);
       // relays + links
-      this.links.children.forEach(c => c.geometry.dispose()); this.links.clear();
-      const lelpPos = V(0, 8, 0);
       this.relays.forEach((r, i) => { const name = 'RELAY-' + (i + 1); const iso = isolatedNodes.includes(name); r.rotation.y += dt * .3;
         r.children[0].material.emissive.setHex(iso ? 0x5a1010 : 0x000000);
-        if ((frame.comms.visible || []).includes(name) || iso) { const geo = new THREE.BufferGeometry().setFromPoints([lelpPos, r.position]); this.links.add(new THREE.Line(geo, iso ? this.linkMat.off : this.linkMat.on)); } });
+        const l = this.relayLinks[i]; l.visible = (frame.comms.visible || []).includes(name) || iso; l.material = iso ? this.linkMat.off : this.linkMat.on; });
       // return capsule
       this._stepCapsule(ctx.capsuleState || 'docked', dt);
       // camera: slow orbit around LELP (console), close on the arm (customer view), pull back during the return
@@ -385,13 +450,16 @@
       if (ctx.cam === 'arm' && !ret) {
         const base = new THREE.Vector3(); this.arm.getWorldPosition(base);
         const out = base.clone().setY(0).normalize(), side = new THREE.Vector3(-out.z, 0, out.x);
-        this.camPos.lerp(base.clone().add(out.multiplyScalar(24)).add(side.multiplyScalar(17)).add(V(0, 7, 0)), .04);
-        this.camTarget.lerp(V(base.x * .45, 10.5, base.z * .45), .06);
+        const snap = ctx.snap || this._camSnap;
+        this.camPos.lerp(base.clone().add(out.multiplyScalar(30)).add(side.multiplyScalar(20)).add(V(0, 8, 0)), snap ? 1 : .04);
+        this.camTarget.lerp(V(base.x * .4, 11.5, base.z * .4), snap ? 1 : .06);
       } else {
         const ang = this.t * .05, d = ret ? 95 : 62;
-        this.camPos.lerp(V(Math.cos(ang) * d, 14 + Math.sin(this.t * .11) * 4, Math.sin(ang) * d), .02);
-        this.camTarget.lerp(ret ? this.capsule.position.clone().lerp(V(0, 4, 0), .5) : V(0, 2, 0), .04);
+        const snap = ctx.snap || this._camSnap;
+        this.camPos.lerp(V(Math.cos(ang) * d, 14 + Math.sin(this.t * .11) * 4, Math.sin(ang) * d), snap ? 1 : .02);
+        this.camTarget.lerp(ret ? this.capsule.position.clone().lerp(V(0, 6, 0), .5) : V(0, 8, 0), snap ? 1 : .04);
       }
+      this._camSnap = false;
       this.camera.position.copy(this.camPos); this.camera.up.set(0, 1, 0); this.camera.lookAt(this.camTarget);
       this.renderer.render(this.scene, this.camera);
     }
@@ -408,7 +476,7 @@
       else if (state === 'landed') { this.chute.visible = false; this.plasma.material.opacity = 0; c.visible = false; }
     }
     setPhase(p) { if (p === this.phase) return; this.phase = p; this.launch.visible = p === 'launch'; this.ops.visible = p === 'ops';
-      if (p === 'ops') { this.camera.up.set(0, 1, 0); this.camPos.set(60, 20, 60); } else { const g = this._place(0, 0); this.camPos.copy(g.pos.clone().add(g.side.clone().multiplyScalar(1.4)).add(g.up.clone().multiplyScalar(.5))); this.camTarget.copy(g.pos); } }
+      if (p === 'ops') { this.camera.up.set(0, 1, 0); this.camPos.set(60, 20, 60); this.camTarget.set(0, 8, 0); this._camSnap = true; } else { const g = this._place(0, 0); this.camPos.copy(g.pos.clone().add(g.side.clone().multiplyScalar(1.4)).add(g.up.clone().multiplyScalar(.5))); this.camTarget.copy(g.pos); } }
     setSolar(d) { this._solarDeployed = d; }
     setLandingZone(km) { this.landingZoneKm = km; }
   }
