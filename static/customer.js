@@ -4,6 +4,10 @@
    snapshot of the twin, independent of the replay clock. Shares replay.js, scene.js and style.css with the console. */
 (async function () {
   'use strict';
+  // build label (web/build.py): reviewers can tell which build they are looking at
+  { const bm = document.querySelector('meta[name=build]'), sub = document.querySelector('.brand-sub');
+    if (bm) { window.__build = bm.content; document.querySelector('.brand').title = 'build ' + bm.content + ' · ' + bm.dataset.built;
+      if (sub) sub.insertAdjacentHTML('beforeend', ` · <span class="build-tag">${bm.content}</span>`); } }
   const $ = (id) => document.getElementById(id);
   const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
   const set = (id, v) => { const el = typeof id === 'string' ? $(id) : id; if (!el) return; v = String(v); if (el.textContent !== v) el.textContent = v; };
