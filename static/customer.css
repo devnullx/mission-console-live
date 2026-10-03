@@ -63,3 +63,25 @@
 @media (max-width: 1320px) { .who span { display: none; } #panel-sample .panel-h .h-sub { display: none; } .ctl { grid-template-columns: 200px minmax(0, 1fr); } .armlive { grid-column: 1 / -1; display: none; } }
 @media (max-width: 1100px) { .ctl { grid-template-columns: 1fr; } .armlive { display: block; } .who { display: none; } }
 @media (max-height: 800px) { .chart { height: 66px; } .chart.short { height: 40px; } .vials { height: 112px; } }
+
+/* RadSenRegen: groups table, wells, environment, after-the-flight plan */
+.gnd { color: var(--ink-3); }
+.gtbl td { padding: 3px 6px 3px 0; vertical-align: top; }
+.gtbl td:first-child { color: var(--ink); font-weight: 500; }
+.gtbl td.num b { display: block; font: 500 var(--fs-small) var(--mono); color: var(--ink); }
+.gtbl td.num small { display: block; font: 9px var(--mono); color: var(--ink-3); margin-top: 1px; }
+.gtbl th.num, .gtbl td.num { text-align: right; }
+.gtbl .sw { margin-right: 5px; }
+#chart-ros { height: 92px; }
+#chart-rate { height: 86px; }
+.vials { height: 118px; }
+#well-legend { margin-top: 6px; }
+#well-legend span:first-child { color: var(--ink-3); }
+.kv.env { margin-top: 10px; }
+#e-rate.warn { color: var(--warn-ink); }
+.env-note, .note.compare { margin-top: 10px; font-size: var(--fs-small); color: var(--ink-2); line-height: 1.45; }
+.note.compare b { font-family: var(--sans); font-weight: 600; color: var(--ink); margin-right: 4px; }
+.tbl.after td { white-space: normal; vertical-align: top; line-height: 1.35; padding: 4px 8px 4px 0; }
+.tbl.after td:first-child { color: var(--ink); width: 46%; }
+.steps li.now .st { color: var(--info-ink); }
+@media (max-height: 800px) { #chart-ros { height: 80px; } #chart-rate { height: 74px; } .vials { height: 104px; } }

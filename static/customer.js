@@ -1,5 +1,5 @@
-/* Customer console: one customer's view of the same mission replay (module 17, Adriana / Zurich Biotech Lab) plus
-   task-level control of Dexter-L. Every request is signed and evaluated by Sentinel: POST api/arm_task on the live
+/* Customer console: RadSenRegen's view of the same mission replay (module 17: WJ-MSCs vs Muse cells, with and without
+   exosomes, sentinel/lelp/experiment.py) plus task-level control of Dexter-L. Every request is signed and evaluated by Sentinel: POST api/arm_task on the live
    server, or the precomputed cases in api/arm_tasks.json on the static site. The task runs against a lab-operations
    snapshot of the twin, independent of the replay clock. Shares replay.js, scene.js and style.css with the console. */
 (async function () {
@@ -9,14 +9,17 @@
   const set = (id, v) => { const el = typeof id === 'string' ? $(id) : id; if (!el) return; v = String(v); if (el.textContent !== v) el.textContent = v; };
   const cls = (id, c) => { const el = typeof id === 'string' ? $(id) : id; if (el && el.className !== c) el.className = c; };
   const R = window.Replay, { T0, lerp, clamp, hms, clock, met, esc, nice, lastBefore } = R;
-  const CUST = 'Adriana / Zurich Biotech Lab', MOD = 17, BAND = [36.7, 37.3];
+  const CUST = 'RadSenRegen', MOD = 17, BAND = [36.7, 37.3];
+  const GROUPS = ['WJ', 'WJ+Exo', 'Muse', 'Muse+Exo'], GCOL = { WJ: '#3987e5', 'WJ+Exo': '#199e70', Muse: '#d95926', 'Muse+Exo': '#9085e9' };
+  const GNAME = { WJ: 'WJ-MSC', 'WJ+Exo': 'WJ + exo', Muse: 'Muse', 'Muse+Exo': 'Muse + exo' };
+  const PRES_COL = ['#b9a7ff', '#ffb27a', '#7fd4c0'];                 // fixed, lysed, acid-extracted wells (2 of each per group)
   const TASK_LABEL = { transfer_to_lab: 'FETCH TO LAB', image: 'IMAGING PASS', return: 'RETURN TO SLOT', full: 'FULL CYCLE' };
   const S = { t: T0, playing: false, speed: 'auto', rate: 1.5, lastWall: performance.now(), lastPanels: 0, dirty: true, error: null, task: null, acked: false, pending: null };
 
   let M;
   try { M = await R.load('sentinel', (n, e) => { set('ld-msg', 'Waiting for the mission twin…'); set('ld-sub', 'attempt ' + n + ' · ' + e.message); }); }
   catch (e) { set('ld-msg', 'Could not load the mission data'); set('ld-sub', e.message + ' · reload the page to retry'); return; }
-  const X = M.x, ev = M.events, F = M.frames;
+  const X = M.x, ev = M.events, F = M.frames, E = X.exp, EM = E ? E.meta : {};
   const lastEvent = (t, pred) => R.lastEvent(M, t, pred);
   const tOf = (pred) => { const e = ev.find(pred); return e ? e.t : Infinity; };
   const feedT = (t) => (t < 0 ? '−' : '') + hms(Math.abs(t));
@@ -29,107 +32,175 @@
   $('view3d').addEventListener('webglcontextrestored', () => { $('gl-note').hidden = true; });
 
   // ---------- what this customer cares about, derived once from the event stream ----------
-  const STEPS = [
-    ['Launch to the 550 km orbit', (e) => e.code === 'ORBIT' && e.seg === 'ORBIT'],
-    ['Module 17 activated', (e) => e.code === 'EXECUTE' && e.data.verb === 'activate_module' && e.data.target === 'module-17'],
-    ['Culture at 37.0 °C, 5 % CO₂', (e) => e.code === 'PROTOCOL'],
-    ['Imaging cycle 1', (e) => e.code === 'IMAGING'],
-    ['Central-lab analysis by Dexter-L', (e) => e.code === 'ANALYSIS'],
-    ['Report delivered to Zurich', (e) => e.code === 'DELIVERED' && /Adriana/.test(e.text)],
-    ['Secured for return with the whole lab', (e) => e.code === 'RETURN_PREP'],
-    ['Re-entry, inflatable shield', (e) => e.code === 'SPLASHDOWN'],
-    ['Module handed to your courier', (e) => e.code === 'SAMPLE_HANDOVER'],
-  ].map(([label, pred]) => ({ label, t: tOf(pred) }));
-  const JOURNEY = [['LAUNCH', (e) => e.code === 'LIFTOFF'], ['ORBIT', (e) => e.code === 'ORBIT' && e.seg === 'ORBIT'], ['CULTURE', (e) => e.code === 'PROTOCOL'], ['LAB', (e) => e.code === 'ANALYSIS'],
-    ['DATA', (e) => e.code === 'DELIVERED' && /Adriana/.test(e.text)], ['RE-ENTRY', (e) => e.code === 'SPLASHDOWN'], ['HANDOVER', (e) => e.code === 'SAMPLE_HANDOVER']].map(([label, pred]) => ({ label, t: tOf(pred) }));
-  const RETURN = ev.filter((e) => ['RETURN_PREP', 'DEORBIT_BURN', 'STAGE_SEP', 'HIAD_INFLATE', 'ENTRY_INTERFACE', 'PEAK_HEATING', 'MAIN_CHUTE', 'SPLASHDOWN', 'RECOVERY', 'SAMPLE_HANDOVER'].includes(e.code));
-  const AUDIT = ev.filter((e) => e.data && e.data.final && (e.data.target === 'module-' + MOD || e.data.target === 'arm' || (e.data.target === 'platform' && /mode|return_prep|deorbit|passivate|key/.test(e.data.verb))));
-  const DELIV = ev.filter((e) => e.code === 'DELIVERED' && /Adriana|Module 17/.test(e.text));
-  const IMAGING = ev.filter((e) => e.code === 'IMAGING'), ANALYSIS = ev.find((e) => e.code === 'ANALYSIS');
-  const ATTACK17 = X.atkCmds.filter((e) => e.data.target === 'module-' + MOD);
+  const tLift = tOf((e) => e.code === 'LIFTOFF'), tOrbit = tOf((e) => e.code === 'ORBIT' && e.seg === 'ORBIT');
   const tPrep = tOf((e) => e.code === 'RETURN_PREP'), tStageSep = tOf((e) => e.code === 'STAGE_SEP'), tSplash = tOf((e) => e.code === 'SPLASHDOWN'), tHand = tOf((e) => e.code === 'SAMPLE_HANDOVER');
   const tLab = tOf((e) => e.code === 'MODE' && /-> CENTRAL_ANALYSIS/.test(e.text));
+  const fin = (v) => (v == null ? Infinity : v);
+  const tStart = fin(EM.t_start), tThaw = fin(EM.t_thaw), tExo = fin(EM.t_exo), tPres = fin(EM.t_preserved);
+  const day1 = (d) => d.toFixed(1);
   // where the module is on its way home (key times from the twin's whole-payload return model)
   const returnState = (t) => t >= tHand ? 'WITH YOUR COURIER' : t >= X.tRecovery ? 'ON THE RECOVERY SHIP' : t >= tSplash ? 'AFLOAT'
     : t >= X.tMain ? 'UNDER MAIN CANOPY' : t >= X.tEI ? 'RE-ENTRY' : t >= X.tInflate ? 'HEAT SHIELD DEPLOYED' : t >= tStageSep ? 'COASTING TO ENTRY' : 'SECURED FOR RETURN';
+  // the RadSenRegen flow (customer brief, 15 steps): design and ground steps before launch, flight steps from the twin,
+  // lab analysis, comparison and result after the flight
+  const FLOW = [
+    { label: 'Cells prepared, frozen', full: 'Cells prepared, characterised and cryopreserved on Earth (3 WJ-MSC and 3 Muse cryovials)', pre: 'on Earth' },
+    { label: 'Payload integrated', full: 'Payload: 24-well cassette, culture media, exosomes, automated fluidics, LumaScope imager, radiation dosimeter, environment sensors', pre: 'integrated' },
+    { label: 'Launch · cells frozen', full: 'Launch: the cells travel cryopreserved in a passive -80 °C cassette', a: tLift, b: tOrbit, now: () => 'riding to orbit' },
+    { label: 'Automated thaw · 37 °C', full: 'Automated thawing, then recovery of the cells at 37 °C', a: tStart, b: tExo, now: (t, x) => x && x.phase === 'thawing' ? 'thawing' : 'day ' + day1(x ? x.day : 0) },
+    { label: 'Culture · automated media', full: 'Cell culture, 2D, with automated media exchange (day 1 full change, days 3 and 5 half)', a: tThaw, b: tPres, now: (t, x) => 'day ' + day1(x.day) },
+    { label: 'Exosomes · 2 treated groups', full: 'Exosome dosing: added automatically to WJ + exosomes and Muse + exosomes on day 1', a: tExo, b: tExo },
+    { label: 'Live imaging · LumaScope', full: 'Live-cell imaging: the LumaScope follows the cells every 4 h', a: tThaw, b: tPres, now: (t, x) => 'round ' + x.rounds },
+    { label: 'Radiation · environment', full: 'Radiation and environmental monitoring: dosimeter, temperature and environment data throughout', a: tStart, b: tPres, now: (t, x) => x.dose.toFixed(2) + ' mGy' },
+    { label: 'End · samples preserved', full: 'End of experiment: samples preserved and all data collected (day 7)', a: tPres, b: tPres },
+    { label: 'Return · inflatable shield', full: 'The whole lab returns under the inflatable heat shield', a: tPrep, b: X.tRecovery, now: (t) => returnState(t).toLowerCase() },
+    { label: 'Handed to your courier', full: 'Module 17 handed to the RadSenRegen courier at 4 °C with its custody ledger', a: tHand, b: tHand },
+    { label: 'Lab analysis · endpoints', full: 'Laboratory analysis: viability, ROS, IL-6, TNF-α, p16/p21, GSH/NAD, morphology', post: true },
+    { label: 'Compare the groups', full: 'Compare the data: WJ vs Muse, then with vs without exosomes, then space vs ground', post: true },
+    { label: 'Final result', full: 'Final result: which cells are more resistant, and whether exosomes protect against space-induced damage', post: true },
+  ];
+  const JOURNEY = [['LAUNCH', tLift], ['THAW', tThaw], ['EXOSOMES', tExo], ['DAY 7', tPres], ['RE-ENTRY', X.tEI], ['HANDOVER', tHand], ['LAB', Infinity], ['RESULT', Infinity]];
+  const RETURN = ev.filter((e) => ['RETURN_PREP', 'DEORBIT_BURN', 'STAGE_SEP', 'HIAD_INFLATE', 'ENTRY_INTERFACE', 'PEAK_HEATING', 'MAIN_CHUTE', 'SPLASHDOWN', 'RECOVERY', 'SAMPLE_HANDOVER'].includes(e.code));
+  const AUDIT = ev.filter((e) => e.data && e.data.final && (e.data.target === 'module-' + MOD || e.data.target === 'arm' || (e.data.target === 'platform' && /mode|return_prep|deorbit|passivate|key/.test(e.data.verb))));
+  const DELIV = ev.filter((e) => e.code === 'DELIVERED' && /RadSenRegen|Module 17/.test(e.text));
+  const ATTACK17 = X.atkCmds.filter((e) => e.data.target === 'module-' + MOD);
   const MARKS = ev.filter((e) => e.t >= T0 && (e.seg === 'CUSTOMER' || e.seg === 'RETURN' || (e.data && e.data.target === 'module-' + MOD) || ['LIFTOFF', 'TOUCHDOWN', 'INTRUSION', 'CONTAIN'].includes(e.code) || (e.code === 'ORBIT' && e.seg === 'ORBIT')));
 
-  $('steps').innerHTML = STEPS.map((s) => `<li><i></i><span>${s.label}</span><span class="st">—</span></li>`).join('');
-  $('journey').innerHTML = JOURNEY.map((j) => `<li>${j.label}</li>`).join('');
+  $('steps').innerHTML = FLOW.map((s) => `<li class="${s.pre ? 'done' : ''}" title="${esc(s.full)}"><i></i><span>${esc(s.label)}</span><span class="st">${s.pre ? 'before launch' : s.post ? 'after the flight' : '—'}</span></li>`).join('');
+  $('journey').innerHTML = JOURNEY.map(([label]) => `<li>${label}</li>`).join('');
   $('return').innerHTML = RETURN.map((e) => `<div><span class="ft">${feedT(e.t)}</span><span>${esc(e.text)}</span></div>`).join('');
+  $('after').innerHTML = '<tr><th>SAMPLE · EACH GROUP</th><th>MEASURED</th></tr>' + [['LumaScope archive, 43 rounds', 'viability, ROS, morphology over 7 days']].concat(EM.preservation || [])
+    .map(([smp, what]) => `<tr><td>${esc(smp)}</td><td>${esc(String(what).replace(/alpha/g, 'α'))}</td></tr>`).join('');
+  $('well-legend').innerHTML = '<span>fill = cell cover · colour = group</span>' + ['fixed', 'lysed', 'extracted'].map((w, k) => `<span><i style="background:${PRES_COL[k]}"></i>${w}</span>`).join('');
   $('track-bands').innerHTML = X.bands.map(([a, b, label, c]) => { const x0 = R.t2x(M, a) * 100, x1 = R.t2x(M, b) * 100; return `<span class="${c}" style="left:${x0.toFixed(2)}%;width:${(x1 - x0).toFixed(2)}%">${label}</span>`; }).join('');
   $('track-marks').innerHTML = MARKS.map((e) => `<i class="${e.level}" style="left:${(R.t2x(M, e.t) * 100).toFixed(2)}%"></i>`).join('');
 
   // ---------- charts ----------
   const size = (svg) => { const r = svg.getBoundingClientRect(); return [Math.max(140, Math.round(r.width)), Math.max(40, Math.round(r.height))]; };
-  let chartKey = '';
-  function drawCharts(fi, returning) {
+  let chartKey = '', rosKey = '', rateKey = '', wellKey = '';
+  function drawTemp(fi, returning) {
     const key = fi + ':' + $('chart-t').clientWidth; if (key === chartKey) return; chartKey = key;
     const i0 = Math.max(0, fi - 720), win = []; for (let i = i0; i <= fi; i += 4) win.push(F[i].modules[MOD - 1]); win.push(F[fi].modules[MOD - 1]);
-    const draw = (id, get, lo, hi, color, band, ticks) => {
-      const svg = $(id), [W, H] = size(svg), l = 30, r = 8, tp = 7, b = 7;
-      const px = (k) => l + k / Math.max(win.length - 1, 1) * (W - l - r), py = (v) => H - b - (clamp(v, lo, hi) - lo) / (hi - lo) * (H - tp - b);
-      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-      svg.innerHTML = (band ? `<rect x="${l}" y="${py(band[1])}" width="${W - l - r}" height="${py(band[0]) - py(band[1])}" fill="rgba(12,163,12,.16)"/>` : '') +
-        ticks.map((v) => `<line x1="${l}" x2="${W - r}" y1="${py(v)}" y2="${py(v)}" class="grid"/><text x="${l - 5}" y="${py(v) + 3.5}" text-anchor="end" class="tick">${v}</text>`).join('') +
-        `<polyline fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" points="${win.map((m, k) => px(k).toFixed(1) + ',' + py(get(m)).toFixed(1)).join(' ')}"/>` +
-        `<circle cx="${px(win.length - 1)}" cy="${py(get(win[win.length - 1]))}" r="3.5" fill="${color}" stroke="#1d1f21" stroke-width="2"/>`;
-    };
-    draw('chart-t', (m) => m.t, 0, 42, '#3987e5', returning ? [3.5, 4.5] : BAND, [4, 20, 37]);
-    draw('chart-h', (m) => m.health * 100, 0, 100, '#199e70', null, [0, 50, 100]);
+    const svg = $('chart-t'), [W, H] = size(svg), l = 30, r = 8, tp = 7, b = 7, lo = 0, hi = 42, band = returning || t4(fi) ? [3.5, 4.5] : BAND;
+    const px = (k) => l + k / Math.max(win.length - 1, 1) * (W - l - r), py = (v) => H - b - (clamp(v, lo, hi) - lo) / (hi - lo) * (H - tp - b);
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.innerHTML = `<rect x="${l}" y="${py(band[1])}" width="${W - l - r}" height="${py(band[0]) - py(band[1])}" fill="rgba(12,163,12,.16)"/>` +
+      [4, 20, 37].map((v) => `<line x1="${l}" x2="${W - r}" y1="${py(v)}" y2="${py(v)}" class="grid"/><text x="${l - 5}" y="${py(v) + 3.5}" text-anchor="end" class="tick">${v}</text>`).join('') +
+      `<polyline fill="none" stroke="#3987e5" stroke-width="2" stroke-linejoin="round" points="${win.map((m, k) => px(k).toFixed(1) + ',' + py(m.t).toFixed(1)).join(' ')}"/>` +
+      `<circle cx="${px(win.length - 1)}" cy="${py(win[win.length - 1].t)}" r="3.5" fill="#3987e5" stroke="#1d1f21" stroke-width="2"/>`;
   }
-  let vialKey = '';
-  function drawVials(t) {
-    // schematic of the 24 vials: organoid diameter from the twin's analysis result (+9 % at the central-lab analysis)
-    const img = IMAGING.filter((e) => e.t <= t), an = ANALYSIS && ANALYSIS.t <= t ? ANALYSIS : null, key = img.length + ':' + (an ? 1 : 0) + ':' + $('vials').clientWidth;
-    if (key === vialKey) return; vialKey = key;
-    const svg = $('vials'), [W, H] = size(svg), cols = 8, rows = 3, cw = W / cols, ch = H / rows, d1 = an ? an.data.diameter_um : 0, d0 = d1 ? d1 / 1.09 : 378, d = an ? d1 : d0;
-    let g = '';
-    for (let i = 0; i < 24; i++) { const cx = (i % cols + .5) * cw, cy = (Math.floor(i / cols) + .5) * ch, well = Math.min(cw, ch) * .42, v = 1 + .07 * Math.sin(i * 12.9898 + 4.1);
-      g += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${well.toFixed(1)}" fill="#151617" stroke="#3d4145"/>`;
-      if (img.length) g += `<circle cx="${(cx + Math.sin(i * 7.3) * 2).toFixed(1)}" cy="${(cy + Math.cos(i * 5.1) * 2).toFixed(1)}" r="${(well * .62 * d * v / 412).toFixed(1)}" fill="#199e70" fill-opacity="${an ? .85 : .6}" stroke="#5fce5f" stroke-opacity=".5"/>`; }
+  const t4 = (fi) => F[fi].t >= tPres;                                  // preserved samples are held at 4 C
+  const ROS = E ? { day: E.rows.map((r) => r[E.ix.day]), s: {} } : null;
+  if (ROS) for (const g of GROUPS) for (const e of ['flight', 'ground']) ROS.s[g + '|' + e] = E.rows.map((r) => r[E.ix[g + '|' + e + '|ros']]);
+  const iThaw = E ? Math.max(0, E.rows.findIndex((r) => r.t >= tThaw)) : 0;
+  function drawRos(t) {
+    const svg = $('chart-ros'); if (!ROS || !svg.clientWidth) return;
+    const i = lastBefore(E.rows, t), key = i + ':' + svg.clientWidth; if (key === rosKey) return; rosKey = key;
+    const [W, H] = size(svg), l = 30, r = 8, tp = 8, b = 16, lo = 0.8, hi = 2.6;
+    const px = (d) => l + d / 7 * (W - l - r), py = (v) => H - b - (clamp(v, lo, hi) - lo) / (hi - lo) * (H - tp - b);
+    let g = [1, 1.5, 2, 2.5].map((v) => `<line x1="${l}" x2="${W - r}" y1="${py(v)}" y2="${py(v)}" class="grid"/><text x="${l - 5}" y="${py(v) + 3.5}" text-anchor="end" class="tick">${v}</text>`).join('')
+      + [0, 1, 2, 3, 4, 5, 6, 7].map((d) => `<text x="${px(d).toFixed(1)}" y="${H - 3}" text-anchor="middle" class="tick">${d}</text>`).join('')
+      + `<line x1="${px(1)}" x2="${px(1)}" y1="${tp}" y2="${H - b}" class="guide"/><text x="${px(1) + 3}" y="${tp + 8}" class="tick">exo</text>`;
+    if (t >= tThaw && i > iThaw) for (const e of ['ground', 'flight']) for (const gr of GROUPS) {
+      const pts = []; for (let k = iThaw; k <= i; k++) pts.push(px(ROS.day[k]).toFixed(1) + ',' + py(ROS.s[gr + '|' + e][k]).toFixed(1));
+      g += `<polyline fill="none" stroke="${GCOL[gr]}" stroke-width="${e === 'flight' ? 1.8 : 1.2}" stroke-linejoin="round"${e === 'ground' ? ' stroke-dasharray="3 3" stroke-opacity=".6"' : ''} points="${pts.join(' ')}"/>`; }
+    else g += `<text x="${(l + W - r) / 2}" y="${H / 2}" text-anchor="middle" class="tick">starts at the thaw</text>`;
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.innerHTML = g;
-    set('img-cap', an ? `analysis T+${hms(an.t)} · ${an.data.diameter_um} µm · viability ${Math.round(an.data.viability * 100)} %` : img.length ? `cycle ${img.length} · T+${hms(img[img.length - 1].t)} · ≈ ${Math.round(d0)} µm` : 'no frames yet');
+  }
+  function drawRate(t) {
+    const svg = $('chart-rate'), rr = E && E.rate; if (!rr || !svg.clientWidth) return;
+    const n = 144, j = rr.t0 == null ? -1 : Math.min(Math.floor((t - rr.t0) / rr.dt), rr.v.length - 1), key = j + ':' + svg.clientWidth; if (key === rateKey) return; rateKey = key;
+    const [W, H] = size(svg), l = 34, r = 8, tp = 7, b = 7, hi = Math.log10(3000);
+    const px = (k) => l + (k - (j - n)) / n * (W - l - r), py = (v) => H - b - Math.log10(Math.max(v, 1)) / hi * (H - tp - b);
+    let g = [1, 10, 100, 1000].map((v) => `<line x1="${l}" x2="${W - r}" y1="${py(v)}" y2="${py(v)}" class="grid"/><text x="${l - 5}" y="${py(v) + 3.5}" text-anchor="end" class="tick">${v >= 1000 ? '1k' : v}</text>`).join('');
+    if (j >= 1) { const pts = []; for (let k = Math.max(0, j - n); k <= j; k++) pts.push(px(k).toFixed(1) + ',' + py(rr.v[k]).toFixed(1));
+      g += `<polyline fill="none" stroke="#c98500" stroke-width="1.6" stroke-linejoin="round" points="${pts.join(' ')}"/>`; }
+    else g += `<text x="${(l + W - r) / 2}" y="${H / 2}" text-anchor="middle" class="tick">dosimeter log starts at the thaw</text>`;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.innerHTML = g;
+  }
+  function drawWells(x) {
+    const svg = $('vials'); if (!svg.clientWidth) return;
+    const key = (x ? x.phase + ':' + Math.round(x.day * 6) : 'none') + ':' + svg.clientWidth; if (key === wellKey) return; wellKey = key;
+    const [W, H] = size(svg), lw = 74, cols = 6, rows = 4, cw = (W - lw) / cols, ch = H / rows, rad = Math.min(cw, ch) * .40, pres = x && x.phase === 'preserved';
+    let g = '';
+    GROUPS.forEach((gr, ri) => { const cy = (ri + .5) * ch, f = x && x.g[gr] ? x.g[gr].flight : null, live = f && x.phase !== 'cryo' && x.phase !== 'thawing';
+      g += `<text x="2" y="${(cy + 3.5).toFixed(1)}" class="tick" fill="${GCOL[gr]}">${GNAME[gr]}</text>`;
+      for (let k = 0; k < cols; k++) { const cx = lw + (k + .5) * cw, v = 1 + .07 * Math.sin((ri * 6 + k) * 12.9898 + 4.1);
+        g += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${rad.toFixed(1)}" fill="#151617" stroke="${pres ? PRES_COL[k >> 1] : '#3d4145'}" stroke-width="${pres ? 2 : 1}"/>`;
+        if (live) g += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${(Math.sqrt(clamp(f.conf * v, 0.02, 1)) * rad * .9).toFixed(1)}" fill="${GCOL[gr]}" fill-opacity="${(.2 + .65 * f.v).toFixed(2)}"/>`; } });
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.innerHTML = g;
+    set('img-cap', !x || x.phase === 'cryo' ? 'cells still cryopreserved' : x.phase === 'thawing' ? 'thawing' : pres ? `preserved · ${x.rounds} rounds` : `round ${x.rounds} · day ${day1(x.day)}`);
   }
 
   // ---------- panels ----------
+  const mean = (a) => a.reduce((s, v) => s + v, 0) / a.length;
+  const cryoText = (t, x) => { const c = x ? x.cryo_c : -80 + 0.15 * (Math.max(t, 0) / 3600 + 24);
+    return !x || t < tExo ? c.toFixed(1) + ' °C' : 'empty'; };
+  function stateChip(t, m, x) {
+    if (t >= tPrep) return [returnState(t), t >= tHand ? 'good' : 'info'];
+    if (t < 0) return ['ON THE PAD · FROZEN', ''];
+    if (!m) return [t < X.tSeco ? 'RIDING TO ORBIT' : 'IN ORBIT · FROZEN', ''];
+    if (m.state === 'isolated') return ['ISOLATED', 'bad'];
+    if (!x || x.phase === 'cryo') return [m.state === 'stowed' ? 'CRYOPRESERVED' : 'FROZEN · BLOCK AT 37 °C', 'info'];
+    if (x.phase === 'thawing') return ['THAWING', 'info'];
+    if (x.phase === 'preserved') return ['SAMPLES PRESERVED', EM.preserved_by && EM.preserved_by !== CUST ? 'bad' : 'good'];
+    const d = 'DAY ' + Math.floor(x.day);
+    if (m.state === 'in_transfer') return [d + ' · WITH THE ARM', 'info'];
+    if (m.state === 'in_lab') return [d + ' · IN THE LAB', 'info'];
+    return [(x.phase === 'recovery' ? 'RECOVERY' : 'CULTURE') + ' · ' + d, 'good'];
+  }
   let auditN = -1, delivN = -1;
   function panels(t, f, fi) {
     set('met-sign', t < 0 ? 'T−' : 'T+'); set('met', clock(t)); set('rate', '×' + (S.rate >= 10 ? Math.round(S.rate) : S.rate.toFixed(1)));
     const phase = t < 0 ? 'PRE-LAUNCH' : t < X.tSeco ? 'LAUNCH' : t < X.opsStart ? 'IN ORBIT' : t >= tHand ? 'COMPLETE' : t >= tSplash ? 'RECOVERY' : t >= X.tEI ? 'RE-ENTRY' : t >= tPrep ? 'RETURNING' : nice(f.platform.mode);
     set('phase-pill', phase); cls('phase-pill', 'chip ' + (t >= tHand ? 'good' : 'info'));
-    const m = f ? f.modules[MOD - 1] : null, returning = t >= tPrep;
-    if (m) {   // the module stays in the lab twin all the way home: live temperature throughout
+    const m = f ? f.modules[MOD - 1] : null, x = R.expAt(M, t), returning = t >= tPrep, live = x && (x.phase === 'recovery' || x.phase === 'culture' || x.phase === 'preserved');
+    const [chip, chipCls] = stateChip(t, m, x); set('m-state', chip); cls('m-state', 'chip push ' + chipCls);
+    if (m) {   // the module stays in the lab twin all the way home: live block temperature throughout
       set('m-t', m.t.toFixed(2));
-      if (returning) {
-        const ok = Math.abs(m.t - 4) <= 0.5;
-        set('m-t-sub', ok ? 'transport mode 4 °C · whole lab returning' : 'cooling to 4 °C transport mode'); cls('m-t-sub', 'hero-sub ' + (ok ? 'ok' : ''));
-        set('m-state', returnState(t)); cls('m-state', 'chip push ' + (t >= tHand ? 'good' : 'info'));
-      } else {
-        const ok = m.state === 'stowed' || (m.t >= BAND[0] && m.t <= BAND[1]);
-        set('m-t-sub', m.state === 'stowed' ? 'not activated yet' : ok ? 'inside protocol 37.0 ± 0.3' : m.t < BAND[0] ? 'warming up to 37.0 ± 0.3' : 'ABOVE protocol 37.0 ± 0.3'); cls('m-t-sub', 'hero-sub ' + (m.state === 'stowed' ? '' : ok ? 'ok' : m.t > BAND[1] ? 'bad' : ''));
-        set('m-state', { stowed: 'STOWED', active: 'CULTURE RUNNING', in_transfer: 'WITH THE ARM', in_lab: 'IN CENTRAL LAB', isolated: 'ISOLATED' }[m.state] || nice(m.state).toUpperCase());
-        cls('m-state', 'chip push ' + (m.state === 'active' ? 'good' : m.state === 'stowed' ? '' : 'info'));
-      }
-      set('m-p', m.p + ' kPa'); set('m-seal', m.sealed ? 'SEALED' : 'BREACH'); set('m-heat', m.heater_w + ' W'); set('m-sp', m.protocol && m.protocol.setpoint ? m.protocol.setpoint + ' °C' : '—');
-    } else {
-      ['m-t', 'm-p', 'm-seal', 'm-heat', 'm-sp'].forEach((id) => set(id, '—')); set('m-t-sub', 'protocol 37.0 ± 0.3 once in orbit'); cls('m-t-sub', 'hero-sub');
-      set('m-state', t < 0 ? 'ON THE PAD' : t < X.tSeco ? 'RIDING TO ORBIT' : 'IN ORBIT'); cls('m-state', 'chip push');
-    }
-    const health = m ? Math.round(m.health * 100) : null;
-    set('m-h', health == null ? '—' : health);
-    set('m-h-sub', health == null ? 'culture health index from the twin' : (ANALYSIS && t >= ANALYSIS.t ? `measured viability ${Math.round(ANALYSIS.data.viability * 100)} % at T+${hms(ANALYSIS.t)}` : health > 90 ? 'nominal' : health > 50 ? 'stressed' : 'culture lost'));
-    cls('m-h-sub', 'hero-sub ' + (health == null ? '' : health > 90 ? 'ok' : 'bad'));
-    if (f) drawCharts(fi, returning);
-    STEPS.forEach((s, k) => { const li = $('steps').children[k], done = t >= s.t, now = !done && (k === 0 || t >= STEPS[k - 1].t); cls(li, done ? 'done' : now ? 'now' : ''); set(li.lastElementChild, done ? feedT(s.t) : now ? 'in progress' : '—'); });
-    JOURNEY.forEach((j, k) => cls($('journey').children[k], t >= j.t ? 'done' : (k === 0 || t >= JOURNEY[k - 1].t) ? 'now' : ''));
+      const inBand = m.t >= BAND[0] && m.t <= BAND[1], at4 = Math.abs(m.t - 4) <= 0.5;
+      const sub = returning ? (at4 ? 'transport mode 4 °C · whole lab returning' : 'cooling to 4 °C transport mode')
+        : x && x.phase === 'preserved' ? (at4 ? 'preserved samples held at 4 °C' : 'preserved samples cooling to 4 °C')
+        : m.state === 'stowed' ? 'module not powered yet'
+        : !x || x.phase === 'cryo' ? (inBand ? 'pre-warmed for the thaw · 37.0 ± 0.3' : 'warming to 37.0 for the thaw')
+        : inBand ? 'inside protocol 37.0 ± 0.3' : m.t > BAND[1] ? 'ABOVE protocol 37.0 ± 0.3' : 'below protocol 37.0 ± 0.3';
+      set('m-t-sub', sub); cls('m-t-sub', 'hero-sub ' + (/ABOVE|below/.test(sub) ? 'bad' : (inBand || at4) && m.state !== 'stowed' ? 'ok' : ''));
+      set('m-seal', m.sealed ? 'SEALED' : 'BREACH'); cls('m-seal', m.sealed ? '' : 'bad');
+    } else { ['m-t', 'm-seal'].forEach((id) => set(id, '—')); set('m-t-sub', 'protocol 37.0 ± 0.3 once in orbit'); cls('m-t-sub', 'hero-sub'); }
+    const presDay = EM.t_preserved != null && E ? E.rows[Math.max(0, lastBefore(E.rows, EM.t_preserved + 61))][E.ix.day] : 7;
+    set('m-day', !x || x.phase === 'cryo' ? '—' : day1(x.day));
+    set('m-day-sub', !x || x.phase === 'cryo' ? 'starts when you sign the thaw' : x.phase === 'thawing' ? 'thawing in the 37 °C block'
+      : x.phase === 'recovery' ? 'exosomes at day 1' : x.phase === 'preserved' ? `preserved on day ${day1(presDay)}` + (EM.preserved_by && EM.preserved_by !== CUST ? ' by ' + EM.preserved_by : '')
+      : x.day < 3 ? 'next: media exchange, day 3' : x.day < 5 ? 'next: media exchange, day 5' : 'preservation at day 7');
+    const via = live ? Math.round(mean(GROUPS.map((g) => x.g[g].flight.v)) * 100) : null;
+    set('m-h', via == null ? '—' : via + ' %'); set('m-dose', x && x.phase !== 'cryo' ? x.dose.toFixed(2) + ' mGy' : '—'); set('m-cryo', cryoText(t, x));
+    if (f) drawTemp(fi, returning);
+    // flow, journey, return
+    FLOW.forEach((s, k) => { if (s.pre) return; const li = $('steps').children[k];
+      if (s.post) { cls(li, t >= tHand && k === FLOW.findIndex((q) => q.post) ? 'now' : ''); return; }
+      const done = t >= s.b, now = !done && t >= s.a; cls(li, done ? 'done' : now ? 'now' : '');
+      set(li.lastElementChild, done ? feedT(s.b) : now ? (s.now ? s.now(t, x) : 'in progress') : '—'); });
+    set('flow-sub', x && x.phase !== 'cryo' ? `protocol clock ×${EM.protocol_x} · day ${day1(x.day)}` : `protocol clock ×${EM.protocol_x || 60}`);
+    JOURNEY.forEach(([, tj], k) => cls($('journey').children[k], t >= tj ? 'done' : (k === 0 || t >= JOURNEY[k - 1][1]) ? 'now' : ''));
     RETURN.forEach((e, k) => cls($('return').children[k], t >= e.t ? 'done' : ''));
-    // data
-    const del = DELIV.filter((e) => e.t <= t), img = IMAGING.filter((e) => e.t <= t);
-    if (del.length !== delivN) { delivN = del.length; $('deliveries').innerHTML = del.length ? del.slice().reverse().map((e) => `<li><span class="ft">${feedT(e.t)}</span><span>${esc(e.text)}</span></li>`).join('') : '<li><span class="ft">—</span><span>Nothing delivered yet. Reports arrive after the central-lab analysis.</span></li>'; }
-    set('d-n', del.length); set('d-frames', img.reduce((a, e) => a + (e.data.frames || 0), 0));
-    set('d-mb', img.reduce((a, e) => a + (+(/(\d+) MB/.exec(e.text) || [0, 0])[1]), 0) + ' MB');
-    drawVials(t);
+    // cells
+    set('c-rounds', x ? x.rounds : 0); set('c-frames', x ? (x.rounds * (EM.frames_per_round || 0)).toLocaleString('en-US') : 0); set('c-mb', (x ? x.down_mb : 0).toFixed(1) + ' MB');
+    const gk = live ? GROUPS.map((g) => ['flight', 'ground'].map((e) => { const q = x.g[g][e]; return [Math.round(q.v * 100), q.ros.toFixed(2), Math.round(q.conf * 100), q.shape.toFixed(1)].join(','); }).join('/')).join(';') : 'none';
+    if ($('groups').dataset.k !== gk) { $('groups').dataset.k = gk;
+      const cell = (a, b) => `<td class="num"><b>${a}</b><small>${b}</small></td>`;
+      $('groups').innerHTML = '<tr><th>GROUP</th><th class="num">VIAB %</th><th class="num">ROS ×</th><th class="num">COVER %</th><th class="num">SHAPE</th></tr>' + GROUPS.map((g) => {
+        if (!live) return `<tr><td><i class="sw" style="background:${GCOL[g]}"></i>${GNAME[g]}</td>${cell('—', '')}${cell('—', '')}${cell('—', '')}${cell('—', '')}</tr>`;
+        const a = x.g[g].flight, b = x.g[g].ground;
+        return `<tr><td><i class="sw" style="background:${GCOL[g]}"></i>${GNAME[g]}</td>${cell(Math.round(a.v * 100), Math.round(b.v * 100))}${cell(a.ros.toFixed(2), b.ros.toFixed(2))}${cell(Math.round(a.conf * 100), Math.round(b.conf * 100))}${cell(a.shape.toFixed(1), b.shape.toFixed(1))}</tr>`; }).join(''); }
+    drawRos(t); drawWells(x);
+    const del = DELIV.filter((e) => e.t <= t);
+    if (del.length !== delivN) { delivN = del.length; $('deliveries').innerHTML = del.length ? del.slice().reverse().map((e) => `<li><span class="ft">${feedT(e.t)}</span><span>${esc(e.text)}</span></li>`).join('') : '<li><span class="ft">—</span><span>Nothing delivered yet. Per-well metrics come down once a protocol day.</span></li>'; }
+    // environment
+    set('e-dose', x && x.phase !== 'cryo' ? x.dose.toFixed(2) + ' mGy' : '—'); set('e-saa', x && x.phase !== 'cryo' ? String(x.passes) : '—');
+    set('e-rate', x && x.rate != null ? Math.round(x.rate) + (x.rate > 80 ? ' · SAA' : '') : '—'); cls('e-rate', x && x.rate > 80 ? 'warn' : '');
+    set('e-t', m ? m.t.toFixed(2) + ' °C' : '—'); set('e-cryo', cryoText(t, x)); set('e-p', m ? m.p + ' kPa' : '—'); set('e-seal', m ? (m.sealed ? 'SEALED' : 'BREACH') : '—');
+    set('e-ug', !f ? '—' : t >= tStageSep ? 'returning' : m && m.state === 'in_transfer' ? '≈ 10⁻³ g · arm transfer' : f.platform.arm.busy ? '≈ 10⁻⁴ g · arm moving' : '≈ 10⁻⁵ g · quiet');
+    drawRate(t);
     // audit
     const au = AUDIT.filter((e) => e.t <= t);
     if (au.length !== auditN) { auditN = au.length;
@@ -140,13 +211,13 @@
     // scorecard
     let n = 0, blocked = 0; for (const e of ATTACK17) { if (e.t > t) break; n++; if (e.data.final !== 'EXECUTE') blocked++; }
     const tiles = [['ATTACKS ON YOUR MODULE', t < X.tIntr ? '—' : `${blocked} / ${n} BLOCKED`, t < X.tIntr ? '' : blocked === n ? 'good' : 'bad'],
-      ['CULTURE HEALTH', health == null ? '—' : health + ' %', health == null ? '' : health > 90 ? 'good' : 'bad'],
+      ['FLIGHT VIABILITY', via == null ? '—' : via + ' %', via == null ? '' : via > 80 ? 'good' : 'bad'],
       ['CUSTODY LEDGER', led ? (led.data.ok ? 'VERIFIED' : 'TAMPER CAUGHT') : 'HASH-CHAINED', led ? (led.data.ok ? 'good' : 'bad') : ''],
       ['MODULE RETURN', t >= tHand ? 'HANDED OVER' : t >= tPrep ? returnState(t).replace('COASTING TO ENTRY', 'COASTING').replace('HEAT SHIELD DEPLOYED', 'SHIELD DEPLOYED').replace('SECURED FOR RETURN', 'SECURED') : 'PENDING', t >= tHand ? 'good' : '']];
     const html = tiles.map(([l, v, k]) => `<div class="sc ${k}"><span>${l}</span><b>${v}</b></div>`).join('');
     if ($('scorecard').dataset.h !== html) { $('scorecard').innerHTML = html; $('scorecard').dataset.h = html; }
     if (!S.task) { const cap = lastEvent(t, (e) => e.seg === 'CUSTOMER' || e.seg === 'RETURN' || e.seg === 'LAUNCH' || e.seg === 'ORBIT' || (e.data && e.data.target === 'module-' + MOD) || (e.code === 'ARM' && /17/.test(e.text)));
-      set('overlay-caption', cap ? `${nice(cap.code)} · ${cap.text}` : 'Your payload is on the pad inside LELP-1'); }
+      set('overlay-caption', cap ? `${nice(cap.code)} · ${cap.text}` : 'Your cells are on the pad inside LELP-1, cryopreserved'); }
   }
 
   // ---------- Dexter-L tasking through Sentinel ----------
@@ -224,10 +295,10 @@
     requestAnimationFrame(tick);
   }
   function play(on) { if (on && S.task) endTask('Task view closed'); S.playing = on; set('btn-play', on ? '❚❚' : '▶'); $('btn-play').setAttribute('aria-label', on ? 'Pause' : 'Play'); }
-  function seek(t) { if (S.task) endTask('Task view closed'); S.t = clamp(t, T0, X.tEnd); auditN = delivN = -1; chartKey = vialKey = ''; S.dirty = true; if (S.speed === 'auto') S.rate = R.autoRate(M, S.t); }
+  function seek(t) { if (S.task) endTask('Task view closed'); S.t = clamp(t, T0, X.tEnd); auditN = delivN = -1; chartKey = rosKey = rateKey = wellKey = ''; S.dirty = true; if (S.speed === 'auto') S.rate = R.autoRate(M, S.t); }
   $('btn-play').onclick = () => { if (!S.playing && S.t >= X.tEnd - 1) seek(T0); play(!S.playing); };
   $$('#speed button').forEach((b) => { b.onclick = () => { S.speed = b.dataset.speed === 'auto' ? 'auto' : +b.dataset.speed; $$('#speed button').forEach((x) => x.classList.toggle('on', x === b)); }; });
-  $$('#right-tabs button').forEach((b) => { b.onclick = () => { $$('#right-tabs button').forEach((x) => x.classList.toggle('on', x === b)); $$('#panel-right .tabpane').forEach((p) => { p.hidden = p.dataset.pane !== b.dataset.tab; }); vialKey = ''; S.dirty = true; }; });
+  $$('#right-tabs button').forEach((b) => { b.onclick = () => { $$('#right-tabs button').forEach((x) => x.classList.toggle('on', x === b)); $$('#panel-right .tabpane').forEach((p) => { p.hidden = p.dataset.pane !== b.dataset.tab; }); rosKey = rateKey = wellKey = ''; S.dirty = true; }; });
   const track = $('track'), tip = $('track-tip'); let dragging = false;
   const trackT = (e) => { const r = track.getBoundingClientRect(); return [R.x2t(M, clamp((e.clientX - r.left) / r.width, 0, 1)), e.clientX - r.left, r.width]; };
   track.addEventListener('pointerdown', (e) => { dragging = true; track.setPointerCapture(e.pointerId); seek(trackT(e)[0]); });
@@ -237,8 +308,8 @@
     const tw = tip.offsetWidth; tip.style.left = clamp(x, tw / 2, w - tw / 2) + 'px'; });
   const endDrag = () => { dragging = false; }; track.addEventListener('pointerup', endDrag); track.addEventListener('pointercancel', endDrag); track.addEventListener('pointerleave', () => { tip.hidden = true; });
   addEventListener('keydown', (e) => { if (e.metaKey || e.ctrlKey || e.altKey || e.target.tagName === 'SELECT') return; if (e.code === 'Space') { e.preventDefault(); $('btn-play').click(); } });
-  if (window.ResizeObserver) new ResizeObserver(() => { scene._resize(); chartKey = vialKey = ''; S.dirty = true; }).observe($('center'));
-  addEventListener('resize', () => { chartKey = vialKey = ''; S.dirty = true; });
+  if (window.ResizeObserver) new ResizeObserver(() => { scene._resize(); chartKey = rosKey = rateKey = wellKey = ''; S.dirty = true; }).observe($('center'));
+  addEventListener('resize', () => { chartKey = rosKey = rateKey = wellKey = ''; S.dirty = true; });
 
   seek(T0); document.body.classList.remove('loading');
   requestAnimationFrame((now) => { S.lastWall = now; tick(now); });

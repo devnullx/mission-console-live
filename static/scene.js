@@ -588,7 +588,7 @@
       // return: the upper stage (with the solar wings) drifts away, then the heat shield inflates under the lab
       const rt = ctx.ret || { sep: false, sepAge: 0, inflate: 0 };
       this.stageParts.forEach(({ o, y }) => { o.position.y = rt.sep ? y - rt.sepAge * 1.5 : y; o.visible = !rt.sep || rt.sepAge < 160; });
-      // Dexter-L parked on the stage-adapter fixture leaves with the stage
+      // Dexter-L parked on the stage grapple post leaves with the stage
       this.armRing.position.y = rt.sep ? -rt.sepAge * 1.5 : 0; this.armRing.visible = !rt.sep || rt.sepAge < 160;
       this.hiadPack.visible = rt.inflate <= 0; this.hiad.visible = rt.inflate > 0;
       if (this.hiad.visible) { const f = sstep(rt.inflate); this.hiad.scale.set(11.5 * lerp(.3, 1, f), 11.5 * lerp(.5, 1, f), 11.5 * lerp(.3, 1, f)); }

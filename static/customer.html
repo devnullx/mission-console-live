@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Customer Console · LELP-1</title>
+<title>RadSenRegen · LELP-1</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/style.css?v=36">
-<link rel="stylesheet" href="/static/customer.css?v=36">
+<link rel="stylesheet" href="/static/style.css?v=37">
+<link rel="stylesheet" href="/static/customer.css?v=37">
 </head>
 <body class="loading customer">
 
@@ -24,8 +24,8 @@
     <span class="brand-sub">CUSTOMER CONSOLE · LELP-1</span>
   </div>
   <div class="who">
-    <b>Adriana · Zurich Biotech Lab</b>
-    <span>Experiment SC-ORG-1 · stem-cell organoids · module 17 (large bay) · requests signed with ML-DSA-87</span>
+    <b>RadSenRegen · science team</b>
+    <span>RadSenRegen-1 · WJ-MSCs vs Muse cells, with and without exosomes · module 17 (large bay) · requests signed with ML-DSA-87</span>
   </div>
   <div class="clock" aria-label="Mission elapsed time">
     <span class="clock-label" id="met-sign">T−</span><span id="met">00:00:15</span>
@@ -37,23 +37,21 @@
 <main id="main">
   <section id="left">
     <div class="panel" id="panel-sample">
-      <div class="panel-h"><h2>YOUR SAMPLE</h2><span class="h-sub">module 17</span><span class="chip push" id="m-state">ON THE PAD</span></div>
+      <div class="panel-h"><h2>YOUR EXPERIMENT</h2><span class="chip push" id="m-state">ON THE PAD</span></div>
       <div class="panel-b">
         <div class="hero-row">
-          <div class="hero"><span class="lbl">TEMPERATURE</span><span class="hero-num"><span id="m-t">—</span><span class="unit">°C</span></span><span class="hero-sub" id="m-t-sub">protocol 37.0 ± 0.3</span></div>
-          <div class="hero"><span class="lbl">VIABILITY</span><span class="hero-num"><span id="m-h">—</span><span class="unit">%</span></span><span class="hero-sub" id="m-h-sub">—</span></div>
+          <div class="hero"><span class="lbl">CULTURE BLOCK</span><span class="hero-num"><span id="m-t">—</span><span class="unit">°C</span></span><span class="hero-sub" id="m-t-sub">protocol 37.0 ± 0.3</span></div>
+          <div class="hero"><span class="lbl">PROTOCOL DAY</span><span class="hero-num"><span id="m-day">—</span><span class="unit">of 7</span></span><span class="hero-sub" id="m-day-sub">—</span></div>
         </div>
         <div class="kv">
-          <div><span>PRESSURE</span><b id="m-p">—</b></div>
+          <div><span>FLIGHT VIABILITY</span><b id="m-h">—</b></div>
+          <div><span>DOSE</span><b id="m-dose">—</b></div>
+          <div><span>CRYO CASSETTE</span><b id="m-cryo">—</b></div>
           <div><span>SEAL</span><b id="m-seal">—</b></div>
-          <div><span>HEATER</span><b id="m-heat">—</b></div>
-          <div><span>SETPOINT</span><b id="m-sp">—</b></div>
         </div>
-        <div class="sub-h"><h3>TEMPERATURE · °C</h3><span class="h-sub">last 2 h · band = protocol</span></div>
-        <svg class="chart" id="chart-t" aria-label="Module 17 temperature over the last two hours"></svg>
-        <div class="sub-h"><h3>VIABILITY · %</h3><span class="h-sub">last 2 h</span></div>
-        <svg class="chart short" id="chart-h" aria-label="Module 17 culture viability over the last two hours"></svg>
-        <div class="sub-h"><h3>PROTOCOL SC-ORG-1</h3></div>
+        <div class="sub-h"><h3>CULTURE BLOCK · °C</h3><span class="h-sub">last 2 h · band = protocol</span></div>
+        <svg class="chart short" id="chart-t" aria-label="Module 17 culture block temperature over the last two hours"></svg>
+        <div class="sub-h"><h3>RADSENREGEN FLOW</h3><span class="h-sub" id="flow-sub">protocol clock ×60</span></div>
         <ol class="steps" id="steps"></ol>
       </div>
     </div>
@@ -74,7 +72,7 @@
         <div class="ctl">
           <div class="ctl-req">
             <select id="ctl-module" aria-label="Module">
-              <option value="17">Module 17 · yours · organoids</option>
+              <option value="17">Module 17 · yours · RadSenRegen</option>
               <option value="3">Module 3 · another customer's</option>
             </select>
             <div class="tasks">
@@ -110,22 +108,49 @@
   <section id="right">
     <div class="panel" id="panel-right">
       <div class="tabs" id="right-tabs">
-        <button data-tab="data" class="on">DATA</button>
+        <button data-tab="cells" class="on">CELLS</button>
+        <button data-tab="env">ENVIRONMENT</button>
         <button data-tab="audit">AUDIT</button>
         <button data-tab="return">JOURNEY</button>
       </div>
       <div class="panel-b">
-        <div class="tabpane" data-pane="data">
+        <div class="tabpane" data-pane="cells">
           <div class="stats">
-            <div class="stat"><span>REPORTS</span><b id="d-n">0</b></div>
-            <div class="stat"><span>FRAMES</span><b id="d-frames">0</b></div>
-            <div class="stat"><span>DATA</span><b id="d-mb">0 MB</b></div>
+            <div class="stat"><span>ROUNDS</span><b id="c-rounds">0</b></div>
+            <div class="stat" title="raw frames kept on board, returned with the lab"><span>FRAMES</span><b id="c-frames">0</b></div>
+            <div class="stat" title="per-well metrics and thumbnails sent to you"><span>SENT</span><b id="c-mb">0 MB</b></div>
           </div>
-          <div class="sub-h"><h3>ORGANOID IMAGING</h3><span class="h-sub" id="img-cap">no frames yet</span></div>
-          <svg class="vials" id="vials" aria-label="Organoid size per vial, rendered from the twin's analysis results"></svg>
-          <div class="img-note">Schematic rendered from the twin's analysis values (24 vials), not camera frames.</div>
+          <div class="sub-h"><h3>FOUR GROUPS</h3><span class="h-sub">flight · <span class="gnd">ground control</span></span></div>
+          <table class="tbl gtbl" id="groups" aria-label="Live metrics per group, flight and ground control"></table>
+          <div class="sub-h"><h3>ROS INDEX</h3><span class="h-sub">by protocol day · dashed = ground</span></div>
+          <svg class="chart" id="chart-ros" aria-label="ROS index per group by protocol day, flight and ground"></svg>
+          <div class="img-note" id="scn-note">Twin scenario, not data: Muse stress tolerance and exosome protection use the proposal's hypotheses with placeholder sizes. The flight measures them.</div>
+          <div class="sub-h"><h3>LUMASCOPE · 24 WELLS</h3><span class="h-sub" id="img-cap">cells still cryopreserved</span></div>
+          <svg class="vials" id="vials" aria-label="The 24 wells by group: cell cover from the twin's confluence, colour by group"></svg>
+          <div class="legend" id="well-legend"></div>
           <div class="sub-h"><h3>DELIVERED TO YOU</h3><span class="h-sub">via Leuk, Switzerland</span></div>
           <ul class="deliveries" id="deliveries"></ul>
+        </div>
+        <div class="tabpane" data-pane="env" hidden>
+          <div class="stats">
+            <div class="stat"><span>DOSE</span><b id="e-dose">—</b></div>
+            <div class="stat"><span>DOSE RATE</span><b id="e-rate">—</b></div>
+            <div class="stat"><span>SAA PASSES</span><b id="e-saa">—</b></div>
+          </div>
+          <div class="sub-h"><h3>DOSE RATE · µGy/h</h3><span class="h-sub">last 24 protocol hours · log scale</span></div>
+          <svg class="chart" id="chart-rate" aria-label="Dosimeter dose rate over the last 24 protocol hours, log scale"></svg>
+          <div class="img-note">Spikes are South Atlantic Anomaly passes; the floor is galactic cosmic rays, higher near the poles.</div>
+          <div class="kv one env">
+            <div><span>CULTURE BLOCK</span><b id="e-t">—</b></div>
+            <div><span>CRYO CASSETTE · 6 cryovials, then the exosome aliquots</span><b id="e-cryo">—</b></div>
+            <div><span>PRESSURE</span><b id="e-p">—</b></div>
+            <div><span>SEAL</span><b id="e-seal">—</b></div>
+            <div><span>MEDIUM</span><b>HEPES-buffered · no CO₂ supply</b></div>
+            <div><span>MICROGRAVITY</span><b id="e-ug">—</b></div>
+            <div><span>IMAGING</span><b>every 4 h</b></div>
+            <div><span>PROTOCOL CLOCK · 1 mission minute = 1 protocol hour</span><b>×60</b></div>
+          </div>
+          <p class="note env-note">Seven days at about 0.6 mGy a day give a few mGy, far below the doses most in-vitro radiation studies use. In this flight, space against ground mostly measures microgravity; a ground arm irradiated to the dosimeter's measured dose separates the two.</p>
         </div>
         <div class="tabpane" data-pane="audit" hidden>
           <p class="note">Every command that could touch module 17 had to pass the post-quantum signature check and the mission guardian. Refused attempts are listed too.</p>
@@ -140,6 +165,9 @@
           <ol class="journey" id="journey"></ol>
           <div class="sub-h"><h3>COMING HOME</h3><span class="h-sub">whole lab · inflatable heat shield</span></div>
           <div class="return" id="return"></div>
+          <div class="sub-h"><h3>AFTER THE FLIGHT</h3><span class="h-sub">in the RadSenRegen lab</span></div>
+          <table class="tbl after" id="after" aria-label="Preserved samples and the endpoints measured from them"></table>
+          <p class="note compare"><b>Compare</b> WJ vs Muse → with vs without exosomes → space vs ground.<br><b>Result</b> which cells resist better, and whether exosomes protect against space-induced damage: from the lab analysis, not from the twin.</p>
         </div>
       </div>
     </div>
@@ -167,9 +195,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script>
-<script src="/static/scene.js?v=36"></script>
-<script src="/static/hydrate.js?v=36"></script>
-<script src="/static/replay.js?v=36"></script>
-<script src="/static/customer.js?v=36"></script>
+<script src="/static/scene.js?v=37"></script>
+<script src="/static/hydrate.js?v=37"></script>
+<script src="/static/replay.js?v=37"></script>
+<script src="/static/customer.js?v=37"></script>
 </body>
 </html>

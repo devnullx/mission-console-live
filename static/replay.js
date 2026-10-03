@@ -57,7 +57,7 @@
     X.tArmPark = rm && rm.t_arm_park ? rm.t_arm_park : Infinity; X.tSep = rm ? rm.t_stage_sep : Infinity; X.tInflate = rm ? rm.t_inflate : Infinity; X.inflateS = rm ? rm.inflate_s : 90;
     X.tEI = rm ? rm.t_entry_interface : Infinity; X.tMain = rm ? rm.t_main : Infinity;
     X.tSplash = rm ? rm.t_splash : Infinity; X.tRecovery = rm ? rm.t_recovery : Infinity; X.tPeak = tOf('PEAK_HEATING', Infinity);
-    X.retShot = rm && X.ret.length ? [X.tEI - 20, X.tRecovery + 60] : null;
+    X.retShot = rm && X.ret.length ? [X.tEI - 20, tEnd + 1] : null;     // to the end: once aboard the ship the lab never goes back to orbit
     X.atk = isFinite(X.tIntr);
     if (X.atk) { X.tAtk0 = X.tIntr - 30;
       X.tAtk1 = Math.max(...ev.filter((e) => e.t >= X.tIntr && e.t < X.tIntr + 900 && (e.seg === 'ATTACK' || e.code === 'CONTAIN' || e.code === 'KEYS' || e.code === 'LEDGER_TAMPER')).map((e) => e.t)) + 30;
@@ -77,8 +77,13 @@
     // director pacing (speed AUTO): slow windows around the moments worth watching
     X.slow = [];
     for (const e of ev) { if (e.t < opsStart || (X.atk && e.t >= X.tAtk0 && e.t <= X.tAtk1)) continue;
-      if (['FAULT', 'ISOLATE', 'SOLAR', 'END'].includes(e.code) || e.seg === 'RETURN' || e.seg === 'CUSTOMER' || (e.data && e.data.final && e.data.final !== 'EXECUTE')) X.slow.push([e.t - 20, e.t + 40, 15]); }
+      if (['FAULT', 'ISOLATE', 'SOLAR', 'END'].includes(e.code) || e.seg === 'RETURN' || (e.seg === 'CUSTOMER' && !['IMAGING', 'MEDIA'].includes(e.code))
+          || (e.data && e.data.final && e.data.final !== 'EXECUTE')) X.slow.push([e.t - 20, e.t + 40, 15]); }
     if (X.atk) X.slow.push([X.tAtk0 + 15, X.tAtk1 - 10, 5]);
+    // RadSenRegen protocol in module 17 (sentinel/lelp/experiment.py): one row per protocol hour, dose rate every 10 s
+    const E = M.experiment && M.experiment.rows && M.experiment.rows.length ? M.experiment : null;
+    if (E) { E.ix = {}; E.cols.forEach((c, i) => { E.ix[c] = i; }); E.rows.forEach((r) => { r.t = r[0]; }); }
+    X.exp = E;
     // chart extents
     const ceilTo = (v, step) => Math.ceil(v / step) * step;
     X.xMax = ceilTo(Math.max(120, ...bo.map((s) => s.downrange_km)) * 1.1, 100);
@@ -165,6 +170,20 @@
     const F = M.frames, i = lastBefore(F, t);
     return i >= 0 && F[i].platform.arm.busy ? 40 : 300;
   }
+  function expAt(M, t) {          // module 17's protocol state at t: rows interpolated, phase from the key times
+    const E = M.x.exp; if (!E) return null;
+    const rows = E.rows, i = lastBefore(rows, t); if (i < 0) return null;
+    const a = rows[i], b = rows[i + 1] || a, k = b.t > a.t ? clamp((t - a.t) / (b.t - a.t), 0, 1) : 0, ix = E.ix, m = E.meta;
+    const v = (c) => lerp(a[ix[c]], b[ix[c]], k);
+    const pres = m.t_preserved != null && t >= m.t_preserved;
+    const phase = m.t_start == null || t < m.t_start ? 'cryo' : t < m.t_thaw ? 'thawing' : pres ? 'preserved' : t < m.t_exo ? 'recovery' : 'culture';
+    const o = { t, phase, day: v('day'), block_c: v('block_c'), cryo_c: v('cryo_c'), dose: v('dose_mgy'), passes: a[ix.saa_passes], rounds: a[ix.rounds],
+                down_mb: a[ix.down_mb], health: v('health'), rate: null, g: {} };
+    const rr = E.rate, j = rr && rr.t0 != null ? Math.floor((t - rr.t0) / rr.dt) : -1;
+    if ((phase === 'recovery' || phase === 'culture' || phase === 'thawing') && j >= 0 && j < rr.v.length) o.rate = rr.v[j];
+    for (const g of m.groups) { o.g[g] = {}; for (const e of m.envs) o.g[g][e] = { v: v(g + '|' + e + '|v'), ros: v(g + '|' + e + '|ros'), conf: v(g + '|' + e + '|conf'), shape: v(g + '|' + e + '|shape') }; }
+    return o;
+  }
   const RET_PHASE = { coast: 'COASTING TO ENTRY', entry: 'ENTRY', main: 'MAIN CANOPY', floating: 'AFLOAT' };
   function reentryReadout(c) {      // one line of live Return Module numbers for the 3-D view
     if (c.t >= c.tRecovery) return 'LELP-1 ABOARD THE RECOVERY SHIP · all 32 modules';
@@ -174,5 +193,5 @@
     return ['LELP-1 · ' + RET_PHASE[c.phase], alt + ' km', v, c.g_load >= 0.05 ? c.g_load.toFixed(1) + ' g' : '', q].filter(Boolean).join(' · ');
   }
   window.Replay = { T0, MILESTONES, lerp, clamp, smooth, pad2, hms, clock, met, esc, km, nice, lastBefore, load, prepare, t2x, x2t, lastEvent,
-                    sampleAt, launchState, moduleState, opsFrame, returnState, reentryAt, reentryReadout, autoRate };
+                    sampleAt, launchState, moduleState, opsFrame, returnState, reentryAt, reentryReadout, autoRate, expAt };
 })();

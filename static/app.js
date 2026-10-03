@@ -164,7 +164,7 @@
     // Dexter-L
     const stepI = ARM_STEPS.indexOf(A.step);
     $$('#arm-steps li').forEach((li, k) => cls(li, A.busy ? (k < stepI ? 'done' : k === stepI ? 'now' : '') : ''));
-    set('arm-now', A.released ? 'LEFT WITH THE UPPER STAGE · Dexter-L does not come home' : A.parked ? 'PARKED ON THE UPPER STAGE · latched to the adapter fixture, base latch released' : A.busy ? `MODULE ${A.module} · ${nice(A.task || 'cycle').toUpperCase()} · ${A.step} ${Math.round(A.step_t || 0)} / ${A.step_dur || 0} s${A.requested_by && A.requested_by !== 'MCC' ? ' · for ' + A.requested_by.split(' /')[0] : ''}`
+    set('arm-now', A.released ? 'LEFT WITH THE UPPER STAGE · Dexter-L does not come home' : A.parked ? 'PARKED ON THE UPPER STAGE · latched to the stage grapple post, base latch released' : A.busy ? `MODULE ${A.module} · ${nice(A.task || 'cycle').toUpperCase()} · ${A.step} ${Math.round(A.step_t || 0)} / ${A.step_dur || 0} s${A.requested_by && A.requested_by !== 'MCC' ? ' · for ' + A.requested_by.split(' /')[0] : ''}`
       : `IDLE · stowed, brakes on · ${A.cycles || 0} cycle${A.cycles === 1 ? '' : 's'} flown`);
     if (A.joints) {
       $$('#joints div').forEach((d, k) => { const v = A.joints[k]; d.querySelector('b').style.height = (Math.min(Math.abs(v), JOINT_LIM[k]) / JOINT_LIM[k] * 100) + '%';
@@ -174,7 +174,7 @@
       set('d-pow', A.power_w + ' W'); set('d-react', A.reaction_nm + ' N·m'); set('d-cyc', A.cycles);
       $('inhand').hidden = !A.grip;
       if (A.grip && A.module) { const m = f.modules[A.module - 1]; set('ih-name', `Module ${m.id} · ${m.payload.kind} · ${m.customer}`);
-        set('ih-det', `${m.payload.mass_kg} kg · ${m.payload.vials} vials · ${m.payload.containment} · ${m.t.toFixed(1)} °C held on umbilical power`); }
+        set('ih-det', `${m.payload.mass_kg} kg · ${m.payload.vials} ${m.payload.vessel || 'vials'} · ${m.payload.containment} · ${m.t.toFixed(1)} °C held on umbilical power`); }
     }
     panelModule(f, fi, t);
     // subsystems
@@ -217,7 +217,7 @@
     set('md-t', m.t.toFixed(2) + ' °C'); set('md-sp', pr.setpoint ? pr.setpoint + ' °C' : '—'); set('md-p', m.p + ' kPa'); set('md-seal', m.sealed ? 'SEALED' : 'BREACH');
     set('md-h', Math.round(m.health * 100) + ' %'); set('md-heat', m.heater_w + ' W'); set('md-proto', pr.mode === 'cycle' ? 'cycling' : 'constant');
     set('md-cyc', pr.mode === 'cycle' ? pr.cycles + (pr.crystal_um ? ' · ' + pr.crystal_um + ' µm' : '') : '—');
-    set('md-note', [pay.vials ? pay.vials + ' vials' : '', pay.mass_kg ? pay.mass_kg + ' kg' : '', pay.containment, pay.interface, pr.groups].filter(Boolean).join(' · '));
+    set('md-note', [pay.vials ? pay.vials + ' ' + (pay.vessel || 'vials') : '', pay.mass_kg ? pay.mass_kg + ' kg' : '', pay.containment, pay.interface, pr.groups].filter(Boolean).join(' · '));
     if (S.tab.left !== 'module') return;
     const key = S.mode + ':' + S.sel + ':' + Math.floor(fi / 3); if (key === sparkKey) return; sparkKey = key;
     const svg = $('md-spark'), [W, H] = size(svg), F = D().frames, i0 = Math.max(0, fi - 720), pts = [];
