@@ -77,7 +77,9 @@
       const up = V(Math.cos(lat) * Math.cos(lon), Math.sin(lat), -Math.cos(lat) * Math.sin(lon));     // matches SphereGeometry uv mapping
       const east = V(-Math.sin(lon), 0, -Math.cos(lon));
       const north = new THREE.Vector3().crossVectors(up, east).negate();
-      return { R, up, east, north };
+      // launch azimuth 192 deg (RUPAK: dawn-dusk SSO, south-south-west over the Bay of Bengal)
+      const az = THREE.MathUtils.degToRad(192), dir = north.clone().multiplyScalar(Math.cos(az)).add(east.clone().multiplyScalar(Math.sin(az))).normalize();
+      return { R, up, east: dir, north };
     }
     _place(downrangeKm, altKm) {
       const { R, up, east } = this._geo(), ang = downrangeKm / R;
@@ -136,7 +138,7 @@
       this.plume = exhaust(300); g.add(this.plume);
       this.plume.material.size = 0.05; this.plume.material.sizeAttenuation = true; this.plume.material.opacity = .45;
       this.sepT = null;
-      // local terrain around the pad (the 2 048 px Earth texture is ~20 km/pixel): a 60 km disc, land west, sea east
+      // local terrain around the pad (the 2 048 px Earth texture is ~20 km/pixel): a 60 km disc, land west, sea east (downrange is now SSW over water)
       const site = this._place(0, 0); this.pad.position.copy(site.pos); this._orient(this.pad, site.up, site.fwd, 0);
       const ground = new THREE.Group(); g.add(ground); ground.position.copy(site.pos); this._orient(ground, site.up, site.fwd, 0);
       const sea = new THREE.Mesh(new THREE.CircleGeometry(60, 64), this._std(0x173a55, { roughness: .4, metalness: .1 })); sea.rotation.x = -Math.PI / 2; sea.position.y = -0.02; ground.add(sea);
@@ -262,24 +264,36 @@
       const lab = new THREE.Mesh(new THREE.CylinderGeometry(Rm + 1.3, Rm + 1.3, 5, 8), new THREE.MeshPhysicalMaterial({ color: 0xbfe0ff, transparent: true, opacity: .22, roughness: .05, metalness: 0, transmission: 0, side: THREE.DoubleSide })); lab.position.y = 17; lelp.add(lab);
       const rig = new THREE.Mesh(new THREE.BoxGeometry(5, .3, 5), this._std(0x9aa0aa, { metalness: .7 })); rig.position.y = 14.8; lelp.add(rig); this.rig = rig;
       const lid = new THREE.Mesh(new THREE.CylinderGeometry(Rm + 1.4, Rm + 1.4, .3, 8), this._std(0xd8d8d2, { metalness: .6 })); lid.position.y = 19.6; lelp.add(lid);
-      // Dexter-L: 7 joints driven by the twin's joint angles (sentinel/lelp/arm.py); 9.5 scene units per metre
-      const U = 9.5, link = (len, r, mat) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r * .85, len, 14), mat); m.rotation.z = -Math.PI / 2; m.position.x = len / 2; return m; };
+      // Dexter-L: 7 joints driven by the twin's joint angles (sentinel/lelp/arm.py); 9.5 scene units per metre.
+      // Links use the team's arm CAD (assets/cad/arm.stl -> models/arm_*.glb) scaled 2.15x like the twin's L1/L2.
+      const U = 9.5, L1m = 0.52, L2m = 0.98, K = 2.15;
+      const link = (len, r, mat) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r * .85, len, 14), mat); m.rotation.z = -Math.PI / 2; m.position.x = len / 2; return m; };
       const jm = this._std(0x3a3f47, { metalness: .8, roughness: .35 }), lm = this._std(0xe8e8e2, { metalness: .4, roughness: .45 });
       this.arm = new THREE.Group(); this.arm.position.set(0.62 * U, 1.45 * U, 0); lelp.add(this.arm);          // J1 yaw
-      this.arm.add(new THREE.Mesh(new THREE.CylinderGeometry(.55, .65, 1.2, 16), jm));
+      this.armBaseProc = new THREE.Mesh(new THREE.CylinderGeometry(.55, .65, 1.2, 16), jm); this.arm.add(this.armBaseProc);
       this.j2 = new THREE.Group(); this.j2.position.y = .6; this.arm.add(this.j2);                               // J2 shoulder pitch (about z)
       this.j2.add(new THREE.Mesh(new THREE.SphereGeometry(.55, 16, 16), jm));
       this.j3 = new THREE.Group(); this.j2.add(this.j3);                                                          // J3 roll (about x)
-      this.j3.add(link(0.75 * U, .3, lm));
-      this.j4 = new THREE.Group(); this.j4.position.x = 0.75 * U; this.j3.add(this.j4);                           // J4 elbow (about z)
-      this.j4.add(new THREE.Mesh(new THREE.SphereGeometry(.42, 16, 16), jm)); this.j4.add(link(0.75 * U, .24, lm));
-      this.j5 = new THREE.Group(); this.j5.position.x = 0.75 * U; this.j4.add(this.j5);                           // J5 wrist pitch
+      this.armUpperProc = link(L1m * U, .3, lm); this.j3.add(this.armUpperProc);
+      this.j4 = new THREE.Group(); this.j4.position.x = L1m * U; this.j3.add(this.j4);                            // J4 elbow (about z)
+      this.j4.add(new THREE.Mesh(new THREE.SphereGeometry(.42, 16, 16), jm)); this.armForeProc = link(L2m * U, .24, lm); this.j4.add(this.armForeProc);
+      this.j5 = new THREE.Group(); this.j5.position.x = L2m * U; this.j4.add(this.j5);                            // J5 wrist pitch
       this.j5.add(new THREE.Mesh(new THREE.SphereGeometry(.3, 12, 12), jm));
       this.j6 = new THREE.Group(); this.j5.add(this.j6);                                                          // J6 roll
       this.j7 = new THREE.Group(); this.j6.add(this.j7);                                                          // J7 yaw
       const cam = new THREE.Mesh(new THREE.BoxGeometry(.5, .35, .35), jm); cam.position.set(.6, .45, 0); this.j7.add(cam);
       this.gripper = new THREE.Mesh(new THREE.BoxGeometry(0.15 * U, .9, 1.4), jm); this.gripper.position.x = 0.075 * U; this.j7.add(this.gripper);
       this.carried = new THREE.Mesh(new THREE.BoxGeometry(2.4, 2.0, 2.0), this._std(0xffffff, { map: mli, metalness: .7, roughness: .4 })); this.carried.position.x = 0.15 * U + 1.2; this.carried.visible = false; this.j7.add(this.carried);
+      if (THREE.GLTFLoader) {
+        const ld = new THREE.GLTFLoader(), armMat = this._std(0xd9dadc, { metalness: .6, roughness: .4 });
+        const put = (url, parent, proc, rotY) => ld.load(url, g => { const r = g.scene; r.scale.setScalar(K * U); if (rotY) r.rotation.y = rotY;
+          r.traverse(o => { if (o.isMesh) { if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); o.material = armMat; o.material.side = THREE.DoubleSide; } });
+          parent.add(r); if (proc) proc.visible = false; }, undefined, () => {});
+        put('static/models/arm_upper.glb?v=1', this.j3, this.armUpperProc, 0);
+        put('static/models/arm_fore.glb?v=1', this.j4, this.armForeProc, 0);
+        put('static/models/arm_base.glb?v=1', this.arm, this.armBaseProc, -Math.PI / 2);   // base bracket stands on the ring
+      }
+      this.L1 = L1m * U; this.L2 = L2m * U;
       this.armUpper = this.j2; this.armElbow = this.j4;   // compatibility
       this.L1 = 0.75 * U; this.L2 = 0.75 * U;
       // solar wings with cell texture

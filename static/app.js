@@ -74,7 +74,7 @@
     const L = byBody[S.mode], latest = {}; for (const b in L) { const i = lastBefore(L[b], t); if (i >= 0) latest[b] = L[b][i]; }
     const hasSep = !!latest.upper;
     const hero = hasSep ? latest.upper : latest.stack;
-    $('launch-body').textContent = hasSep ? 'UPPER STAGE + LELP' : 'STACK';
+    $('launch-body').textContent = hasSep ? 'VIBHU UPPER STAGE + LELP-1' : 'STACK · 9 × SHAKTI';
     if (hero) {
       $('v-speed').textContent = Math.round(hero.speed_ms * 3.6).toLocaleString(); $('v-alt').textContent = hero.alt_km.toFixed(1);
       $('v-dr').textContent = hero.downrange_km.toFixed(1) + ' km'; $('v-thr').textContent = Math.round(hero.throttle * 100) + ' %';
@@ -92,7 +92,7 @@
     drawTraj(t, L);
     scene.setLandingZone((D().launch_meta || {}).landing_zone_km || 0);
     scene.updateLaunch(latest, hasSep);
-    $('overlay-caption').textContent = hasSep ? `BOOSTER TO DOWNRANGE BARGE AT ${(D().launch_meta || {}).landing_zone_km || '—'} KM (BAY OF BENGAL) · UPPER STAGE: BURN, COAST, CIRCULARISE AT 800 KM` : `ASCENT FROM APJ ABDUL KALAM ISLAND, ODISHA · ${(D().launch_meta || {}).engines || 28} × SHAKTI LOX/ETHANOL`;
+    $('overlay-caption').textContent = hasSep ? `BOOSTER TO DOWNRANGE BARGE AT ${(D().launch_meta || {}).landing_zone_km || '—'} KM (BAY OF BENGAL) · VIBHU UPPER STAGE: BURN, COAST, CIRCULARISE AT ${(D().launch_meta || {}).target_alt_km || 550} KM` : `RUPAK ASCENT FROM APJ ABDUL KALAM ISLAND, ODISHA · ${(D().launch_meta || {}).engines || 28} × SHAKTI ON GP-300 · TARGET ${(D().launch_meta || {}).orbit || '550 KM SSO'}`;
   }
   function drawTraj(t, L) {
     const xmax = Math.max(220, ...['stack', 'upper', 'booster'].flatMap(b => (L[b] || []).filter(s => s.t <= t).map(s => Math.abs(s.downrange_km))));
