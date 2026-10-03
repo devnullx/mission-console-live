@@ -1,7 +1,7 @@
 /* Customer panel: one customer's view of the same mission replay (module 17, Adriana / Zurich Biotech Lab). */
 (async function () {
   const $ = (id) => document.getElementById(id);
-  const D = await (await fetch('api/mission/sentinel.json')).json();
+  const D = window.hydrateMission(await (await fetch('api/mission/sentinel.json')).json());
   const CUST = 'Adriana / Zurich Biotech Lab', MOD = 17;
   const S = { t: 0, playing: false, speed: 60, lastWall: performance.now() };
   const fmtT = (t) => { t = Math.max(0, Math.floor(t)); const h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60; return [h, m, s].map(x => String(x).padStart(2, '0')).join(':'); };

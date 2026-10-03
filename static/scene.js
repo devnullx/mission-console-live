@@ -290,38 +290,38 @@
       const lab = new THREE.Mesh(new THREE.CylinderGeometry(Rm + 1.3, Rm + 1.3, 5, 8), new THREE.MeshPhysicalMaterial({ color: 0xbfe0ff, transparent: true, opacity: .22, roughness: .05, metalness: 0, transmission: 0, side: THREE.DoubleSide })); lab.position.y = 17; lelp.add(lab);
       const rig = new THREE.Mesh(new THREE.BoxGeometry(5, .3, 5), this._std(0x9aa0aa, { metalness: .7 })); rig.position.y = 14.8; lelp.add(rig); this.rig = rig;
       const lid = new THREE.Mesh(new THREE.CylinderGeometry(Rm + 1.4, Rm + 1.4, .3, 8), this._std(0xd8d8d2, { metalness: .6 })); lid.position.y = 19.6; lelp.add(lid);
-      // Dexter-L: 7 joints driven by the twin's joint angles (sentinel/lelp/arm.py); 9.5 scene units per metre.
-      // Links use the team's arm CAD (assets/cad/arm.stl -> models/arm_*.glb) scaled 2.15x like the twin's L1/L2.
-      const U = 9.5, L1m = 0.52, L2m = 0.98, K = 2.15;
+      // Dexter-L (sentinel/lelp/arm.py): turntable ring J0 + 7 joints driven by the twin's joint angles; 9.5 scene
+      // units per metre. Twin frame (x radial, y tangential, z up) maps to scene (x, z, y), so yaw/roll signs flip.
+      // The team's arm CAD (models/arm_*.glb, a 0.93 m concept model) is stretched onto the 0.80 m links.
+      const U = 9.5, L1m = 0.80, L2m = 0.80, L3m = 0.15;
       const link = (len, r, mat) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r * .85, len, 14), mat); m.rotation.z = -Math.PI / 2; m.position.x = len / 2; return m; };
       const jm = this._std(0x3a3f47, { metalness: .8, roughness: .35 }), lm = this._std(0xe8e8e2, { metalness: .4, roughness: .45 });
-      this.arm = new THREE.Group(); this.arm.position.set(0.62 * U, 1.45 * U, 0); lelp.add(this.arm);          // J1 yaw
-      this.armBaseProc = new THREE.Mesh(new THREE.CylinderGeometry(.55, .65, 1.2, 16), jm); this.arm.add(this.armBaseProc);
-      this.j2 = new THREE.Group(); this.j2.position.y = .6; this.arm.add(this.j2);                               // J2 shoulder pitch (about z)
+      this.armRing = new THREE.Group(); lelp.add(this.armRing);                                                  // J0 ring azimuth
+      const track = new THREE.Mesh(new THREE.TorusGeometry(Rm + 1.5, .16, 8, 48), jm); track.rotation.x = Math.PI / 2; track.position.y = 1.52 * U; lelp.add(track);
+      const outrigger = new THREE.Mesh(new THREE.BoxGeometry((0.85 - 0.70) * U + .6, .5, .9), jm); outrigger.position.set(0.775 * U, 1.56 * U, 0); this.armRing.add(outrigger);
+      this.arm = new THREE.Group(); this.arm.position.set(0.85 * U, 1.60 * U, 0); this.armRing.add(this.arm);     // J1 yaw
+      this.armBaseProc = new THREE.Mesh(new THREE.CylinderGeometry(.55, .65, 1.0, 16), jm); this.armBaseProc.position.y = -.2; this.arm.add(this.armBaseProc);
+      this.j2 = new THREE.Group(); this.arm.add(this.j2);                                                         // J2 shoulder pitch (scene z)
       this.j2.add(new THREE.Mesh(new THREE.SphereGeometry(.55, 16, 16), jm));
-      this.j3 = new THREE.Group(); this.j2.add(this.j3);                                                          // J3 roll (about x)
+      this.j3 = new THREE.Group(); this.j2.add(this.j3);                                                          // J3 upper-arm roll (scene x)
       this.armUpperProc = link(L1m * U, .3, lm); this.j3.add(this.armUpperProc);
-      this.j4 = new THREE.Group(); this.j4.position.x = L1m * U; this.j3.add(this.j4);                            // J4 elbow (about z)
+      this.j4 = new THREE.Group(); this.j4.position.x = L1m * U; this.j3.add(this.j4);                            // J4 elbow
       this.j4.add(new THREE.Mesh(new THREE.SphereGeometry(.42, 16, 16), jm)); this.armForeProc = link(L2m * U, .24, lm); this.j4.add(this.armForeProc);
       this.j5 = new THREE.Group(); this.j5.position.x = L2m * U; this.j4.add(this.j5);                            // J5 wrist pitch
       this.j5.add(new THREE.Mesh(new THREE.SphereGeometry(.3, 12, 12), jm));
-      this.j6 = new THREE.Group(); this.j5.add(this.j6);                                                          // J6 roll
-      this.j7 = new THREE.Group(); this.j6.add(this.j7);                                                          // J7 yaw
+      this.j6 = new THREE.Group(); this.j5.add(this.j6);                                                          // J6 wrist roll
+      this.j7 = new THREE.Group(); this.j6.add(this.j7);                                                          // J7 wrist yaw
       const cam = new THREE.Mesh(new THREE.BoxGeometry(.5, .35, .35), jm); cam.position.set(.6, .45, 0); this.j7.add(cam);
-      this.gripper = new THREE.Mesh(new THREE.BoxGeometry(0.15 * U, .9, 1.4), jm); this.gripper.position.x = 0.075 * U; this.j7.add(this.gripper);
-      this.carried = new THREE.Mesh(new THREE.BoxGeometry(2.4, 2.0, 2.0), this._std(0xffffff, { map: mli, metalness: .7, roughness: .4 })); this.carried.position.x = 0.15 * U + 1.2; this.carried.visible = false; this.j7.add(this.carried);
+      this.gripper = new THREE.Mesh(new THREE.BoxGeometry(L3m * U, .9, 1.4), jm); this.gripper.position.x = L3m * U / 2; this.j7.add(this.gripper);
+      this.carried = new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.4, 3.4), this._std(0xffffff, { map: mli, metalness: .7, roughness: .4 })); this.carried.position.x = L3m * U + 1.1; this.carried.visible = false; this.j7.add(this.carried);
       if (THREE.GLTFLoader) {
         const ld = new THREE.GLTFLoader(), armMat = this._std(0xd9dadc, { metalness: .6, roughness: .4 });
-        const put = (url, parent, proc, rotY) => ld.load(url, g => { const r = g.scene; r.scale.setScalar(K * U); if (rotY) r.rotation.y = rotY;
+        const put = (url, parent, proc, sx, k, rotY) => ld.load(url, g => { const r = g.scene; r.scale.set(sx * U, k * U, k * U); if (rotY) r.rotation.y = rotY;
           r.traverse(o => { if (o.isMesh) { if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); o.material = armMat; o.material.side = THREE.DoubleSide; } });
           parent.add(r); if (proc) proc.visible = false; }, undefined, () => {});
-        put('static/models/arm_upper.glb?v=1', this.j3, this.armUpperProc, 0);
-        put('static/models/arm_fore.glb?v=1', this.j4, this.armForeProc, 0);
-        put('static/models/arm_base.glb?v=1', this.arm, this.armBaseProc, -Math.PI / 2);   // base bracket stands on the ring
+        put('static/models/arm_upper.glb?v=1', this.j3, this.armUpperProc, L1m / 0.241, 2.0, 0);
+        put('static/models/arm_fore.glb?v=1', this.j4, this.armForeProc, L2m / 0.457, 2.0, 0);
       }
-      this.L1 = L1m * U; this.L2 = L2m * U;
-      this.armUpper = this.j2; this.armElbow = this.j4;   // compatibility
-      this.L1 = 0.75 * U; this.L2 = 0.75 * U;
       // solar wings with cell texture
       const cells = solarTexture();
       this.solar = new THREE.Group(); this.solar.position.y = -7; lelp.add(this.solar);
@@ -350,81 +350,28 @@
     updateOps(frame, states, isolatedNodes, dt, ctx = {}) {
       this.t += dt;
       this.scene.background.setRGB(.02, .03, .06);
-      this.lelp.rotation.y += dt * .03; this.earth.rotation.y += dt * .004;
-      const p = frame.platform;
+      this.lelp.rotation.y += dt * (ctx.cam === 'arm' ? .0 : .03); this.earth.rotation.y += dt * .004;
+      const p = frame.platform, R = THREE.MathUtils.degToRad;
       // modules: colour + status LED
       states.forEach((s, i) => { const m = this.modules[i]; if (!m) return;
         const col = { idle: 0xffffff, good: 0xd8ffd8, warn: 0xffe0a0, crit: 0xffb0b0, move: 0xc0d8ff }[s] || 0xffffff;
         m.material.color.setHex(col); m.material.emissive.setHex(s === 'move' ? 0x0d2a5a : s === 'crit' ? 0x3a0a0a : 0x000000);
         m.userData.led.material.color.setHex({ idle: 0x222222, good: 0x1fe06a, warn: 0xffb020, crit: 0xff3030, move: 0x40a0ff }[s]);
         m.visible = !(ctx.capsuleState && ctx.capsuleState !== 'docked' && i === 16 && ctx.capsuleState !== 'landed'); });
-      // Dexter-L: apply the twin's joint angles (deg). J1 yaw about y, J2/J4/J5 pitch about z, J3/J6 roll about x, J7 yaw about y
-      const a = p.arm, R = THREE.MathUtils.degToRad;
-      if (a.joints) {
-        const j = a.joints, k = .15;
-        this.arm.rotation.y = lerp(this.arm.rotation.y, R(-j[0]), k); this.j2.rotation.z = lerp(this.j2.rotation.z, R(j[1]), k); this.j3.rotation.x = lerp(this.j3.rotation.x, R(j[2]), k);
-        this.j4.rotation.z = lerp(this.j4.rotation.z, R(j[3]), k); this.j5.rotation.z = lerp(this.j5.rotation.z, R(j[4]), k); this.j6.rotation.x = lerp(this.j6.rotation.x, R(j[5]), k); this.j7.rotation.y = lerp(this.j7.rotation.y, R(j[6]), k);
-        this.carried.visible = !!a.grip; if (a.module) this.modules[a.module - 1].visible = !a.grip;
+      // Dexter-L: ring azimuth + joint angles straight from the twin (deg)
+      const a = p.arm;
+      if (a && a.joints) {
+        const j = a.joints, k = ctx.snap ? 1 : .2;
+        const ringT = R(-(a.ring_deg || 0)); let dr = ringT - this.armRing.rotation.y; dr = Math.atan2(Math.sin(dr), Math.cos(dr));
+        this.armRing.rotation.y += dr * k;
+        this.arm.rotation.y = lerp(this.arm.rotation.y, R(-j[0]), k); this.j2.rotation.z = lerp(this.j2.rotation.z, R(j[1]), k);
+        this.j3.rotation.x = lerp(this.j3.rotation.x, R(-j[2]), k); this.j4.rotation.z = lerp(this.j4.rotation.z, R(j[3]), k);
+        this.j5.rotation.z = lerp(this.j5.rotation.z, R(j[4]), k); this.j6.rotation.x = lerp(this.j6.rotation.x, R(-j[5]), k); this.j7.rotation.y = lerp(this.j7.rotation.y, R(-j[6]), k);
+        this.carried.visible = !!a.grip;
+        if (a.module && this.modules[a.module - 1] && a.grip) this.modules[a.module - 1].visible = false;
       }
-      // solar wings with cell texture
-      const cells = solarTexture();
-      this.solar = new THREE.Group(); this.solar.position.y = -7; lelp.add(this.solar);
-      [-1, 1].forEach(s => { const p = new THREE.Mesh(new THREE.BoxGeometry(16, .12, 3.4), this._std(0xffffff, { map: cells, metalness: .5, roughness: .35 })); p.position.x = s * 12; this.solar.add(p);
-        const boom = new THREE.Mesh(new THREE.CylinderGeometry(.12, .12, 4.5, 8), this._std(0x9aa0aa)); boom.rotation.z = Math.PI / 2; boom.position.x = s * 2.2; this.solar.add(boom); });
-      this.solar.scale.set(.05, 1, 1);
-      // upper stage below (integrated bus)
-      const adapter = new THREE.Mesh(new THREE.CylinderGeometry(3.6, 4.8, 2.4, 8, 1, true), this._std(0xd8d8d2, { side: THREE.DoubleSide, wireframe: true })); adapter.position.y = -1.6; lelp.add(adapter);
-      const stage = new THREE.Mesh(new THREE.CylinderGeometry(4.8, 4.8, 22, 32), this._std(0xe6e6e0, { roughness: .45, metalness: .25 })); stage.position.y = -14; lelp.add(stage);
-      const nozzle = new THREE.Mesh(new THREE.ConeGeometry(2.2, 4, 24, 1, true), this._std(0x555a63, { side: THREE.DoubleSide, metalness: .8 })); nozzle.position.y = -27; nozzle.rotation.x = Math.PI; lelp.add(nozzle);
-      // return capsule (docked on top until CAPSULE_SEP)
-      this.capsule = new THREE.Group(); g.add(this.capsule);
-      const cap = new THREE.Mesh(new THREE.ConeGeometry(2.2, 3.2, 32), this._std(0xd0d4da, { metalness: .5, roughness: .4 })); cap.position.y = 1.6; this.capsule.add(cap);
-      const shield = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 1.8, .6, 32), this._std(0x4a2a1a, { roughness: .9 })); this.capsule.add(shield);
-      this.plasma = new THREE.Mesh(new THREE.SphereGeometry(3.4, 24, 24), new THREE.MeshBasicMaterial({ color: 0xff7a30, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending })); this.capsule.add(this.plasma);
-      this.chute = new THREE.Mesh(new THREE.SphereGeometry(5, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), this._std(0xff7f2a, { side: THREE.DoubleSide, roughness: .9 })); this.chute.position.y = 11; this.chute.visible = false; this.capsule.add(this.chute);
-      this.capsule.position.set(0, 21.5, 0); this.capsuleState = 'docked'; this.capsuleT = 0;
-      // relays + ground stations as points on the Earth limb
-      this.relays = []; this.links = new THREE.Group(); g.add(this.links);
-      [[-70, 28, -60], [78, 36, -50]].forEach(p => { const r = new THREE.Group(); r.position.set(...p);
-        const bus = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.6, 1.6), this._std(0xffffff, { map: mli, metalness: .7 })); r.add(bus);
-        [-1, 1].forEach(s => { const w = new THREE.Mesh(new THREE.BoxGeometry(4, .08, 1.4), this._std(0xffffff, { map: cells, metalness: .5 })); w.position.x = s * 3; r.add(w); });
-        g.add(r); this.relays.push(r); });
-      this.linkMat = { on: new THREE.LineBasicMaterial({ color: 0x5fd39a, transparent: true, opacity: .8 }), off: new THREE.LineBasicMaterial({ color: 0x9a3030, transparent: true, opacity: .8 }) };
-    }
-    _armIK(targetLocal) {
-      // 2-link planar IK in the arm's vertical plane after yawing toward the target
-      const tx = targetLocal.x, ty = targetLocal.y, tz = targetLocal.z;
-      const yaw = Math.atan2(-tz, tx); this.arm.rotation.y = lerp(this.arm.rotation.y, yaw, .06);
-      const horiz = Math.hypot(tx, tz), d = Math.min(Math.hypot(horiz, ty), this.L1 + this.L2 - .05);
-      const a1 = Math.acos((this.L1 * this.L1 + d * d - this.L2 * this.L2) / (2 * this.L1 * d));
-      const a2 = Math.acos((this.L1 * this.L1 + this.L2 * this.L2 - d * d) / (2 * this.L1 * this.L2));
-      const base = Math.atan2(ty, horiz);
-      // upper link hangs down (-y) by default; rotate it in the x-y plane
-      const upperAng = -(Math.PI / 2) + base + a1;      // angle of upper link from +x
-      this.armUpper.rotation.z = lerp(this.armUpper.rotation.z, upperAng + Math.PI / 2, .06);
-      this.armElbow.rotation.z = lerp(this.armElbow.rotation.z, -(Math.PI - a2) + Math.PI / 2, .06);
-    }
-    updateOps(frame, states, isolatedNodes, dt, ctx = {}) {
-      this.t += dt;
-      this.scene.background.setRGB(.02, .03, .06);
-      this.lelp.rotation.y += dt * .03; this.earth.rotation.y += dt * .004;
-      const p = frame.platform;
-      // modules: colour + status LED
-      states.forEach((s, i) => { const m = this.modules[i]; if (!m) return;
-        const col = { idle: 0xffffff, good: 0xd8ffd8, warn: 0xffe0a0, crit: 0xffb0b0, move: 0xc0d8ff }[s] || 0xffffff;
-        m.material.color.setHex(col); m.material.emissive.setHex(s === 'move' ? 0x0d2a5a : s === 'crit' ? 0x3a0a0a : 0x000000);
-        m.userData.led.material.color.setHex({ idle: 0x222222, good: 0x1fe06a, warn: 0xffb020, crit: 0xff3030, move: 0x40a0ff }[s]);
-        m.visible = !(ctx.capsuleState && ctx.capsuleState !== 'docked' && i === 16 && ctx.capsuleState !== 'landed'); });
-      // arm: reach the module in transfer, carry it to the rig, return
-      const a = p.arm; const stepIdx = ['identify', 'unlock', 'capture', 'transfer', 'dock', 'position', 'analyse', 'return', 'record'].indexOf(a.step);
-      if (a.busy && a.module) {
-        const mod = this.modules[a.module - 1]; const target = new THREE.Vector3();
-        if (stepIdx <= 2 || stepIdx >= 7) { mod.getWorldPosition(target); } else { this.rig.getWorldPosition(target); target.y += 1.5; }
-        this.arm.worldToLocal(target); this._armIK(target);
-        const carrying = stepIdx >= 2 && stepIdx <= 7; this.carried.visible = carrying; mod.visible = !carrying;
-      } else { this.carried.visible = false; this.arm.rotation.y = lerp(this.arm.rotation.y, 0, .03); this.armUpper.rotation.z = lerp(this.armUpper.rotation.z, 0, .03); this.armElbow.rotation.z = lerp(this.armElbow.rotation.z, 0, .03); }
       // solar wings
-      const solarTarget = this._solarDeployed ? 1 : .05; this.solar.scale.x = lerp(this.solar.scale.x, solarTarget, .04);
+      this.solar.scale.x = lerp(this.solar.scale.x, this._solarDeployed ? 1 : .05, .04);
       // relays + links
       this.links.children.forEach(c => c.geometry.dispose()); this.links.clear();
       const lelpPos = V(0, 8, 0);
@@ -433,11 +380,19 @@
         if ((frame.comms.visible || []).includes(name) || iso) { const geo = new THREE.BufferGeometry().setFromPoints([lelpPos, r.position]); this.links.add(new THREE.Line(geo, iso ? this.linkMat.off : this.linkMat.on)); } });
       // return capsule
       this._stepCapsule(ctx.capsuleState || 'docked', dt);
-      // camera: slow orbit around LELP, pull back during return
-      const ang = this.t * .05; const ret = ctx.capsuleState && !['docked', 'landed'].includes(ctx.capsuleState);
-      const d = ret ? 95 : 62; this.camPos.lerp(V(Math.cos(ang) * d, 14 + Math.sin(this.t * .11) * 4, Math.sin(ang) * d), .02);
-      const tgt = ret ? this.capsule.position.clone().lerp(V(0, 4, 0), .5) : V(0, 2, 0); this.camTarget.lerp(tgt, .04);
-      this.camera.position.copy(this.camPos); this.camera.lookAt(this.camTarget);
+      // camera: slow orbit around LELP (console), close on the arm (customer view), pull back during the return
+      const ret = ctx.capsuleState && !['docked', 'landed'].includes(ctx.capsuleState);
+      if (ctx.cam === 'arm' && !ret) {
+        const base = new THREE.Vector3(); this.arm.getWorldPosition(base);
+        const out = base.clone().setY(0).normalize(), side = new THREE.Vector3(-out.z, 0, out.x);
+        this.camPos.lerp(base.clone().add(out.multiplyScalar(24)).add(side.multiplyScalar(17)).add(V(0, 7, 0)), .04);
+        this.camTarget.lerp(V(base.x * .45, 10.5, base.z * .45), .06);
+      } else {
+        const ang = this.t * .05, d = ret ? 95 : 62;
+        this.camPos.lerp(V(Math.cos(ang) * d, 14 + Math.sin(this.t * .11) * 4, Math.sin(ang) * d), .02);
+        this.camTarget.lerp(ret ? this.capsule.position.clone().lerp(V(0, 4, 0), .5) : V(0, 2, 0), .04);
+      }
+      this.camera.position.copy(this.camPos); this.camera.up.set(0, 1, 0); this.camera.lookAt(this.camTarget);
       this.renderer.render(this.scene, this.camera);
     }
     _stepCapsule(state, dt) {

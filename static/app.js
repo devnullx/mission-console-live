@@ -2,7 +2,8 @@
 (async function () {
   const $ = (id) => document.getElementById(id);
   const data = {};
-  for (const m of ['sentinel', 'baseline']) data[m] = await (await fetch('api/mission/' + m + '.json')).json();
+  const load = async (m) => window.hydrateMission(await (await fetch('api/mission/' + m + '.json')).json());
+  data.sentinel = await load('sentinel');   // the crypto-only baseline is fetched only when it is asked for
 
   const S = { mode: 'sentinel', t: 0, playing: false, speed: 20, lastWall: performance.now(), feedIdx: 0, lastDecision: null };
   const scene = new Scene3D($('view3d')); window.scene = scene;
@@ -68,7 +69,7 @@
 
   // ----- launch -----
   const byBody = {};
-  function indexLaunch() { for (const m of ['sentinel', 'baseline']) { byBody[m] = {}; for (const s of data[m].launch) (byBody[m][s.body] = byBody[m][s.body] || []).push(s); } }
+  function indexLaunch() { for (const m of Object.keys(data)) { if (byBody[m]) continue; byBody[m] = {}; for (const s of data[m].launch) (byBody[m][s.body] = byBody[m][s.body] || []).push(s); } }
   function renderLaunch(t) {
     $('panel-launch').hidden = false; $('panel-platform').hidden = true; scene.setPhase('launch');
     const L = byBody[S.mode], latest = {}; for (const b in L) { const i = lastBefore(L[b], t); if (i >= 0) latest[b] = L[b][i]; }
@@ -211,7 +212,7 @@
     render(); requestAnimationFrame(tick);
   }
   function seek(t) { S.t = Math.max(0, Math.min(t, tEnd())); $('feed').innerHTML = ''; $('feed').scrollTop = 0; S.feedIdx = 0; lastFrameT = -1; }
-  function setMode(m) { S.mode = m; document.body.dataset.mode = m; $('btn-sentinel').classList.toggle('on', m === 'sentinel'); $('btn-baseline').classList.toggle('on', m === 'baseline'); buildTimeline(); seek(S.t); }
+  async function setMode(m) { if (!data[m]) { data[m] = await load(m); indexLaunch(); } S.mode = m; document.body.dataset.mode = m; $('btn-sentinel').classList.toggle('on', m === 'sentinel'); $('btn-baseline').classList.toggle('on', m === 'baseline'); buildTimeline(); seek(S.t); }
 
   $('btn-play').onclick = () => { S.playing = !S.playing; $('btn-play').textContent = S.playing ? '❚❚' : '▶'; };
   $('speed').onchange = (e) => S.speed = +e.target.value;
