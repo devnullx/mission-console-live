@@ -8,7 +8,8 @@
   const smooth = (k) => { k = clamp(k, 0, 1); return k * k * (3 - 2 * k); };
   const pad2 = (x) => String(x).padStart(2, '0');
   const hms = (s) => { s = Math.max(0, Math.floor(s)); return pad2(Math.floor(s / 3600)) + ':' + pad2(Math.floor(s % 3600 / 60)) + ':' + pad2(s % 60); };
-  const clock = (t) => hms(t < 0 ? Math.ceil(-t) : t);
+  const DAY = 86400;
+  const clock = (t) => { if (t >= DAY) { const d = Math.floor(t / DAY); return d + 'd ' + hms(t - d * DAY); } return hms(t < 0 ? Math.ceil(-t) : t); };
   const met = (t) => (t < 0 ? 'T−' : 'T+') + clock(t);
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const km = (x) => Math.abs(x) >= 1000 ? Math.round(x).toLocaleString('en-US') + ' km' : x.toFixed(1) + ' km';
@@ -59,16 +60,23 @@
     X.tSplash = rm ? rm.t_splash : Infinity; X.tRecovery = rm ? rm.t_recovery : Infinity; X.tPeak = tOf('PEAK_HEATING', Infinity);
     X.retShot = rm && X.ret.length ? [X.tEI - 20, tEnd + 1] : null;     // to the end: once aboard the ship the lab never goes back to orbit
     X.atk = isFinite(X.tIntr);
+    // multi-day mission (lab operations last as long as the experiments, sentinel/lelp/mission.py): day-0 setup, quiet days,
+    // the attack and the return each get their own stretch of the track
+    const opsEnd = Math.min(X.tReturn, tEnd), tSetup = Math.min(opsStart + 3 * 3600, opsEnd), tRetW = isFinite(X.tReturn) ? X.tReturn - 600 : tEnd;
+    X.tSetup = tSetup;
     if (X.atk) { X.tAtk0 = X.tIntr - 30;
       X.tAtk1 = Math.max(...ev.filter((e) => e.t >= X.tIntr && e.t < X.tIntr + 900 && (e.seg === 'ATTACK' || e.code === 'CONTAIN' || e.code === 'KEYS' || e.code === 'LEDGER_TAMPER')).map((e) => e.t)) + 30;
-      const a = X.tAtk0 - opsStart, b = tEnd - X.tAtk1, xa = .30 + .62 * a / (a + b);
-      X.kT = [T0, X.tTouch + 20, opsStart, X.tAtk0, X.tAtk1, tEnd]; X.kX = [0, .24, .30, xa, xa + .08, 1];
       X.atkCmds = ev.filter((e) => e.data && e.data.final && e.data.route !== 'ground' && e.t >= X.tIntr);
-    } else { X.kT = [T0, X.tTouch + 20, opsStart, tEnd]; X.kX = [0, .24, .30, 1]; X.atkCmds = []; }
-    X.bands = [[T0, X.tMeco, 'ASCENT', ''], [X.tMeco, X.tTouch + 20, 'BOOSTER LANDING', 'b-booster'], [X.tTouch + 20, opsStart, 'COAST', '']];
-    const opsEnd = Math.min(X.tReturn, tEnd);
-    if (X.atk) X.bands.push([opsStart, X.tAtk0, 'LAB OPERATIONS', ''], [X.tAtk0, X.tAtk1, 'ATTACK', 'b-sentinel'], [X.tAtk1, opsEnd, 'LAB OPERATIONS', '']);
-    else X.bands.push([opsStart, opsEnd, 'LAB OPERATIONS', '']);
+    } else X.atkCmds = [];
+    if (X.atk && X.tAtk0 > tSetup && X.tAtk1 < tRetW) {
+      const a = X.tAtk0 - tSetup, b = tRetW - X.tAtk1, xa = .35 + (.86 - .06 - .35) * a / (a + b);
+      X.kT = [T0, X.tTouch + 20, opsStart, tSetup, X.tAtk0, X.tAtk1, tRetW, tEnd]; X.kX = [0, .22, .27, .35, xa, xa + .06, .86, 1];
+    } else if (tRetW > tSetup) { X.kT = [T0, X.tTouch + 20, opsStart, tSetup, tRetW, tEnd]; X.kX = [0, .22, .27, .35, .86, 1]; }
+    else { X.kT = [T0, X.tTouch + 20, opsStart, tEnd]; X.kX = [0, .24, .30, 1]; }
+    X.bands = [[T0, X.tMeco, 'ASCENT', ''], [X.tMeco, X.tTouch + 20, 'BOOSTER LANDING', 'b-booster'], [X.tTouch + 20, opsStart, 'COAST', ''], [opsStart, tSetup, 'SETUP · THAW', '']];
+    if (X.atk) X.bands.push([tSetup, X.tAtk0, 'LAB OPERATIONS', ''], [X.tAtk0, X.tAtk1, 'ATTACK', 'b-sentinel'], [X.tAtk1, opsEnd, 'LAB OPERATIONS', '']);
+    else X.bands.push([tSetup, opsEnd, 'LAB OPERATIONS', '']);
+    X.days = []; for (let d = 1; d * DAY < opsEnd; d++) X.days.push({ t: d * DAY, label: 'FD' + (d + 1) });   // flight days from launch
     if (isFinite(X.tReturn)) X.bands.push([X.tReturn, X.tEom, 'PAYLOAD RETURN', 'b-return'], [X.tEom, tEnd, '', '']);
     const KEY = new Set(MILESTONES.map((m) => m[0]));
     X.marks = ev.filter((e) => e.t >= T0 && ((KEY.has(e.code) && e.seg !== 'OPS') || e.code === 'SOLAR' || e.code === 'KEYS' || e.seg === 'ATTACK' || e.seg === 'RETURN' || e.seg === 'CUSTOMER'
@@ -80,10 +88,17 @@
       if (['FAULT', 'ISOLATE', 'SOLAR', 'END'].includes(e.code) || e.seg === 'RETURN' || (e.seg === 'CUSTOMER' && !['IMAGING', 'MEDIA'].includes(e.code))
           || (e.data && e.data.final && e.data.final !== 'EXECUTE')) X.slow.push([e.t - 20, e.t + 40, 15]); }
     if (X.atk) X.slow.push([X.tAtk0 + 15, X.tAtk1 - 10, 5]);
-    // RadSenRegen protocol in module 17 (sentinel/lelp/experiment.py): one row per protocol hour, dose rate every 10 s
-    const E = M.experiment && M.experiment.rows && M.experiment.rows.length ? M.experiment : null;
-    if (E) { E.ix = {}; E.cols.forEach((c, i) => { E.ix[c] = i; }); E.rows.forEach((r) => { r.t = r[0]; }); }
-    X.exp = E;
+    X.slow.sort((a, b) => a[0] - b[0]);
+    // customer experiments (experiments/*.yaml via sentinel/lelp/experiment.py): one row per protocol hour, dose rate every 10 s
+    X.exps = {};
+    for (const [id, E] of Object.entries(M.experiments || {})) { if (!E.rows || !E.rows.length) continue;
+      E.ix = {}; E.cols.forEach((c, i) => { E.ix[c] = i; }); E.rows.forEach((r) => { r.t = r[0]; }); X.exps[id] = E; }
+    X.featured = M.featured && X.exps[M.featured] ? M.featured : (Object.keys(X.exps)[0] || null);
+    for (const E of Object.values(X.exps)) { const m = E.meta, step = m.imaging.every_h * 3600 / m.protocol_x;  // imaging rounds, for the flash
+      E.rounds = []; if (m.t_start != null && m.t_end != null) for (let tr = m.t_start; tr <= (m.t_preserved != null ? m.t_preserved : m.t_end) + 1; tr += step) E.rounds.push({ t: tr }); }
+    // pacing changes playback must not skip at high speed: every slow window and director shot starts here
+    X.stops = [...X.slow.map((w) => w[0]), X.tArmPark - 5, X.tSep - 10, X.tInflate - 10, X.retShot ? X.retShot[0] : Infinity, tSetup, X.tAtk0 || Infinity]
+      .filter((v) => isFinite(v)).sort((a, b) => a - b);
     // chart extents
     const ceilTo = (v, step) => Math.ceil(v / step) * step;
     X.xMax = ceilTo(Math.max(120, ...bo.map((s) => s.downrange_km)) * 1.1, 100);
@@ -163,25 +178,43 @@
       if (t < X.tSplash + 15) return 8;
       return 120;
     }
+    if (t < X.tSetup) return 300;                                                     // day 0: commissioning, module activation, thaws
     if (t >= X.tArmPark - 5 && t < X.tArmPark + 50) return 8;                        // Dexter-L parks itself on the upper stage
     if (t >= X.tSep - 10 && t < X.tSep + 60) return 10;                              // the lab leaves the upper stage
     if (t >= X.tInflate - 10 && t < X.tInflate + X.inflateS + 15) return 10;         // the heat shield inflates
     for (const [a, b, v] of X.slow) if (t >= a && t <= b) return v;
     const F = M.frames, i = lastBefore(F, t);
-    return i >= 0 && F[i].platform.arm.busy ? 40 : 300;
+    return i >= 0 && F[i].platform.arm.busy ? 40 : 3600;                            // quiet days: an hour a second
   }
-  function expAt(M, t) {          // module 17's protocol state at t: rows interpolated, phase from the key times
-    const E = M.x.exp; if (!E) return null;
+  function advance(M, t, step) {    // move playback forward without jumping over the start of a slow window or a director shot
+    const S = M.x.stops; let lo = 0, hi = S.length;
+    while (lo < hi) { const m = (lo + hi) >> 1; if (S[m] <= t + 1e-6) lo = m + 1; else hi = m; }
+    return lo < S.length && S[lo] < t + step ? S[lo] : t + step;
+  }
+  function expStates(M, t) {        // what each experiment module is doing now, for the 3-D view
+    const out = [];
+    for (const [id, E] of Object.entries(M.x.exps)) { const m = E.meta, x = expAt(M, t, id); if (!x) continue;
+      let glow = null;
+      if (m.t_start != null && t >= m.t_start - 5 && t < m.t_thaw + 60) glow = 'thaw';
+      for (const st of m.t_steps || []) if (st.t != null && t >= st.t - 5 && t < st.t + 50) glow = st.do.includes('preserve') ? 'preserve' : st.do.includes('treat') ? 'treat' : 'media';
+      const i = lastBefore(E.rounds, t);
+      out.push({ id, module: m.module, phase: x.phase, glow, lastRound: i >= 0 ? E.rounds[i].t : null, rate: x.rate, saa: x.rate != null && x.rate > 80, day: x.day, dose: x.dose });
+    }
+    return out;
+  }
+  function expAt(M, t, id) {      // one customer's protocol state at t: rows interpolated, phase from the key times
+    const E = M.x.exps[id || M.x.featured]; if (!E) return null;
     const rows = E.rows, i = lastBefore(rows, t); if (i < 0) return null;
     const a = rows[i], b = rows[i + 1] || a, k = b.t > a.t ? clamp((t - a.t) / (b.t - a.t), 0, 1) : 0, ix = E.ix, m = E.meta;
     const v = (c) => lerp(a[ix[c]], b[ix[c]], k);
     const pres = m.t_preserved != null && t >= m.t_preserved;
-    const phase = m.t_start == null || t < m.t_start ? 'cryo' : t < m.t_thaw ? 'thawing' : pres ? 'preserved' : t < m.t_exo ? 'recovery' : 'culture';
+    const first = m.t_steps && m.t_steps.length ? m.t_steps[0].t : Infinity;     // recovery lasts until the first scheduled step
+    const phase = m.t_start == null || t < m.t_start ? 'cryo' : t < m.t_thaw ? 'thawing' : pres ? 'preserved' : t < first ? 'recovery' : 'culture';
     const o = { t, phase, day: v('day'), block_c: v('block_c'), cryo_c: v('cryo_c'), dose: v('dose_mgy'), passes: a[ix.saa_passes], rounds: a[ix.rounds],
                 down_mb: a[ix.down_mb], health: v('health'), rate: null, g: {} };
     const rr = E.rate, j = rr && rr.t0 != null ? Math.floor((t - rr.t0) / rr.dt) : -1;
     if ((phase === 'recovery' || phase === 'culture' || phase === 'thawing') && j >= 0 && j < rr.v.length) o.rate = rr.v[j];
-    for (const g of m.groups) { o.g[g] = {}; for (const e of m.envs) o.g[g][e] = { v: v(g + '|' + e + '|v'), ros: v(g + '|' + e + '|ros'), conf: v(g + '|' + e + '|conf'), shape: v(g + '|' + e + '|shape') }; }
+    for (const g of m.groups) { o.g[g.id] = {}; for (const e of m.envs) { const q = o.g[g.id][e] = {}; for (const mt of m.family.metrics) q[mt.key] = v(g.id + '|' + e + '|' + mt.key); } }
     return o;
   }
   const RET_PHASE = { coast: 'COASTING TO ENTRY', entry: 'ENTRY', main: 'MAIN CANOPY', floating: 'AFLOAT' };
@@ -193,5 +226,5 @@
     return ['LELP-1 · ' + RET_PHASE[c.phase], alt + ' km', v, c.g_load >= 0.05 ? c.g_load.toFixed(1) + ' g' : '', q].filter(Boolean).join(' · ');
   }
   window.Replay = { T0, MILESTONES, lerp, clamp, smooth, pad2, hms, clock, met, esc, km, nice, lastBefore, load, prepare, t2x, x2t, lastEvent,
-                    sampleAt, launchState, moduleState, opsFrame, returnState, reentryAt, reentryReadout, autoRate, expAt };
+                    sampleAt, launchState, moduleState, opsFrame, returnState, reentryAt, reentryReadout, autoRate, expAt, advance, expStates, DAY };
 })();

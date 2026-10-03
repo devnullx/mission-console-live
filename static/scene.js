@@ -559,14 +559,48 @@
     updateOps(frame, states, isolatedNodes, dt, ctx = {}) {
       this.t += dt;
       this.scene.background.setRGB(.02, .03, .06); this.stars.material.opacity = .85;
-      this.lelp.rotation.y += dt * (ctx.cam === 'arm' ? .0 : .03); this.earth.rotation.y += dt * .004;
+      this.lelp.rotation.y += dt * (ctx.cam === 'arm' ? .0 : .03);
+      // the Earth turns with mission time (one orbit per 95.7 min), capped so fast-forwarded days read as a time-lapse
+      this.earth.rotation.y += Math.min(Math.max((ctx.dtm || 0) * 2 * Math.PI / 5740, dt * .004), dt * .6);
       const p = frame.platform, R = THREE.MathUtils.degToRad;
       // modules: colour + status LED
       states.forEach((s, i) => { const m = this.modules[i]; if (!m) return;
         const col = { idle: 0xffffff, good: 0xd8ffd8, warn: 0xffe0a0, crit: 0xffb0b0, move: 0xc0d8ff }[s] || 0xffffff;
         m.material.color.setHex(col); m.material.emissive.setHex(s === 'move' ? 0x0d2a5a : s === 'crit' ? 0x3a0a0a : 0x000000);
         m.userData.led.material.color.setHex({ idle: 0x222222, good: 0x1fe06a, warn: 0xffb020, crit: 0xff3030, move: 0x40a0ff }[s]);
-        m.visible = true; });
+        m.material.emissiveIntensity = 1; m.visible = true; });
+      // customer experiments (replay.js expStates): what each experiment module is doing, readable from outside.
+      // thaw orange, treatment violet, medium change cyan, preservation and cold storage blue, a white flash per imaging round
+      this._flashAt = this._flashAt || {}; this._lastRound = this._lastRound || {};
+      for (const x of ctx.exps || []) { const m = this.modules[x.module - 1]; if (!m || m.userData.isolated) continue;
+        const pulse = .55 + .45 * Math.sin(this.t * 6);
+        let em = null, k = 0, led = null;
+        if (x.phase === 'cryo') led = 0x9fd8ff;
+        if (x.glow === 'thaw') { em = 0xff8a3d; k = .6 * pulse; led = 0xffa040; }
+        else if (x.glow === 'treat') { em = 0x8f63ff; k = .65 * pulse; led = 0xb090ff; }
+        else if (x.glow === 'media') { em = 0x1fb3d6; k = .5 * pulse; led = 0x40c8ff; }
+        else if (x.glow === 'preserve') { em = 0x2f6fd0; k = .7 * pulse; led = 0x6fa6ee; }
+        else if (x.phase === 'preserved') { em = 0x2f6fd0; k = .25; led = 0x6fa6ee; }
+        if (this._lastRound[x.module] === undefined) this._lastRound[x.module] = x.lastRound;
+        else if (x.lastRound !== this._lastRound[x.module]) { this._lastRound[x.module] = x.lastRound; if (x.lastRound != null) this._flashAt[x.module] = this.t; }
+        const fl = this._flashAt[x.module] != null ? Math.max(0, 1 - (this.t - this._flashAt[x.module]) / .4) : 0;
+        if (fl > 0) { em = 0xffffff; k = Math.max(k, .9 * fl); led = 0xffffff; }
+        if (em != null) { m.material.emissive.setHex(em); m.material.emissiveIntensity = k; }
+        if (led != null) m.userData.led.material.color.setHex(led);
+        if (x.module === ctx.focusModule && em != null) { this._focusCol = em; this._focusK = k; }
+      }
+      // a coloured light just outside the module the director is looking at, so the step reads in a wide shot too
+      if (!this.focusLight) { this.focusLight = new THREE.PointLight(0xffffff, 0, 26); this.lelp.add(this.focusLight); }
+      const fm = ctx.focusModule && this.modules[ctx.focusModule - 1];
+      if (fm && this._focusCol != null) { this.focusLight.color.setHex(this._focusCol); fm.getWorldPosition(this.focusLight.position); this.lelp.worldToLocal(this.focusLight.position);
+        this.focusLight.position.multiplyScalar(1.35); this.focusLight.intensity = lerp(this.focusLight.intensity, 2.2 * (this._focusK || 0) + .4, .2); }
+      else this.focusLight.intensity = lerp(this.focusLight.intensity, 0, .1);
+      this._focusCol = null;
+      // South Atlantic Anomaly: a red cast on the lab while the dosimeter reads trapped protons
+      if (!this.saaLight) { this.saaLight = new THREE.PointLight(0xff2a1f, 0, 70); this.saaLight.position.set(10, 9, 10); this.lelp.add(this.saaLight);
+        this.saaLight2 = new THREE.PointLight(0xff2a1f, 0, 70); this.saaLight2.position.set(-10, 9, -10); this.lelp.add(this.saaLight2); }
+      const saaI = ctx.saa ? 3.2 + .9 * Math.sin(this.t * 3) : 0;
+      this.saaLight.intensity = lerp(this.saaLight.intensity, saaI, .08); this.saaLight2.intensity = this.saaLight.intensity;
       // Dexter-L: ring azimuth + joint angles straight from the twin (deg)
       const a = p.arm;
       if (a && a.joints) {
@@ -601,6 +635,12 @@
         const e = sstep(sepA / 20), ty = lerp(8, -7, e), d = lerp(52, 96, e), snap = ctx.snap || this._camSnap;
         this.camPos.lerp(V(out.x * 5, ty + 3, out.z * 5).add(out.clone().multiplyScalar(d * .55)).add(side.clone().multiplyScalar(d * .83)), snap ? 1 : .05);
         this.camTarget.lerp(V(out.x * 4, ty, out.z * 4), snap ? 1 : .06);
+      } else if (ctx.focusModule && this.modules[ctx.focusModule - 1] && this.modules[ctx.focusModule - 1].visible && !ret) {
+        // director: close on the experiment module while its protocol step happens (thaw, dosing, medium change, preservation)
+        const mp = new THREE.Vector3(); this.modules[ctx.focusModule - 1].getWorldPosition(mp);
+        const out = mp.clone().setY(0).normalize(), side = new THREE.Vector3(-out.z, 0, out.x), snap = ctx.snap || this._camSnap;
+        this.camPos.lerp(mp.clone().add(out.multiplyScalar(34)).add(side.multiplyScalar(14)).add(V(0, 7, 0)), snap ? 1 : .05);
+        this.camTarget.lerp(mp.clone().multiplyScalar(.55).add(V(0, mp.y * .45 + 2, 0)), snap ? 1 : .08);
       } else if (ctx.cam === 'arm' && !ret && !rt.armParked) {
         const base = new THREE.Vector3(); this.arm.getWorldPosition(base);
         const out = base.clone().setY(0).normalize(), side = new THREE.Vector3(-out.z, 0, out.x);

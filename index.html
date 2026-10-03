@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="build" content="539d3f3" data-built="2026-10-03T17:01:53Z">
+<meta name="build" content="1269d08" data-built="2026-10-03T17:39:16Z">
 <title>Mission Console · RUPAK / LELP-1</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="static/style.css?v=539d3f3">
+<link rel="stylesheet" href="static/style.css?v=1269d08">
 </head>
 <body class="loading" data-mode="sentinel">
 
@@ -166,7 +166,7 @@
     <div id="stage">
       <canvas id="view3d"></canvas>
       <div class="stage-top">
-        <div class="stage-left"><div id="overlay-caption" class="hud-chip"></div><div id="ret-readout" class="hud-chip readout" hidden></div></div>
+        <div class="stage-left"><div id="overlay-caption" class="hud-chip"></div><div id="ret-readout" class="hud-chip readout" hidden></div><div id="day-chip" class="hud-chip day" hidden></div></div>
         <div class="stage-tools">
           <button class="btn" id="btn-broadcast" title="Overlay mode: panels on black for video compositing (B)">OVERLAY</button>
           <button class="btn" id="btn-cinema" title="Fullscreen animation (F)">FULLSCREEN</button>
@@ -273,6 +273,7 @@
   <div class="track" id="track" role="slider" aria-label="Mission timeline" tabindex="0">
     <div class="track-bands" id="track-bands"></div>
     <div class="track-fill" id="track-fill"></div>
+    <div class="track-days" id="track-days"></div>
     <div class="track-marks" id="track-marks"></div>
     <div class="track-head" id="track-head"></div>
     <div class="track-tip" id="track-tip" hidden></div>
@@ -282,9 +283,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script>
-<script src="static/scene.js?v=539d3f3"></script>
-<script src="static/hydrate.js?v=539d3f3"></script>
-<script src="static/replay.js?v=539d3f3"></script>
-<script src="static/app.js?v=539d3f3"></script>
+<script src="static/scene.js?v=1269d08"></script>
+<script src="static/hydrate.js?v=1269d08"></script>
+<script src="static/replay.js?v=1269d08"></script>
+<script src="static/app.js?v=1269d08"></script>
 </body>
 </html>

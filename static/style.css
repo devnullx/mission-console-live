@@ -204,6 +204,11 @@ body[data-mode="baseline"] .actions .seg button.on { background: rgba(208,59,59,
 .stage-left { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; max-width: 70%; }
 .stage-left .hud-chip { max-width: 100%; }
 .hud-chip.readout { border-left-color: var(--s2); color: var(--ink-2); }
+.hud-chip.day { border-left-color: var(--s3); color: var(--ink-2); }
+.hud-chip.day.saa { border-left-color: var(--crit); color: var(--crit-ink); }
+.track-days { position: absolute; left: 0; right: 0; top: 0; bottom: 0; pointer-events: none; }
+.track-days i { position: absolute; top: 14px; bottom: 0; border-left: 1px dashed var(--line-2); }
+.track-days b { position: absolute; bottom: 1px; transform: translateX(3px); font: 600 8px var(--mono); color: var(--ink-3); letter-spacing: .04em; }
 .stage-tools .btn { background: rgba(11,12,13,.62); backdrop-filter: blur(4px); }
 #gl-note { position: absolute; left: 12px; bottom: 12px; border-left-color: var(--warn); max-width: 80%; }
 

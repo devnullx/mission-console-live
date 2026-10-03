@@ -68,6 +68,7 @@
     const M = D(), X = M.x, meta = M.launch_meta || {}, L = meta.landing;
     $('track-bands').innerHTML = X.bands.map(([a, b, label, c]) => { const x0 = t2x(a) * 100, x1 = t2x(b) * 100; return `<span class="${c}" style="left:${x0.toFixed(2)}%;width:${(x1 - x0).toFixed(2)}%">${label}</span>`; }).join('');
     $('track-marks').innerHTML = X.marks.map((e) => `<i class="${e.level}" style="left:${(t2x(e.t) * 100).toFixed(2)}%"></i>`).join('');
+    $('track-days').innerHTML = (X.days || []).map((d) => { const x = (t2x(d.t) * 100).toFixed(2); return `<i style="left:${x}%"></i><b style="left:${x}%">${d.label}</b>`; }).join('');
     $('milestones').innerHTML = X.miles.map((m) => `<div id="ms-${m.code}"><span>${m.label}</span><b>${pad2(Math.floor(m.t / 60))}:${pad2(Math.floor(m.t % 60))}</b></div>`).join('');
     $('facts').innerHTML = [['SITE', (meta.site || '').split(' (')[0].replace('APJ Abdul ', '')], ['TARGET ORBIT', meta.orbit || '—'], ['LAUNCH AZIMUTH', (meta.launch_azimuth_deg || '—') + '°'],
       ['LANDING BARGE', X.lz ? X.lz.toFixed(0) + ' km downrange' : '—'], ['STAGE 1', (meta.engines || 9) + ' × Shakti · GP-300'],
@@ -224,8 +225,9 @@
     set('md-note', [pay.vials ? pay.vials + ' ' + (pay.vessel || 'vials') : '', pay.mass_kg ? pay.mass_kg + ' kg' : '', pay.containment, pay.interface, pr.groups].filter(Boolean).join(' · '));
     if (S.tab.left !== 'module') return;
     const key = S.mode + ':' + S.sel + ':' + Math.floor(fi / 3); if (key === sparkKey) return; sparkKey = key;
-    const svg = $('md-spark'), [W, H] = size(svg), F = D().frames, i0 = Math.max(0, fi - 720), pts = [];
-    for (let i = i0; i <= fi; i += 6) pts.push(F[i].modules[S.sel - 1].t);
+    const svg = $('md-spark'), [W, H] = size(svg), F = D().frames, pts = [];
+    const i0 = Math.max(0, lastBefore(F, F[fi].t - R.DAY)), stride = Math.max(1, Math.round((fi - i0) / 160));   // the last 24 h
+    for (let i = i0; i <= fi; i += stride) pts.push(F[i].modules[S.sel - 1].t);
     pts.push(m.t);
     let lo = Math.min(...pts), hi = Math.max(...pts); if (hi - lo < 1) { const c = (hi + lo) / 2; lo = c - .5; hi = c + .5; }
     const px = (k) => 4 + k / Math.max(pts.length - 1, 1) * (W - 44), py = (v) => H - 5 - (v - lo) / (hi - lo) * (H - 10);
@@ -257,7 +259,7 @@
   function feedRow(e) {
     const d = e.data && e.data.final ? e.data : null, chip = d ? d.final : ({ alert: 'alert', warn: 'warn', good: 'good' }[e.level] || '');
     const body = d ? `<span class="fcmd">${esc(d.issuer)} → ${esc(d.verb)} ${esc(d.target)} ${esc(d.params || '')}</span><span class="fwhy">A ${d.A} · B ${d.B === 'SKIPPED' ? '—' : d.B} · via ${esc(d.route)} · ${esc(d.reasons[d.reasons.length - 1] || '')}</span>` : esc(e.text);
-    return `<li data-cat="${CAT[e.seg] || 'lab'}"><span class="ft">${(e.t < 0 ? '−' : '') + hms(Math.abs(e.t))}</span><span class="fb"><span class="chip ${chip}">${esc(d ? d.final : nice(e.code))}</span>${body}</span></li>`;
+    return `<li data-cat="${CAT[e.seg] || 'lab'}"><span class="ft">${(e.t < 0 ? '−' : '') + clock(Math.abs(e.t))}</span><span class="fb"><span class="chip ${chip}">${esc(d ? d.final : nice(e.code))}</span>${body}</span></li>`;
   }
   function panelFeed(t) {
     const ev = D().events, feed = $('feed');
@@ -309,6 +311,15 @@
   $('modgrid').onclick = (e) => { const el = e.target.closest('.mod'); if (!el) return; S.sel = +el.dataset.id; setTab('left', 'module', false); };
   $$('#feed-filters button').forEach((b) => { b.onclick = () => { $$('#feed-filters button').forEach((x) => x.classList.toggle('on', x === b)); $('feed').dataset.filter = b.dataset.f; }; });
 
+  // flight-day chip on the 3-D view: the mission is as long as its experiments
+  function dayChip(t, X, x) {
+    const el = $('day-chip'), show = t >= X.opsStart && t < X.tEI;
+    el.hidden = !show; if (!show) return;
+    const E = x && X.exps[x.id];
+    const exp = E && x.phase !== 'cryo' ? ` · ${E.meta.customer} day ${x.day.toFixed(1)} · ${x.dose.toFixed(2)} mGy${x.saa ? ' · SAA' : ''}` : '';
+    set(el, `FLIGHT DAY ${Math.floor(t / R.DAY) + 1}${exp}`); el.classList.toggle('saa', !!(x && x.saa));
+  }
+
   // ---------- frame loop ----------
   function frame(dt, now) {
     const t = S.t, M = D(), X = M.x, launch = t < X.opsStart, panels = S.dirty || now - S.lastPanels > 110;
@@ -327,7 +338,11 @@
       if (panelsNow) { $('panel-launch').hidden = true; $('panel-platform').hidden = false; }
       if (cap) { scene.setPhase('return'); scene.updateReturn(cap, dt); }      // entry interface to recovery: true-scale return shot
       else { scene.setPhase('ops'); scene.setSolar(!!lastEvent(t, (e) => e.code === 'SOLAR') && t < X.tSep);
-        scene.updateOps(o.view, opsStates, f.gate.isolated || [], dt, { ret: R.returnState(M, t) }); }
+        const xs = R.expStates(M, t), feat = xs.find((x) => x.id === X.featured) || xs[0];
+        const focus = (xs.filter((x) => x.glow).sort((a, b) => (b.id === X.featured) - (a.id === X.featured))[0] || {}).module;
+        scene.updateOps(o.view, opsStates, f.gate.isolated || [], dt, { ret: R.returnState(M, t), exps: xs, saa: !!(feat && feat.saa),
+          focusModule: focus, dtm: S.playing ? dt * S.rate : 0 });
+        if (panels) dayChip(t, X, feat); }
       if (panelsNow) panelOps(t, f, o.i, cap);
     }
     $('track-fill').style.width = $('track-head').style.left = (t2x(t) * 100).toFixed(3) + '%';
@@ -337,8 +352,8 @@
     const dt = Math.min((now - S.lastWall) / 1000, .25); S.lastWall = now;
     try {
       const target = S.speed === 'auto' ? autoRate(S.t) : S.speed;
-      S.rate = S.speed === 'auto' ? S.rate + (target - S.rate) * Math.min(1, dt * 5) : target;
-      if (S.playing) { S.t += dt * S.rate; if (S.t >= D().x.tEnd) { S.t = D().x.tEnd; play(false); } }
+      S.rate = S.speed === 'auto' ? (target < S.rate ? target : S.rate + (target - S.rate) * Math.min(1, dt * 5)) : target;   // slow down at once, speed up smoothly
+      if (S.playing) { S.t = R.advance(D(), S.t, dt * S.rate); if (S.t >= D().x.tEnd) { S.t = D().x.tEnd; play(false); } }
       frame(dt, now);
     } catch (e) { if (!S.error) { S.error = e; console.error(e); } }
     requestAnimationFrame(tick);

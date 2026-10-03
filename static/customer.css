@@ -85,3 +85,6 @@
 .tbl.after td:first-child { color: var(--ink); width: 46%; }
 .steps li.now .st { color: var(--info-ink); }
 @media (max-height: 800px) { #chart-ros { height: 80px; } #chart-rate { height: 74px; } .vials { height: 104px; } }
+
+#cust-switch { background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); border-radius: 4px; padding: 5px 8px; font: var(--fs-small) var(--sans); max-width: 240px; }
+#topbar .actions { display: flex; gap: 8px; align-items: center; }
