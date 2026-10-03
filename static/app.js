@@ -69,6 +69,24 @@
     $('track-bands').innerHTML = X.bands.map(([a, b, label, c]) => { const x0 = t2x(a) * 100, x1 = t2x(b) * 100; return `<span class="${c}" style="left:${x0.toFixed(2)}%;width:${(x1 - x0).toFixed(2)}%">${label}</span>`; }).join('');
     $('track-marks').innerHTML = X.marks.map((e) => `<i class="${e.level}" style="left:${(t2x(e.t) * 100).toFixed(2)}%"></i>`).join('');
     $('track-days').innerHTML = (X.days || []).map((d) => { const x = (t2x(d.t) * 100).toFixed(2); return `<i style="left:${x}%"></i><b style="left:${x}%">${d.label}</b>`; }).join('');
+    // where the subsystem numbers come from (config/lelp_subsystems.yaml via the mission JSON)
+    const SS = M.subsystems;
+    if (SS) {
+      const TL = { team: 'TEAM', twin: 'TWIN', estimate: 'EST', tbd: 'TBD' };
+      const chip = (sec, key, label, fmt) => { const q = SS.params[sec] && SS.params[sec][key]; if (!q) return '';
+        return `<span class="src t-${q.tier}" title="${esc(TL[q.tier] + ': ' + (q.source || ''))}">${esc(label ? label + ' ' : '')}${esc(fmt(q.value))} · ${TL[q.tier]}</span>`; };
+      const BASIS = {
+        eps: [['array_bol_w', 'array', (v) => v + ' W'], ['battery_wh', 'battery', (v) => v / 1000 + ' kWh'], ['cell_efficiency', 'cells', (v) => Math.round(v * 100) + ' %'], ['battery_max_dod', 'max DoD', (v) => Math.round(v * 100) + ' %']],
+        tcs: [['radiator_m2', 'radiator', (v) => v + ' m²'], ['lab_setpoint_c', 'lab', (v) => v + ' °C'], ['band_mammalian_c', 'cells', (v) => v.join('–') + ' °C'], ['band_cryo_c', 'cryo', (v) => v.join('/') + ' °C']],
+        adcs: [['wheel_h_max_nms', 'wheels 3 ×', (v) => v + ' N·m·s'], ['mtq_dipole_am2', 'MTQ', (v) => v + ' A·m²'], ['pointing_req_deg', 'pointing req', (v) => v + '°']],
+        cdh: [['obc', '', (v) => v], ['storage_gb', 'storage', (v) => v + ' GB']],
+        prop: [['isp_s', 'Isp', (v) => v + ' s'], ['stage_dry_kg', 'stage dry', (v) => v + ' kg'], ['propellant', '', (v) => v], ['deorbit_dv_ms', 'deorbit', (v) => v + ' m/s']],
+      };
+      $$('#subsys .ss-basis').forEach((el) => { el.innerHTML = (BASIS[el.dataset.sec] || []).map(([k, l, fmt]) => chip(el.dataset.sec, k, l, fmt)).join(''); });
+      const n = SS.tiers;
+      $('ss-src').innerHTML = 'numbers from: ' + ['team', 'twin', 'estimate', 'tbd'].map((k) => `<span class="src t-${k}">${n[k]} ${TL[k]}</span>`).join('') +
+        '<span>· team documents give few LELP numbers; estimates wait for the team</span>';
+    }
     $('milestones').innerHTML = X.miles.map((m) => `<div id="ms-${m.code}"><span>${m.label}</span><b>${pad2(Math.floor(m.t / 60))}:${pad2(Math.floor(m.t % 60))}</b></div>`).join('');
     $('facts').innerHTML = [['SITE', (meta.site || '').split(' (')[0].replace('APJ Abdul ', '')], ['TARGET ORBIT', meta.orbit || '—'], ['LAUNCH AZIMUTH', (meta.launch_azimuth_deg || '—') + '°'],
       ['LANDING BARGE', X.lz ? X.lz.toFixed(0) + ' km downrange' : '—'], ['STAGE 1', (meta.engines || 9) + ' × Shakti · GP-300'],
@@ -182,13 +200,21 @@
         set('ih-det', `${m.payload.mass_kg} kg · ${m.payload.vials} ${m.payload.vessel || 'vials'} · ${m.payload.containment} · ${m.t.toFixed(1)} °C held on umbilical power`); }
     }
     panelModule(f, fi, t);
-    // subsystems
+    // subsystems (sentinel/lelp/subsystems.py); the chips under each card say where its numbers come from
     if (p.eps) { const e = p.eps, tc = p.tcs, ad = p.adcs, cd = p.cdh, pr = p.prop;
-      set('ss-eps-sun', e.sun); set('ss-eps-gen', e.gen_w + ' W'); set('ss-eps-load', e.load_w + ' W'); set('ss-eps-v', e.bus_v + ' V'); set('ss-eps-soc', e.soc + ' %');
-      set('ss-tcs-lab', tc.lab_c + ' °C'); set('ss-tcs-rad', tc.radiator_c + ' °C'); set('ss-tcs-heat', tc.heaters_w + ' W'); set('ss-tcs-bus', tc.bus_c + ' °C');
-      set('ss-adcs-mode', ad.mode); set('ss-adcs-err', ad.err_deg + '°'); set('ss-adcs-rate', ad.rate_dps + ' °/s'); set('ss-adcs-rw', Math.round(ad.wheel_rpm.reduce((x, y) => x + y, 0) / ad.wheel_rpm.length) + ' rpm'); set('ss-adcs-arm', (ad.arm_reaction_nm || 0) + ' N·m');
-      set('ss-cdh-obc', 'OBC-' + cd.obc); set('ss-cdh-cpu', cd.cpu_pct + ' %'); set('ss-cdh-sto', cd.storage_gb + ' GB'); set('ss-cdh-up', cd.uptime_h + ' h'); set('ss-cdh-led', f.gate.ledger_entries);
-      set('ss-prop-kg', pr.prop_kg + ' kg'); set('ss-prop-dv', pr.dv_ms + ' m/s'); set('ss-prop-bar', pr.tank_bar + ' bar'); set('ss-prop-orbit', p.alt_km + ' km SSO'); }
+      set('ss-eps-sun', e.sun); set('ss-eps-gen', e.gen_w + ' W'); set('ss-eps-load', e.load_w + ' W');
+      set('ss-eps-margin', (e.margin_w >= 0 ? '+' : '') + e.margin_w + ' W'); cls('ss-eps-margin', e.margin_w < 0 ? 'warn' : '');
+      set('ss-eps-soc', `${e.soc} % · DoD ${e.dod} of ${e.max_dod} %`); cls('ss-eps-soc', e.dod > e.max_dod ? 'bad' : '');
+      set('ss-eps-ecl', e.eclipse_min > 0 ? `β ${e.beta_deg}° · ${e.eclipse_min} min/orbit` : `β ${e.beta_deg}° · none this season`);
+      set('ss-tcs-sp', 'setpoint ' + tc.setpoint_c + ' °C'); set('ss-tcs-lab', tc.lab_c + ' °C'); set('ss-tcs-rad', `${tc.radiator_c} °C · ${tc.rejected_w} W out`);
+      set('ss-tcs-lh', tc.lab_heater_w + ' W'); set('ss-tcs-heat', tc.heaters_w + ' W'); set('ss-tcs-bus', tc.bus_c + ' °C');
+      set('ss-adcs-mode', ad.mode); set('ss-adcs-err', ad.err_deg + '°');
+      set('ss-adcs-rw', `${ad.h_pct} % · ${Math.max(...ad.wheel_rpm.map(Math.abs))} rpm`); cls('ss-adcs-rw', ad.saturated ? 'bad' : ad.h_pct > 75 ? 'warn' : '');
+      set('ss-adcs-arm', (ad.arm_h_nms || 0).toFixed(2) + ' N·m·s'); set('ss-adcs-dump', ad.dumping ? 'ON' : 'off'); set('ss-adcs-dist', ad.dist_unm + ' µN·m');
+      set('ss-cdh-obc', 'OBC-' + cd.obc); set('ss-cdh-cpu', cd.cpu_pct + ' %'); set('ss-cdh-sto', `${cd.storage_gb} of ${cd.storage_cap_gb} GB`); set('ss-cdh-arc', cd.archive_gb + ' GB');
+      set('ss-cdh-up', cd.uptime_h + ' h'); set('ss-cdh-led', f.gate.ledger_entries);
+      set('ss-prop-kg', pr.prop_kg + ' kg'); set('ss-prop-dv', pr.dv_ms + ' m/s'); cls('ss-prop-dv', pr.need_ms && pr.dv_ms < pr.need_ms ? 'bad' : '');
+      set('ss-prop-need', pr.need_ms ? pr.need_ms + ' m/s' : 'done'); set('ss-prop-sk', (pr.sk_ms || 0) + ' m/s'); set('ss-prop-bar', pr.tank_bar + ' bar'); set('ss-prop-orbit', p.alt_km + ' km SSO'); }
     // ground segment
     const vis = f.comms.visible || [], iso = f.gate.isolated || [];
     STATIONS.forEach(([id]) => { const l = (f.comms.links || {})[id], b = l && l.budget, isIso = iso.includes(id), on = vis.includes(id);

@@ -187,13 +187,20 @@ body[data-mode="baseline"] .actions .seg button.on { background: rgba(208,59,59,
 .moddetail .md-h { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
 .moddetail .md-h b { font-family: var(--sans); font-weight: 600; font-size: var(--fs-emph); }
 .moddetail .md-s { font-size: var(--fs-small); color: var(--ink-2); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.subsys { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.subsys { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.subsys .ss .kv, .subsys .ss.wide .kv { grid-template-columns: 1fr; }
 .ss { background: var(--surface-2); border-radius: 4px; padding: 7px 8px; min-width: 0; }
 .ss-h { display: flex; justify-content: space-between; align-items: baseline; font-size: var(--fs-micro); letter-spacing: .1em; color: var(--ink); font-weight: 600; margin-bottom: 2px; }
 .ss-h span { color: var(--ink-3); font-weight: 400; letter-spacing: .04em; }
 .ss .kv { grid-template-columns: 1fr; }
 .ss .kv > div { border-bottom: 1px dotted var(--line); padding: 3px 0; }
 .ss.wide { grid-column: 1 / -1; } .ss.wide .kv { grid-template-columns: 1fr 1fr; }
+.ss-src { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: var(--fs-micro); color: var(--ink-3); margin-bottom: 6px; }
+.ss-basis { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 5px; }
+.src { font: 500 9px var(--mono); letter-spacing: .02em; padding: 2px 4px; border-radius: 2px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; cursor: help; }
+.src.t-team { color: var(--good-ink); background: rgba(12,163,12,.14); } .src.t-twin { color: var(--info-ink); background: rgba(57,135,229,.15); }
+.src.t-estimate { color: var(--warn-ink); background: rgba(250,178,25,.12); } .src.t-tbd { color: var(--crit-ink); background: rgba(208,59,59,.16); }
+.ss b.bad { color: var(--crit-ink); } .ss b.warn { color: var(--warn-ink); }
 
 /* centre: stage */
 #stage { position: relative; min-height: 0; overflow: hidden; background: #05070c; }
