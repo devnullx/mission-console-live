@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/style.css?v=20">
-<link rel="stylesheet" href="/static/customer.css?v=20">
+<link rel="stylesheet" href="/static/style.css?v=21">
+<link rel="stylesheet" href="/static/customer.css?v=21">
 </head>
 <body class="customer">
 
@@ -70,6 +70,42 @@
   </section>
 
   <section class="col">
+    <div class="panel" id="ctl">
+      <h2>CONTROL DEXTER-L <span class="h-sub">task-level · Sentinel-authorised</span></h2>
+      <div class="ctl-row">
+        <select id="ctl-module" title="Module">
+          <option value="17">Module 17 · yours (stem-cell organoids)</option>
+          <option value="3">Module 3 · Basel Pharma Research (not yours)</option>
+        </select>
+      </div>
+      <div class="ctl-row tasks">
+        <button data-task="transfer_to_lab">FETCH TO LAB</button>
+        <button data-task="image">IMAGING PASS</button>
+        <button data-task="return">RETURN TO SLOT</button>
+        <button data-task="full">FULL CYCLE</button>
+        <button id="ctl-abort" class="danger">ABORT</button>
+      </div>
+      <div class="verdict" id="verdict" hidden>
+        <div class="v-head"><span class="v-final">—</span><span class="v-paths">A — · B —</span></div>
+        <div class="v-why"></div>
+        <div class="v-ack" hidden><span>Awaiting MCC operator sign-off (first task this pass)…</span><button id="ctl-ack">MCC ACKNOWLEDGES (DEMO)</button></div>
+      </div>
+      <div class="armlive" id="armlive" hidden>
+        <div class="al-head"><span id="al-step">—</span><span id="al-t" class="mono">0 s</span></div>
+        <div class="al-bar"><i id="al-prog"></i></div>
+        <svg id="arm-svg" viewBox="0 0 360 240" aria-label="Dexter-L side view"></svg>
+        <div class="joints" id="ctl-joints"></div>
+        <div class="kv-grid">
+          <div><span>WRIST F/T</span><b id="al-ft">—</b></div>
+          <div><span>TIP SPEED</span><b id="al-tip">—</b></div>
+          <div><span>GRIP · UMBILICAL</span><b id="al-grip">—</b></div>
+          <div><span>FIDUCIAL</span><b id="al-fid">—</b></div>
+          <div><span>MODULE TEMP</span><b id="al-temp">—</b></div>
+          <div><span>ARM POWER</span><b id="al-pow">—</b></div>
+        </div>
+        <ol class="al-log" id="al-log"></ol>
+      </div>
+    </div>
     <div class="panel">
       <h2>WHO TOUCHED YOUR EXPERIMENT <span class="h-sub">Sentinel command audit, signed ledger</span></h2>
       <p class="note">Every command that could affect module 17 had to pass post-quantum signature checks <em>and</em> the mission guardian. Blocked attempts are shown too.</p>
@@ -94,6 +130,6 @@
   <div class="scorecard" id="scorecard"></div>
 </footer>
 
-<script src="/static/customer.js?v=20"></script>
+<script src="/static/customer.js?v=21"></script>
 </body>
 </html>

@@ -254,3 +254,6 @@ body.cinema #hud { display: block; }
   .queue { display: none; }
   body { grid-template-rows: 50px 1fr 78px; }
 }
+
+.stab { margin-top: 6px; font-family: var(--mono); font-size: 9px; color: var(--ink-3); line-height: 1.5; }
+.stab b { color: var(--ink-2); }

@@ -88,4 +88,75 @@
   $('track').onclick = (e) => { const r = e.currentTarget.getBoundingClientRect(); S.t = (e.clientX - r.left) / r.width * tEnd; auditCount = -1; delivCount = -1; };
   addEventListener('keydown', (e) => { if (e.code === 'Space' && e.target.tagName !== 'SELECT') { e.preventDefault(); $('btn-play').click(); } });
   requestAnimationFrame(tick);
+
+  // ---------------- CONTROL DEXTER-L: task-level requests through Sentinel ----------------
+  let staticTasks = null; try { staticTasks = await (await fetch('api/arm_tasks.json')).json(); } catch (e) {}
+  const JN = ['J1', 'J2', 'J3', 'J4', 'J5', 'J6', 'J7'];
+  $('ctl-joints').innerHTML = JN.map(j => `<div><i><b style="height:0"></b></i><em>0°</em>${j}</div>`).join('');
+  const ctl = { playing: null, pending: null };
+  async function ask(customer, module, task, ack, abort) {
+    try {
+      const r = await fetch('/api/arm_task', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ customer, module, task, ack, abort }) });
+      if (r.ok) return await r.json();
+    } catch (e) {}
+    if (!staticTasks) return { error: 'no server and no precomputed cases' };
+    const key = abort ? `${customer}:${module}:abort:1` : `${customer}:${module}:${task}:${ack ? 1 : 0}`;
+    return staticTasks[key] || staticTasks[`${customer}:17:${task}:${ack ? 1 : 0}`] || { error: 'case not precomputed: ' + key };
+  }
+  function showVerdict(res) {
+    const v = $('verdict'); v.hidden = false; const d = res.decision || { final: 'ERROR', A: '—', B: '—', reasons: [res.error || 'no response'] };
+    v.className = 'verdict ' + d.final; v.querySelector('.v-final').textContent = d.final + (res.abort ? ' · ABORT' : ` · ${res.task || ''}`);
+    v.querySelector('.v-paths').textContent = `A ${d.A} · B ${d.B}${res.signature_bytes ? ' · ML-DSA-87 ' + res.signature_bytes + ' B' : ''}`;
+    v.querySelector('.v-why').textContent = (d.reasons || []).slice(-3).join(' · ');
+    v.querySelector('.v-ack').hidden = d.final !== 'ESCALATED';
+  }
+  function drawArm(j) {
+    // side view in the plane of the arm: shoulder at (rho 0.62, z 1.45); L1 .52, L2 .98, L3 .15 (metres); 90 px per metre
+    const R = Math.PI / 180, S = 90, ox = 180, oy = 230, sgn = Math.cos(j[0] * R) >= 0 ? 1 : -1;
+    const P = (rho, z) => [ox + rho * S, oy - z * S];
+    const p0 = [0.62, 1.45], a1 = j[1] * R, a2 = a1 + j[3] * R, a3 = a2 + j[4] * R;
+    const p1 = [p0[0] + 0.52 * Math.cos(a1) * sgn, p0[1] + 0.52 * Math.sin(a1)];
+    const p2 = [p1[0] + 0.98 * Math.cos(a2) * sgn, p1[1] + 0.98 * Math.sin(a2)];
+    const p3 = [p2[0] + 0.15 * Math.cos(a3) * sgn, p2[1] + 0.15 * Math.sin(a3)];
+    const layers = [[0, .25], [.25, .5], [.5, .95], [.95, 1.4]];
+    const mods = layers.map(([a, b]) => `<rect x="${P(.35, b)[0]}" y="${P(.35, b)[1]}" width="${.23 * S}" height="${(b - a) * S - 2}" fill="#3a3122" stroke="#5a4a2a"/><rect x="${P(-.58, b)[0]}" y="${P(-.58, b)[1]}" width="${.23 * S}" height="${(b - a) * S - 2}" fill="#3a3122" stroke="#5a4a2a"/>`).join('');
+    const seg = (a, b, w, c) => `<line x1="${P(...a)[0]}" y1="${P(...a)[1]}" x2="${P(...b)[0]}" y2="${P(...b)[1]}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+    $('arm-svg').innerHTML = `<rect x="${P(-.35, 1.5)[0]}" y="${P(-.35, 1.5)[1]}" width="${.7 * S}" height="${1.5 * S}" fill="#23262b"/>${mods}` +
+      `<rect x="${P(-.68, 2.0)[0]}" y="${P(-.68, 2.0)[1]}" width="${1.36 * S}" height="${.5 * S}" fill="rgba(159,195,232,.15)" stroke="#5a7ca0"/>` +
+      `<rect x="${P(-.25, 1.63)[0]}" y="${P(-.25, 1.63)[1]}" width="${.5 * S}" height="3" fill="#9aa0aa"/>` +
+      seg(p0, p1, 6, '#e8e8e2') + seg(p1, p2, 5, '#e8e8e2') + seg(p2, p3, 4, '#3a3f47') +
+      `<circle cx="${P(...p0)[0]}" cy="${P(...p0)[1]}" r="5" fill="#3a3f47"/><circle cx="${P(...p1)[0]}" cy="${P(...p1)[1]}" r="4" fill="#3a3f47"/><circle cx="${P(...p2)[0]}" cy="${P(...p2)[1]}" r="3" fill="#3a3f47"/>` +
+      `<text x="6" y="12" font-size="9" fill="#8a897f" font-family="IBM Plex Mono">SIDE VIEW · metres</text>`;
+  }
+  function play(res) {
+    const tr = res.trace || []; $('armlive').hidden = false; $('al-log').innerHTML = '';
+    let i = 0, logged = 0; if (ctl.playing) clearInterval(ctl.playing);
+    const total = tr.length ? tr[tr.length - 1].t : 0;
+    ctl.playing = setInterval(() => {
+      if (i >= tr.length) { clearInterval(ctl.playing); ctl.playing = null; $('al-step').textContent = 'task complete · arm holding'; return; }
+      const f = tr[i++];
+      $('al-step').textContent = `${f.step} · ${Math.round(f.step_t)} / ${f.step_dur} s`; $('al-t').textContent = `${f.t} s`;
+      $('al-prog').style.width = (total ? f.t / total * 100 : 0) + '%';
+      document.querySelectorAll('#ctl-joints div').forEach((d, k) => { const lim = [180, 100, 90, 150, 120, 180, 180][k]; d.querySelector('b').style.height = (Math.min(Math.abs(f.joints[k]), lim) / lim * 100) + '%'; d.querySelector('em').textContent = f.joints[k].toFixed(0) + '°'; d.querySelector('i').className = Math.abs(f.torques[k]) > 0.3 ? 'hot' : ''; });
+      $('al-ft').textContent = `${f.ft_n} N`; $('al-tip').textContent = `${f.tip_mps} m/s`; $('al-grip').textContent = `${f.grip ? 'LATCHED' : 'OPEN'} · ${f.umbilical ? 'MATED' : 'OFF'}`;
+      $('al-fid').textContent = Math.round(f.fiducial * 100) + ' %'; $('al-temp').textContent = f.module_t.toFixed(2) + ' °C'; $('al-pow').textContent = f.power_w + ' W';
+      drawArm(f.joints);
+      while (logged < (res.events || []).length && res.events[logged].t <= f.t) { const e = res.events[logged++]; const li = document.createElement('li'); li.innerHTML = `<span class="ft">${e.t}s</span>${e.text}`; $('al-log').prepend(li); }
+    }, 200);   // 10x: trace samples are 2 s apart
+  }
+  async function submit(task, ack) {
+    const customer = CUST, module = +$('ctl-module').value;
+    document.querySelectorAll('.tasks button').forEach(b => b.disabled = true);
+    const res = await ask(customer, module, task, ack, false);
+    document.querySelectorAll('.tasks button').forEach(b => b.disabled = false);
+    ctl.pending = res.decision && res.decision.final === 'ESCALATED' ? { task } : null;
+    showVerdict(res);
+    if (res.decision && res.decision.final === 'EXECUTE') play(res); else { $('armlive').hidden = !ctl.playing; }
+  }
+  document.querySelectorAll('.tasks button[data-task]').forEach(b => b.onclick = () => submit(b.dataset.task, false));
+  $('ctl-ack').onclick = () => { if (ctl.pending) submit(ctl.pending.task, true); };
+  $('ctl-abort').onclick = async () => { if (ctl.playing) { clearInterval(ctl.playing); ctl.playing = null; }
+    const res = await ask(CUST, +$('ctl-module').value, 'full', true, true); showVerdict(res);
+    $('al-step').textContent = 'ABORT acknowledged · arm holding position, brakes on'; $('armlive').hidden = false; };
+  drawArm([0, -80, 0, -140, 40, 0, 0]);
 })();

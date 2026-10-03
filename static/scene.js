@@ -163,12 +163,29 @@
         const bb = new THREE.Box3(); root.traverse(o => { if (o.isMesh) { o.geometry.computeBoundingBox(); bb.union(o.geometry.boundingBox); } });
         grp.userData.cadHeight = (bb.max.y - bb.min.y) * S;   // metres x S = group units (independent of the group's own scale)
       };
-      loader.load('static/models/booster.glb?v=3', g => {
+      // booster: CAD body + 4 legs + 4 fins as separate nodes so they can deploy (scripts/cad_parts.py)
+      loader.load('static/models/booster_body.glb?v=1', g => {
         attach(this.booster, g, this.booster.children.filter(c => c !== this.bFlame));
         this.legs.forEach(l => l.visible = false); this.fins.forEach(f => f.visible = false); this.engines.visible = false;
         this.bFlame.position.y = -0.5;
         this.cadBoosterH = this.booster.userData.cadHeight; this.stackH = this.cadBoosterH * this.vehScale;
       }, undefined, () => {});
+      fetch('static/models/parts.json').then(r => r.json()).then(meta => {
+        this.cadLegs = []; this.cadFins = [];
+        const mount = (file, list, key, rotSign) => loader.load(file, g => {
+          g.scene.traverse(o => { if (o.isMesh) { if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); o.material = dark; o.material.side = THREE.DoubleSide; } });
+          meta[key].forEach(info => {
+            const node = g.scene.getObjectByName(info.name); if (!node) return;
+            const pivot = new THREE.Group(); const h = info.hinge; pivot.position.set(h[0] * S, h[1] * S, h[2] * S);
+            node.position.set(0, 0, 0); node.scale.setScalar(S); pivot.add(node); this.booster.add(pivot);
+            const ang = THREE.MathUtils.degToRad(info.angle_deg);
+            list.push({ pivot, axis: V(-Math.sin(ang), 0, Math.cos(ang)).normalize(), sign: rotSign });
+          });
+        }, undefined, () => {});
+        mount('static/models/legs.glb?v=1', this.cadLegs, 'legs', -1);   // legs: hinge at the base, swing the foot out and down
+        mount('static/models/fins.glb?v=1', this.cadFins, 'fins', +1);   // fins: hinge at the top, blade swings outward
+      }).catch(() => {});
+      this.legDeploy = 0; this.finDeploy = 0;
       loader.load('static/models/upper.glb?v=3', g => { attach(this.upper, g, this.upper.children.filter(c => c !== this.uFlame)); }, undefined, () => {});
     }
     _emit(pos, dir, n, spread, speed) {
@@ -215,7 +232,16 @@
           this._flameOn(this.bFlame, b.throttle > 0, b.throttle, this.t);
           if (b.throttle > 0) this._emit(gb.pos.clone(), gb.up.clone().negate(), 2, .01, .03);
           const finsOut = ['entry_coast', 'entry_burn', 'descent', 'landing_burn'].includes(b.phase);
-          if (!this.cadBoosterH) { this.fins.forEach(f => f.rotation.z = lerp(f.rotation.z, finsOut ? 0 : Math.PI / 2, .06)); this.legs.forEach(l => l.rotation.z = lerp(l.rotation.z, (b.phase === 'landing_burn' && b.alt_km < 1.2) ? -0.55 : 0, .08)); }
+          const legsOut = (b.phase === 'landing_burn' && b.alt_km < 1.2) || b.landed;
+          this.finDeploy = lerp(this.finDeploy, (b.fins != null ? b.fins : (finsOut ? 1 : 0)), .08);
+          this.legDeploy = lerp(this.legDeploy, legsOut ? 1 : 0, .06);
+          if (this.cadLegs) {
+            const LEG_DEPLOY = THREE.MathUtils.degToRad(115), FIN_DEPLOY = THREE.MathUtils.degToRad(70);
+            this.cadLegs.forEach(l => l.pivot.quaternion.setFromAxisAngle(l.axis, l.sign * LEG_DEPLOY * this.legDeploy));
+            this.cadFins.forEach(f => f.pivot.quaternion.setFromAxisAngle(f.axis, f.sign * FIN_DEPLOY * this.finDeploy));
+            // with the legs down the nozzles sit 1.28 m above the deck (docs/REENTRY.md): lift the body accordingly
+            if (b.alt_km < 0.05) { this.booster.position.add(gb.up.clone().multiplyScalar(0.0512 * this.legDeploy)); }
+          } else if (!this.cadBoosterH) { this.fins.forEach(f => f.rotation.z = lerp(f.rotation.z, finsOut ? 0 : Math.PI / 2, .06)); this.legs.forEach(l => l.rotation.z = lerp(l.rotation.z, legsOut ? -0.55 : 0, .08)); }
           if (b.landed) this.bFlame.visible = false;
         }
         const lz = this._place(this.landingZoneKm || 0, 0); this.barge.position.copy(lz.pos); this._orient(this.barge, lz.up, lz.fwd, 0);

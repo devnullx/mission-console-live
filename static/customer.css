@@ -32,3 +32,27 @@ body.customer #topbar { grid-template-columns: 220px 1fr 300px 180px; }
 .audit li.EXECUTE .verdict { color: var(--good); } .audit li.BLOCKED .verdict { color: var(--crit); } .audit li.HELD .verdict, .audit li.ESCALATED .verdict { color: var(--warn); }
 .audit li .why { color: var(--ink-3); display: block; margin-top: 2px; }
 a.toggle { text-decoration: none; display: inline-block; }
+
+/* control panel */
+.ctl-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+.ctl-row select { background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); border-radius: 3px; padding: 5px 8px; font: 11px var(--sans); width: 100%; }
+.tasks button { background: var(--surface-2); color: var(--ink); border: 1px solid var(--s1); border-radius: 3px; padding: 6px 9px; font: 600 10px var(--sans); letter-spacing: .08em; cursor: pointer; }
+.tasks button:hover { background: rgba(57,135,229,.18); }
+.tasks button.danger { border-color: var(--crit); color: var(--crit); margin-left: auto; }
+.tasks button:disabled { opacity: .4; cursor: default; }
+.verdict { background: var(--surface-2); border-left: 3px solid var(--line); border-radius: 3px; padding: 7px 9px; margin: 6px 0; }
+.verdict.EXECUTE { border-left-color: var(--good); } .verdict.BLOCKED { border-left-color: var(--crit); } .verdict.ESCALATED, .verdict.HELD { border-left-color: var(--warn); }
+.v-head { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; }
+.v-final { font-weight: 600; letter-spacing: .08em; }
+.verdict.EXECUTE .v-final { color: var(--good); } .verdict.BLOCKED .v-final { color: var(--crit); } .verdict.ESCALATED .v-final, .verdict.HELD .v-final { color: var(--warn); }
+.v-paths { color: var(--ink-3); }
+.v-why { font-size: 10px; color: var(--ink-2); margin-top: 3px; line-height: 1.4; }
+.v-ack { display: flex; gap: 8px; align-items: center; margin-top: 6px; font-size: 10px; color: var(--warn); }
+.v-ack button { background: var(--surface); color: var(--ink); border: 1px solid var(--warn); border-radius: 3px; padding: 4px 8px; font: 600 9px var(--sans); cursor: pointer; }
+.armlive { margin-top: 6px; }
+.al-head { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-2); }
+.al-bar { height: 4px; background: var(--surface-2); border-radius: 2px; margin: 4px 0 6px; overflow: hidden; }
+.al-bar i { display: block; height: 100%; width: 0; background: var(--s1); }
+#arm-svg { width: 100%; height: auto; background: var(--surface-2); border-radius: 3px; }
+.al-log { list-style: none; margin: 6px 0 0; padding: 0; font-size: 10px; color: var(--ink-2); max-height: 90px; overflow-y: auto; }
+.al-log li { padding: 2px 0; border-bottom: 1px solid var(--line); } .al-log li .ft { font-family: var(--mono); color: var(--ink-3); margin-right: 6px; }

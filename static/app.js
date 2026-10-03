@@ -88,7 +88,10 @@
       $('b-dr').textContent = Math.abs(b.downrange_km).toFixed(1) + ' km'; $('b-prop').textContent = b.prop_pct.toFixed(1) + ' %';
       $('b-fins').textContent = b.fins >= 1 ? 'DEPLOYED' : b.fins > 0 ? 'DEPLOYING' : 'STOWED'; $('b-g').textContent = (b.g_load || 0).toFixed(1) + ' g';
       $('b-q').textContent = b.q_kpa.toFixed(1) + ' kPa'; $('b-heat').textContent = Math.round(b.heat_kw_m2 || 0) + ' kW/m²';
-      document.querySelectorAll('#fins i').forEach(f => f.style.transform = `rotate(${90 - 90 * (b.fins || 0)}deg)`); }
+      document.querySelectorAll('#fins i').forEach(f => f.style.transform = `rotate(${90 - 90 * (b.fins || 0)}deg)`);
+      const legsOut = (b.phase === 'landing_burn' && b.alt_km < 1.2) || b.phase === 'landed' || b.speed_ms < 1;
+      $('b-legs').textContent = legsOut ? 'DEPLOYED 115°' : 'STOWED';
+      const L = (D().launch_meta || {}).landing; if (L) $('stab').innerHTML = `LANDING STABILITY · legs 4 × 3.87 m @ ${L.deploy_deg}° · span <b>${L.span_m} m</b> · nozzle clearance <b>${L.nozzle_clearance_m} m</b> · tip-over <b>${L.tip_angle_deg}°</b> vs deck roll ${L.deck_roll_deg}° · ${L.leg_load_kn} kN/leg · ${L.stable ? '<b style="color:var(--good)">STABLE</b>' : '<b style="color:var(--crit)">UNSTABLE</b>'}`; }
     drawTraj(t, L);
     scene.setLandingZone((D().launch_meta || {}).landing_zone_km || 0);
     scene.updateLaunch(latest, hasSep);
