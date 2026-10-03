@@ -54,7 +54,7 @@
     // whole-payload return (sentinel/lelp/reentry.py): key times and the window of the true-scale return shot
     const rm = M.reentry_meta || null;
     X.ret = (M.reentry || []).slice().sort((a, b) => a.t - b.t);
-    X.tSep = rm ? rm.t_stage_sep : Infinity; X.tInflate = rm ? rm.t_inflate : Infinity; X.inflateS = rm ? rm.inflate_s : 90;
+    X.tArmPark = rm && rm.t_arm_park ? rm.t_arm_park : Infinity; X.tSep = rm ? rm.t_stage_sep : Infinity; X.tInflate = rm ? rm.t_inflate : Infinity; X.inflateS = rm ? rm.inflate_s : 90;
     X.tEI = rm ? rm.t_entry_interface : Infinity; X.tMain = rm ? rm.t_main : Infinity;
     X.tSplash = rm ? rm.t_splash : Infinity; X.tRecovery = rm ? rm.t_recovery : Infinity; X.tPeak = tOf('PEAK_HEATING', Infinity);
     X.retShot = rm && X.ret.length ? [X.tEI - 20, X.tRecovery + 60] : null;
@@ -122,7 +122,7 @@
     const F = M.frames, i = Math.max(lastBefore(F, t), 0), f = F[i], n = F[i + 1];
     if (!M._ops || M._ops.i !== i) M._ops = { i, states: f.modules.map(moduleState) };
     const states = M._ops.states, a = f.platform.arm, b = n && n.platform.arm;
-    if (!b || !a.joints || !b.joints || (!a.busy && !b.busy)) return { f, view: f, i, states };
+    if (!b || !a.joints || !b.joints || a.joints.every((v, j) => Math.abs(v - b.joints[j]) < 0.05)) return { f, view: f, i, states };
     const k = clamp((t - f.t) / (n.t - f.t), 0, 1), dr = ((b.ring_deg - a.ring_deg + 540) % 360) - 180;
     const arm = Object.assign({}, a, { joints: a.joints.map((v, j) => lerp(v, b.joints[j], k)), ring_deg: a.ring_deg + dr * k });
     return { f, i, states, view: { t: f.t, modules: f.modules, comms: f.comms, gate: f.gate, platform: Object.assign({}, f.platform, { arm }) } };
@@ -139,7 +139,7 @@
   }
   function returnState(M, t) {    // for the orbital scene: stage separated, heat shield inflation 0..1
     const X = M.x;
-    return { sep: t >= X.tSep, sepAge: Math.max(0, t - X.tSep), inflate: t < X.tInflate ? 0 : clamp((t - X.tInflate) / X.inflateS, 0.001, 1) };
+    return { armParked: t >= X.tArmPark, sep: t >= X.tSep, sepAge: Math.max(0, t - X.tSep), inflate: t < X.tInflate ? 0 : clamp((t - X.tInflate) / X.inflateS, 0.001, 1) };
   }
   function autoRate(M, t) {
     const X = M.x;
@@ -158,6 +158,7 @@
       if (t < X.tSplash + 15) return 8;
       return 120;
     }
+    if (t >= X.tArmPark - 5 && t < X.tArmPark + 50) return 8;                        // Dexter-L parks itself on the upper stage
     if (t >= X.tSep - 10 && t < X.tSep + 60) return 10;                              // the lab leaves the upper stage
     if (t >= X.tInflate - 10 && t < X.tInflate + X.inflateS + 15) return 10;         // the heat shield inflates
     for (const [a, b, v] of X.slow) if (t >= a && t <= b) return v;

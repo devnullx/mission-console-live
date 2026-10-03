@@ -187,9 +187,9 @@
     if (!k.aborted && k.t >= k.end) { k.hold += dt; if (k.hold > 2.5) endTask('Task complete · arm stowed, module on its own power'); }
   }
   async function submit(task, ack) {
-    const module = +$('ctl-module').value; $$('.tasks .btn').forEach((b) => { b.disabled = true; });
+    const module = +$('ctl-module').value; S.busyAsk = true; $$('.tasks .btn').forEach((b) => { b.disabled = true; });
     const res = await ask(module, task, ack || S.acked, false);
-    $$('.tasks .btn').forEach((b) => { b.disabled = false; });
+    S.busyAsk = false; $$('.tasks .btn').forEach((b) => { b.disabled = false; });
     const fin = res.decision && res.decision.final; S.pending = fin === 'ESCALATED' ? task : null; showVerdict(res, task);
     if (fin === 'EXECUTE') { if (ack) S.acked = true; startTask(res); }
   }
@@ -209,7 +209,9 @@
     if (doPanels) { $('ret-readout').hidden = !cap || !!S.task; if (cap && !S.task) set('ret-readout', R.reentryReadout(cap)); }
     if (S.task) stepTask(dt);
     $('track-fill').style.width = $('track-head').style.left = (R.t2x(M, t) * 100).toFixed(3) + '%';
-    if (doPanels) { panels(t, f, fi); S.lastPanels = now; S.dirty = false; }
+    if (doPanels) { panels(t, f, fi); S.lastPanels = now; S.dirty = false;
+      const parked = t >= X.tArmPark; if (!S.busyAsk) $$('.tasks .btn').forEach((b) => { b.disabled = parked; });
+      set('ctl-note', parked ? 'Dexter-L is parked on the upper stage for the return; it does not come home' : 'task-level requests · each one is signed and has to pass Sentinel'); }
   }
   function tick(now) {
     const dt = Math.min((now - S.lastWall) / 1000, .25); S.lastWall = now;

@@ -67,6 +67,7 @@
     $('milestones').innerHTML = X.miles.map((m) => `<div id="ms-${m.code}"><span>${m.label}</span><b>${pad2(Math.floor(m.t / 60))}:${pad2(Math.floor(m.t % 60))}</b></div>`).join('');
     $('facts').innerHTML = [['SITE', (meta.site || '').split(' (')[0].replace('APJ Abdul ', '')], ['TARGET ORBIT', meta.orbit || '—'], ['LAUNCH AZIMUTH', (meta.launch_azimuth_deg || '—') + '°'],
       ['LANDING BARGE', X.lz ? X.lz.toFixed(0) + ' km downrange' : '—'], ['STAGE 1', (meta.engines || 9) + ' × Shakti · GP-300'],
+      ['LELP-1 PAYLOAD', meta.lelp_kg ? `${meta.lelp_kg.toFixed(0)} kg of ${meta.lelp_allocation_kg.toFixed(0)} kg` : '—'],
       ['DRAG FINS', meta.drag_fins ? `${meta.drag_fins.count} × ${meta.drag_fins.length_m.toFixed(2)} m · ${Math.round(meta.drag_fins.open_deg)}° · drag ×${meta.drag_fins.drag_area_ratio.toFixed(2)}` : '—']].map(([k, v]) => `<div><span>${k}</span><b>${esc(v)}</b></div>`).join('');
     $('stab').innerHTML = L ? `Legs 4 × 3.87 m at ${L.deploy_deg}° with telescoping struts · span <b>${L.span_m} m</b> · nozzle clearance <b>${L.nozzle_clearance_m} m</b> · tip-over <b>${L.tip_angle_deg}°</b> against ${L.deck_roll_deg}° deck roll · ${L.leg_load_kn} kN per leg · <b class="${L.stable ? 'ok' : 'bad'}">${L.stable ? 'STABLE' : 'UNSTABLE'}</b>` : '';
     const links = M.frames.length ? M.frames[0].comms.links : {};
@@ -163,7 +164,7 @@
     // Dexter-L
     const stepI = ARM_STEPS.indexOf(A.step);
     $$('#arm-steps li').forEach((li, k) => cls(li, A.busy ? (k < stepI ? 'done' : k === stepI ? 'now' : '') : ''));
-    set('arm-now', A.busy ? `MODULE ${A.module} · ${nice(A.task || 'cycle').toUpperCase()} · ${A.step} ${Math.round(A.step_t || 0)} / ${A.step_dur || 0} s${A.requested_by && A.requested_by !== 'MCC' ? ' · for ' + A.requested_by.split(' /')[0] : ''}`
+    set('arm-now', A.released ? 'LEFT WITH THE UPPER STAGE · Dexter-L does not come home' : A.parked ? 'PARKED ON THE UPPER STAGE · latched to the adapter fixture, base latch released' : A.busy ? `MODULE ${A.module} · ${nice(A.task || 'cycle').toUpperCase()} · ${A.step} ${Math.round(A.step_t || 0)} / ${A.step_dur || 0} s${A.requested_by && A.requested_by !== 'MCC' ? ' · for ' + A.requested_by.split(' /')[0] : ''}`
       : `IDLE · stowed, brakes on · ${A.cycles || 0} cycle${A.cycles === 1 ? '' : 's'} flown`);
     if (A.joints) {
       $$('#joints div').forEach((d, k) => { const v = A.joints[k]; d.querySelector('b').style.height = (Math.min(Math.abs(v), JOINT_LIM[k]) / JOINT_LIM[k] * 100) + '%';
