@@ -48,6 +48,29 @@
     pts.userData = { life: new Float32Array(count), vel: new Float32Array(count * 3), i: 0 }; pts.frustumCulled = false; return pts;
   }
 
+  // Inflatable heat shield (HIAD) in metres (sentinel/lelp/reentry.py): 70 deg sphere-cone, nose at y = 0 facing -y,
+  // rigid 1.1 m centerbody (the lab sits on it at y = 0.15), flexible TPS skin over six stacked tori, radial straps.
+  function buildHIAD(skinMat, toriMat, rigidMat, D = 4.5) {
+    const g = new THREE.Group(), R = D / 2, rc = 0.55, t20 = Math.tan(THREE.MathUtils.degToRad(20)), tube = (R - rc) / 12;
+    const yAt = (r) => 0.12 + (r - rc) * t20;
+    const nose = [new THREE.Vector2(0.001, 0), new THREE.Vector2(0.25, 0.02), new THREE.Vector2(0.45, 0.07), new THREE.Vector2(rc, 0.12)];
+    g.add(new THREE.Mesh(new THREE.LatheGeometry(nose, 48), rigidMat));
+    const flex = [];
+    for (let k = 0; k <= 16; k++) { const r = rc + (R - rc) * k / 16; flex.push(new THREE.Vector2(r, yAt(r))); }
+    flex.push(new THREE.Vector2(R + 0.03, yAt(R) + 0.07), new THREE.Vector2(R - 0.06, yAt(R) + 0.2));
+    g.add(new THREE.Mesh(new THREE.LatheGeometry(flex, 72), skinMat));
+    for (let i = 0; i < 6; i++) {
+      const Ri = rc + tube + i * 2 * tube, t = new THREE.Mesh(new THREE.TorusGeometry(Ri, tube * 0.98, 12, 72), toriMat);
+      t.rotation.x = Math.PI / 2; t.position.y = yAt(Ri) + tube * 0.95; g.add(t);
+    }
+    const pts = [];
+    for (let k = 0; k < 16; k++) { const a = k / 16 * Math.PI * 2, c = Math.cos(a), sn = Math.sin(a);
+      pts.push(new THREE.Vector3(c * rc, yAt(rc) + 2 * tube, sn * rc), new THREE.Vector3(c * (R - tube), yAt(R) + 2 * tube, sn * (R - tube))); }
+    g.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x6b5a3a })));
+    g.userData = { R, shoulderY: yAt(R) };
+    return g;
+  }
+
   class Scene3D {
     constructor(canvas) {
       this.canvas = canvas;
@@ -160,42 +183,42 @@
     // (sentinel/lelp/capsule.py), so the canopies open where the model opens them: drogue 14 km, main 3 km.
     _buildReturn() {
       const r = this.ret = new THREE.Group(); r.visible = false; this.launch.add(r);
-      const cap = this.rcap = new THREE.Group(); r.add(cap);                 // built in metres; local +y = aft (canister)
-      const shell = this._std(0xd6d9dd, { roughness: .5, metalness: .35 }), tps = this._std(0x3a2a20, { roughness: .9, metalness: .05 });
-      const th = 0.95, R0 = 0.62;                                            // heat shield: spherical cap, 1.0 m rim
-      const shield = new THREE.Mesh(new THREE.SphereGeometry(R0, 32, 10, 0, Math.PI * 2, Math.PI - th, th), tps); shield.position.y = R0 * Math.cos(th); cap.add(shield);
-      const back = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.5, 0.52, 32), shell); back.position.y = 0.26; cap.add(back);
-      const can = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.12, 24), this._std(0x2b2e33, { roughness: .6 })); can.position.y = 0.58; cap.add(can);
+      const cap = this.rcap = new THREE.Group(); r.add(cap);                 // the Return Module in metres; local +y = aft
+      const mliMat = this._std(0xffffff, { map: mliTexture(), roughness: .4, metalness: .75 }), shell = this._std(0xd6d9dd, { roughness: .5, metalness: .35 });
+      const stack = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 1.4, 8), mliMat); stack.position.y = 0.85; cap.add(stack);       // 32 modules
+      const labDome = new THREE.Mesh(new THREE.CylinderGeometry(0.46, 0.55, 0.35, 8), shell); labDome.position.y = 1.725; cap.add(labDome); // central chamber
+      const can = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.3, 0.14, 24), this._std(0x2b2e33, { roughness: .6 })); can.position.y = 1.97; cap.add(can);   // parachute canister
+      this.rHiad = buildHIAD(this._std(0xb6ab98, { roughness: .85, metalness: .05, side: THREE.DoubleSide }), this._std(0xd9b46a, { roughness: .7, metalness: .1 }),
+                             this._std(0x3b2a20, { roughness: .9, metalness: .05 })); cap.add(this.rHiad);
       const glow = (color, op) => new THREE.MeshBasicMaterial({ color, transparent: true, opacity: op, depthWrite: false, blending: THREE.AdditiveBlending });
-      this.rPlasma = new THREE.Mesh(new THREE.SphereGeometry(0.8, 24, 16), glow(0xff5a12, 0)); this.rPlasma.position.y = -0.25; cap.add(this.rPlasma);
-      this.rWake = new THREE.Mesh(new THREE.ConeGeometry(0.55, 9, 24, 1, true), glow(0xff6a20, 0)); this.rWake.position.y = 4.8; cap.add(this.rWake);
-      this.rBeacon = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 8), new THREE.MeshBasicMaterial({ color: 0xffffff })); this.rBeacon.position.y = 0.68; cap.add(this.rBeacon);   // recovery strobe
-      // canopies: origin at the canister, risers to the rim, canopy downwind (+y)
+      this.rPlasma = new THREE.Mesh(new THREE.SphereGeometry(2.7, 32, 16), glow(0xff5a12, 0)); this.rPlasma.position.y = -0.2; this.rPlasma.scale.set(1, .32, 1); cap.add(this.rPlasma);
+      this.rWake = new THREE.Mesh(new THREE.ConeGeometry(2.2, 18, 32, 1, true), glow(0xff6a20, 0)); this.rWake.position.y = 9.6; cap.add(this.rWake);
+      this.rBeacon = new THREE.Mesh(new THREE.SphereGeometry(0.09, 12, 8), new THREE.MeshBasicMaterial({ color: 0xffffff })); this.rBeacon.position.y = 2.08; cap.add(this.rBeacon);   // recovery strobe
+      // main canopy: origin at the canister, risers to the rim, canopy downwind (+y)
       const gores = (a, b) => { const c = document.createElement('canvas'); c.width = 256; c.height = 8; const g = c.getContext('2d');
         for (let i = 0; i < 16; i++) { g.fillStyle = i % 2 ? a : b; g.fillRect(i * 16, 0, 16, 8); } return new THREE.CanvasTexture(c); };
-      const chute = (radius, riser, a, b) => {
-        const grp = new THREE.Group(); grp.position.y = 0.64;
-        const canopy = new THREE.Mesh(new THREE.SphereGeometry(radius, 32, 10, 0, Math.PI * 2, 0, Math.PI * 0.42),
+      const chute = (radius, riser, a, b, y0) => {
+        const grp = new THREE.Group(); grp.position.y = y0;
+        const canopy = new THREE.Mesh(new THREE.SphereGeometry(radius, 40, 10, 0, Math.PI * 2, 0, Math.PI * 0.42),
           new THREE.MeshStandardMaterial({ map: gores(a, b), roughness: .9, metalness: 0, side: THREE.DoubleSide }));
         canopy.position.y = riser - radius * Math.cos(Math.PI * 0.42); grp.add(canopy);
         const rim = radius * Math.sin(Math.PI * 0.42), pts = [];
-        for (let i = 0; i < 12; i++) { const q = i / 12 * Math.PI * 2; pts.push(V(0, 0, 0), V(Math.cos(q) * rim, riser, Math.sin(q) * rim)); }
+        for (let i = 0; i < 16; i++) { const q = i / 16 * Math.PI * 2; pts.push(V(0, 0, 0), V(Math.cos(q) * rim, riser, Math.sin(q) * rim)); }
         const lines = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xdedede, transparent: true, opacity: .8 })); grp.add(lines);
         grp.userData = { canopy, lines }; grp.visible = false; cap.add(grp); return grp;
       };
-      this.rDrogue = chute(0.9, 6, '#ff7a1a', '#f4f4f4');                  // 1.8 m drogue on a 6 m riser
-      this.rMain = chute(3.5, 12, '#ff7a1a', '#f4f4f4');                    // 7 m main on a 12 m riser
+      this.rMain = chute(7.5, 22, '#ff7a1a', '#f4f4f4', 2.04);              // 15 m ringsail on a 22 m riser
       cap.scale.setScalar(0.04);                                             // 40x, like the booster
       // splash zone: open sea, a foam ring at splashdown, the recovery ship (built in metres, bow along +x)
       this.retSea = new THREE.Group(); r.add(this.retSea);
       const sea = new THREE.Mesh(new THREE.CircleGeometry(120, 96), this._std(0x173a55, { roughness: .35, metalness: .15 })); sea.rotation.x = -Math.PI / 2; this.retSea.add(sea);
-      this.rSplash = new THREE.Mesh(new THREE.RingGeometry(1.2, 2.2, 48), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false }));
+      this.rSplash = new THREE.Mesh(new THREE.RingGeometry(2.6, 3.8, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false }));
       this.rSplash.rotation.x = -Math.PI / 2; this.rSplash.position.y = 0.002; this.rSplash.scale.setScalar(0.04); this.retSea.add(this.rSplash);
       // after splashdown: fluorescein dye spreading round the capsule, and the released main canopy floating downwind
       this.rDye = new THREE.Mesh(new THREE.CircleGeometry(1, 48), new THREE.MeshBasicMaterial({ color: 0x22e05a, transparent: true, opacity: 0, depthWrite: false }));
       this.rDye.rotation.x = -Math.PI / 2; this.rDye.position.y = 0.001; this.retSea.add(this.rDye);
-      this.rFloat = new THREE.Mesh(new THREE.CircleGeometry(3.2, 32), new THREE.MeshStandardMaterial({ color: 0xff7a1a, roughness: .9, transparent: true, opacity: .9, side: THREE.DoubleSide }));
-      this.rFloat.rotation.x = -Math.PI / 2; this.rFloat.position.set(0.3, 0.0015, 0.12); this.rFloat.scale.set(0.04, 0.04 * 0.6, 0.04); this.retSea.add(this.rFloat);
+      this.rFloat = new THREE.Mesh(new THREE.CircleGeometry(7.5, 40), new THREE.MeshStandardMaterial({ color: 0xff7a1a, roughness: .9, transparent: true, opacity: .9, side: THREE.DoubleSide }));
+      this.rFloat.rotation.x = -Math.PI / 2; this.rFloat.position.set(0.55, 0.0015, 0.25); this.rFloat.scale.set(0.04, 0.04 * 0.6, 0.04); this.retSea.add(this.rFloat);
       const ship = this.ship = new THREE.Group(); r.add(ship);
       const hullM = this._std(0x2e3a48, { roughness: .7 }), deckM = this._std(0x5b6470, { roughness: .8 }), whiteM = this._std(0xe8e8e6, { roughness: .6 }), craneM = this._std(0xd9a400, { roughness: .5, metalness: .4 });
       const box = (w, h, d, m, x, y, z) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); ship.add(b); return b; };
@@ -226,40 +249,36 @@
       const g = this._place(c.x_km, alt), gam = THREE.MathUtils.degToRad(c.fpa_deg);
       const vdir = g.fwd.clone().multiplyScalar(Math.cos(gam)).add(g.up.clone().multiplyScalar(Math.sin(gam))).normalize();
       const aft = floating ? sz.up.clone() : vdir.clone().negate();
-      let pos = floating ? sz.pos.clone().add(sz.up.clone().multiplyScalar(0.004 + Math.sin(this.t * 1.7) * 0.002)) : g.pos.clone();
+      let pos = floating ? sz.pos.clone().add(sz.up.clone().multiplyScalar(-0.014 + Math.sin(this.t * 1.7) * 0.002)) : g.pos.clone();   // afloat on the aeroshell
       if (aboard) pos = this.ship.position.clone().add(sz.side.clone().multiplyScalar(0.56)).add(sz.up.clone().multiplyScalar(this.shipDeckKm + 0.012)).add(sz.fwd.clone().multiplyScalar(-0.12));   // on deck under the crane
       this.rcap.position.copy(pos); this.rcap.quaternion.setFromUnitVectors(V(0, 1, 0), aft);
       const heat = Math.min(c.heat_kw_m2 / 900, 1), fl = 1 + Math.sin(this.t * 31) * .08;
       this.rPlasma.visible = this.rWake.visible = heat > .01;
-      this.rPlasma.material.opacity = .9 * heat; this.rPlasma.scale.set(fl, .55 * fl, fl);
-      this.rWake.material.opacity = .5 * heat; this.rWake.scale.set(1, .5 + .7 * heat, 1);
+      this.rPlasma.material.opacity = .9 * heat; this.rPlasma.scale.set(fl, .32 * fl, fl);
+      this.rWake.material.opacity = .45 * heat; this.rWake.scale.set(1, .5 + .7 * heat, 1);
       const fill = (chute, f) => { const { canopy, lines } = chute.userData; canopy.scale.set(.15 + .85 * f, .55 + .45 * f, .15 + .85 * f); lines.scale.set(.15 + .85 * f, 1, .15 + .85 * f); };
-      this.rDrogue.visible = c.phase === 'drogue'; if (this.rDrogue.visible) fill(this.rDrogue, sstep((c.t - c.tDrogue) / 1.0));
-      this.rMain.visible = c.phase === 'main'; if (this.rMain.visible) fill(this.rMain, sstep((c.t - c.tMain) / 4.0));
+      this.rMain.visible = c.phase === 'main'; if (this.rMain.visible) fill(this.rMain, sstep((c.t - c.tMain) / 6.0));
       const ts = c.t - c.tSplash; this.rSplash.visible = ts > 0 && ts < 25;
       if (this.rSplash.visible) { this.rSplash.scale.setScalar(0.04 * (1 + ts * 0.5)); this.rSplash.material.opacity = .8 * (1 - ts / 25); this.rSplash.position.set(0, 0.002, 0); }
       const afloat = floating && !aboard;
-      this.rDye.visible = afloat; if (afloat) { const d = sstep(ts / 90); this.rDye.scale.setScalar(0.02 + 0.13 * d); this.rDye.material.opacity = .7 * d; }
+      this.rDye.visible = afloat; if (afloat) { const d = sstep(ts / 90); this.rDye.scale.setScalar(0.05 + 0.2 * d); this.rDye.material.opacity = .7 * d; }
       this.rFloat.visible = floating;
       this.rBeacon.visible = !floating || aboard ? false : Math.sin(this.t * 6) > .6;
       // cameras: side-on through the entry with the plasma trailing, close on the drogue, wide on the main canopy,
       // low over the water for splashdown and recovery
       let from, at;
-      if (aboard) {           // the ship with the capsule on deck, from off its quarter
-        from = this.ship.position.clone().add(sz.fwd.clone().multiplyScalar(-1.7)).add(sz.side.clone().multiplyScalar(1.6)).add(sz.up.clone().multiplyScalar(.55));
+      if (aboard) {           // the ship with the lab and aeroshell on deck, from off its quarter
+        from = this.ship.position.clone().add(sz.fwd.clone().multiplyScalar(-2.0)).add(sz.side.clone().multiplyScalar(1.9)).add(sz.up.clone().multiplyScalar(.7));
         at = pos.clone().add(sz.side.clone().multiplyScalar(-.25));
-      } else if (floating) {  // low over the water: capsule, dye and canopy in front, the ship coming up behind
-        from = sz.pos.clone().add(sz.fwd.clone().multiplyScalar(-.5)).add(sz.side.clone().multiplyScalar(-.3)).add(sz.up.clone().multiplyScalar(.1));
-        at = sz.pos.clone().add(sz.side.clone().multiplyScalar(.35)).add(sz.fwd.clone().multiplyScalar(.15)).add(sz.up.clone().multiplyScalar(.03));
-      } else if (c.phase === 'main') {
-        from = pos.clone().add(g.side.clone().multiplyScalar(1.05)).add(g.fwd.clone().multiplyScalar(.35)).add(g.up.clone().multiplyScalar(.1));
-        at = pos.clone().add(g.up.clone().multiplyScalar(.26));
-      } else if (c.phase === 'drogue') {
-        from = pos.clone().add(g.side.clone().multiplyScalar(.55)).add(g.fwd.clone().multiplyScalar(.18)).add(g.up.clone().multiplyScalar(.06));
-        at = pos.clone().add(g.up.clone().multiplyScalar(.13));
-      } else {
-        from = pos.clone().add(g.side.clone().multiplyScalar(.62)).add(aft.clone().multiplyScalar(.12)).add(g.up.clone().multiplyScalar(.1));
-        at = pos.clone().add(aft.clone().multiplyScalar(.13));
+      } else if (floating) {  // low over the water: the lab afloat on its aeroshell, dye and canopy in front, the ship behind
+        from = sz.pos.clone().add(sz.fwd.clone().multiplyScalar(-1.0)).add(sz.side.clone().multiplyScalar(-.6)).add(sz.up.clone().multiplyScalar(.2));
+        at = sz.pos.clone().add(sz.side.clone().multiplyScalar(.35)).add(sz.fwd.clone().multiplyScalar(.15)).add(sz.up.clone().multiplyScalar(.06));
+      } else if (c.phase === 'main') {   // 600 m canopy on a 900 m riser at this scale
+        from = pos.clone().add(g.side.clone().multiplyScalar(3.2)).add(g.fwd.clone().multiplyScalar(1.0)).add(g.up.clone().multiplyScalar(.35));
+        at = pos.clone().add(g.up.clone().multiplyScalar(.6));
+      } else {                // side-on through the entry, plasma ahead of the aeroshell and the wake trailing
+        from = pos.clone().add(g.side.clone().multiplyScalar(1.3)).add(aft.clone().multiplyScalar(.25)).add(g.up.clone().multiplyScalar(.15));
+        at = pos.clone().add(aft.clone().multiplyScalar(.18));
       }
       const minR = this.earthR + 0.03; if (from.length() < minR) from.setLength(minR);       // never below the sea
       this.camPos.copy(from); this.camTarget.copy(at);
@@ -513,12 +532,13 @@
       const adapter = new THREE.Mesh(new THREE.CylinderGeometry(3.6, 4.8, 2.4, 8, 1, true), this._std(0xd8d8d2, { side: THREE.DoubleSide, wireframe: true })); adapter.position.y = -1.6; lelp.add(adapter);
       const stage = new THREE.Mesh(new THREE.CylinderGeometry(4.8, 4.8, 22, 32), this._std(0xe6e6e0, { roughness: .45, metalness: .25 })); stage.position.y = -14; lelp.add(stage);
       const nozzle = new THREE.Mesh(new THREE.ConeGeometry(2.2, 4, 24, 1, true), this._std(0x555a63, { side: THREE.DoubleSide, metalness: .8 })); nozzle.position.y = -27; nozzle.rotation.x = Math.PI; lelp.add(nozzle);
-      // return capsule (docked on top until CAPSULE_SEP)
-      this.capsule = new THREE.Group(); g.add(this.capsule);
-      const cap = new THREE.Mesh(new THREE.ConeGeometry(2.2, 3.2, 32), this._std(0xd0d4da, { metalness: .5, roughness: .4 })); cap.position.y = 1.6; this.capsule.add(cap);
-      const shield = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 1.8, .6, 32), this._std(0x4a2a1a, { roughness: .9 })); this.capsule.add(shield);
-      this.plasma = new THREE.Mesh(new THREE.SphereGeometry(3.4, 24, 24), new THREE.MeshBasicMaterial({ color: 0xff7a30, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending })); this.capsule.add(this.plasma);
-      this.capsule.position.set(0, 21.5, 0); this.capsuleState = 'docked'; this.capsuleT = 0;
+      // whole-payload return: the inflatable heat shield is packed as a ring round the base of the stack (11.5 units per
+      // metre in this scene); after the stage separates it inflates to 4.5 m and the lab sits in its wake
+      this.hiadMats = { skin: this._std(0xbdb3a2, { roughness: .85, metalness: .05, side: THREE.DoubleSide }), tori: this._std(0xd9b46a, { roughness: .7, metalness: .1 }),
+                        rigid: this._std(0x3b2a20, { roughness: .9, metalness: .05 }) };
+      this.hiad = buildHIAD(this.hiadMats.skin, this.hiadMats.tori, this.hiadMats.rigid); this.hiad.position.y = -1.75; this.hiad.visible = false; lelp.add(this.hiad);
+      this.hiadPack = new THREE.Mesh(new THREE.TorusGeometry(6.6, 1.0, 12, 48), this.hiadMats.tori); this.hiadPack.rotation.x = Math.PI / 2; this.hiadPack.position.y = -0.9; lelp.add(this.hiadPack);
+      this.stageParts = [adapter, stage, nozzle, this.solar].map(o => ({ o, y: o.position.y }));
       // relays + ground stations as points on the Earth limb
       this.relays = []; this.links = new THREE.Group(); g.add(this.links);
       [[-70, 28, -60], [78, 36, -50]].forEach(p => { const r = new THREE.Group(); r.position.set(...p);
@@ -538,7 +558,7 @@
         const col = { idle: 0xffffff, good: 0xd8ffd8, warn: 0xffe0a0, crit: 0xffb0b0, move: 0xc0d8ff }[s] || 0xffffff;
         m.material.color.setHex(col); m.material.emissive.setHex(s === 'move' ? 0x0d2a5a : s === 'crit' ? 0x3a0a0a : 0x000000);
         m.userData.led.material.color.setHex({ idle: 0x222222, good: 0x1fe06a, warn: 0xffb020, crit: 0xff3030, move: 0x40a0ff }[s]);
-        m.visible = !(ctx.capsuleState && ctx.capsuleState !== 'docked' && i === 16 && ctx.capsuleState !== 'landed'); });
+        m.visible = true; });
       // Dexter-L: ring azimuth + joint angles straight from the twin (deg)
       const a = p.arm;
       if (a && a.joints) {
@@ -557,10 +577,13 @@
       this.relays.forEach((r, i) => { const name = 'RELAY-' + (i + 1); const iso = isolatedNodes.includes(name); r.rotation.y += dt * .3;
         r.children[0].material.emissive.setHex(iso ? 0x5a1010 : 0x000000);
         const l = this.relayLinks[i]; l.visible = (frame.comms.visible || []).includes(name) || iso; l.material = iso ? this.linkMat.off : this.linkMat.on; });
-      // return capsule
-      this._stepCapsule(ctx.capsuleState || 'docked', dt);
-      // camera: slow orbit around LELP (console), close on the arm (customer view), pull back during the return
-      const ret = ctx.capsuleState && !['docked', 'landed'].includes(ctx.capsuleState);
+      // return: the upper stage (with the solar wings) drifts away, then the heat shield inflates under the lab
+      const rt = ctx.ret || { sep: false, sepAge: 0, inflate: 0 };
+      this.stageParts.forEach(({ o, y }) => { o.position.y = rt.sep ? y - rt.sepAge * 1.5 : y; o.visible = !rt.sep || rt.sepAge < 160; });
+      this.hiadPack.visible = rt.inflate <= 0; this.hiad.visible = rt.inflate > 0;
+      if (this.hiad.visible) { const f = sstep(rt.inflate); this.hiad.scale.set(11.5 * lerp(.3, 1, f), 11.5 * lerp(.5, 1, f), 11.5 * lerp(.3, 1, f)); }
+      // camera: slow orbit around LELP (console), close on the arm (customer view), pull back for the return
+      const ret = rt.sep;
       if (ctx.cam === 'arm' && !ret) {
         const base = new THREE.Vector3(); this.arm.getWorldPosition(base);
         const out = base.clone().setY(0).normalize(), side = new THREE.Vector3(-out.z, 0, out.x);
@@ -568,24 +591,14 @@
         this.camPos.lerp(base.clone().add(out.multiplyScalar(30)).add(side.multiplyScalar(20)).add(V(0, 8, 0)), snap ? 1 : .04);
         this.camTarget.lerp(V(base.x * .4, 11.5, base.z * .4), snap ? 1 : .06);
       } else {
-        const ang = this.t * .05, d = ret ? 95 : 62;
+        const ang = this.t * .05, d = ret ? 82 : 62;
         const snap = ctx.snap || this._camSnap;
         this.camPos.lerp(V(Math.cos(ang) * d, 14 + Math.sin(this.t * .11) * 4, Math.sin(ang) * d), snap ? 1 : .02);
-        this.camTarget.lerp(ret ? this.capsule.position.clone().lerp(V(0, 6, 0), .5) : V(0, 8, 0), snap ? 1 : .04);
+        this.camTarget.lerp(V(0, ret ? 4 : 8, 0), snap ? 1 : .04);
       }
       this._camSnap = false;
       this.camera.position.copy(this.camPos); this.camera.up.set(0, 1, 0); this.camera.lookAt(this.camTarget);
       this.renderer.render(this.scene, this.camera);
-    }
-    _stepCapsule(state, dt) {
-      if (state !== this.capsuleState) { this.capsuleState = state; this.capsuleT = 0; }
-      this.capsuleT += dt; const c = this.capsule, T = this.capsuleT;
-      const earthTop = this.earth.position.y + 420;
-      if (state === 'docked') { c.position.set(0, 21.5, 0); c.rotation.set(0, this.lelp.rotation.y, 0); this.plasma.material.opacity = 0; c.visible = true; return; }
-      c.visible = true;
-      if (state === 'sep') { c.position.lerp(V(-8, 26, 6), .02); c.rotation.z = lerp(c.rotation.z, .3, .02); }
-      else if (state === 'deorbit') { c.position.lerp(V(-30, 12, 20), .01); c.rotation.z = lerp(c.rotation.z, 2.6, .02); }
-      else { this.plasma.material.opacity = 0; c.visible = false; }   // entry onwards: far below the station, shown by updateReturn()
     }
     setPhase(p) { if (p === this.phase) return; this.phase = p; this.launch.visible = p === 'launch' || p === 'return'; this.ops.visible = p === 'ops';
       const ret = p === 'return'; this.ret.visible = ret; [this.booster, this.upper, this.pad, this.barge, this.plume].forEach(o => { o.visible = !ret; });

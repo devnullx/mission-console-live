@@ -11,7 +11,7 @@
 
   // ---------- constants ----------
   const PHASES = ['LAUNCH', 'BOOSTER', 'ORBIT', 'OPS', 'RETURN', 'EOM'];
-  const PHASE_LABEL = { LAUNCH: 'LAUNCH', BOOSTER: 'BOOSTER LANDING', ORBIT: 'ORBIT INSERTION', OPS: 'LAB OPERATIONS', RETURN: 'SAMPLE RETURN', EOM: 'MISSION COMPLETE' };
+  const PHASE_LABEL = { LAUNCH: 'LAUNCH', BOOSTER: 'BOOSTER LANDING', ORBIT: 'ORBIT INSERTION', OPS: 'LAB OPERATIONS', RETURN: 'PAYLOAD RETURN', EOM: 'MISSION COMPLETE' };
   const ARM_STEPS = ['identify', 'unlock', 'capture', 'transfer', 'dock', 'position', 'analyse', 'return', 'record'];
   const JOINT_LIM = [180, 100, 90, 150, 120, 180, 180];
   const STATIONS = [['ISTRAC', 'ISTRAC Bengaluru', 'IN'], ['LEUK', 'Leuk', 'CH'], ['ESOC', 'ESOC Darmstadt', 'DE'], ['RELAY-1', 'Relay 1', 'ISL'], ['RELAY-2', 'Relay 2', 'ISL']];
@@ -204,8 +204,8 @@
     if (S.follow.left) { if (tgtId) S.sel = tgtId; else if (!A.busy && !lastEvent(t, (e) => e.data && e.data.final && e.data.final !== 'EXECUTE' && t - e.t < 90)) S.sel = 17;
       setTab('left', A.busy ? 'dexter' : 'module', true); }
     if (S.follow.drawer) setTab('drawer', dLast ? 'stack' : 'ground', true);
-    $('ret-readout').hidden = !capS; if (capS) set('ret-readout', R.capsuleReadout(capS));
-    if (capS) hud(t, R.capsuleReadout(capS).split(' · ').slice(0, 2).join(' · '), R.capsuleReadout(capS).split(' · ').slice(2).join(' · '), cap ? cap.text.slice(0, 90) : '');
+    $('ret-readout').hidden = !capS; if (capS) set('ret-readout', R.reentryReadout(capS));
+    if (capS) hud(t, R.reentryReadout(capS).split(' · ').slice(0, 2).join(' · '), R.reentryReadout(capS).split(' · ').slice(2).join(' · '), cap ? cap.text.slice(0, 90) : '');
     else hud(t, nice(p.mode), A.busy ? `DEXTER-L · MODULE ${A.module} · ${A.step}` : `${p.active_modules} modules active · ${p.eclipse ? 'eclipse' : 'sunlit'}`, cap ? cap.text.slice(0, 90) : '');
   }
   function panelModule(f, fi, t) {
@@ -318,11 +318,11 @@
       if (panels) panelLaunch(t, L);
     } else {
       const o = R.opsFrame(M, t); f = o.f; opsStates = o.states;
-      const panelsNow = panels || S.dirty, cap = R.capsuleAt(M, t);
+      const panelsNow = panels || S.dirty, cap = R.reentryAt(M, t);
       if (panelsNow) { $('panel-launch').hidden = true; $('panel-platform').hidden = false; }
       if (cap) { scene.setPhase('return'); scene.updateReturn(cap, dt); }      // entry interface to recovery: true-scale return shot
-      else { scene.setPhase('ops'); scene.setSolar(!!lastEvent(t, (e) => e.code === 'SOLAR'));
-        scene.updateOps(o.view, opsStates, f.gate.isolated || [], dt, { capsuleState: R.capsuleState(M, t) }); }
+      else { scene.setPhase('ops'); scene.setSolar(!!lastEvent(t, (e) => e.code === 'SOLAR') && t < X.tSep);
+        scene.updateOps(o.view, opsStates, f.gate.isolated || [], dt, { ret: R.returnState(M, t) }); }
       if (panelsNow) panelOps(t, f, o.i, cap);
     }
     $('track-fill').style.width = $('track-head').style.left = (t2x(t) * 100).toFixed(3) + '%';

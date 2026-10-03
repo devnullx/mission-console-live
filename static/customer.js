@@ -36,22 +36,22 @@
     ['Imaging cycle 1', (e) => e.code === 'IMAGING'],
     ['Central-lab analysis by Dexter-L', (e) => e.code === 'ANALYSIS'],
     ['Report delivered to Zurich', (e) => e.code === 'DELIVERED' && /Adriana/.test(e.text)],
-    ['Sealed in the return capsule', (e) => e.code === 'CAPSULE_LOAD'],
-    ['Re-entry and splashdown', (e) => e.code === 'SPLASHDOWN'],
-    ['Samples handed over', (e) => e.code === 'SAMPLE_HANDOVER'],
+    ['Secured for return with the whole lab', (e) => e.code === 'RETURN_PREP'],
+    ['Re-entry, inflatable shield', (e) => e.code === 'SPLASHDOWN'],
+    ['Module handed to your courier', (e) => e.code === 'SAMPLE_HANDOVER'],
   ].map(([label, pred]) => ({ label, t: tOf(pred) }));
   const JOURNEY = [['LAUNCH', (e) => e.code === 'LIFTOFF'], ['ORBIT', (e) => e.code === 'ORBIT' && e.seg === 'ORBIT'], ['CULTURE', (e) => e.code === 'PROTOCOL'], ['LAB', (e) => e.code === 'ANALYSIS'],
     ['DATA', (e) => e.code === 'DELIVERED' && /Adriana/.test(e.text)], ['RE-ENTRY', (e) => e.code === 'SPLASHDOWN'], ['HANDOVER', (e) => e.code === 'SAMPLE_HANDOVER']].map(([label, pred]) => ({ label, t: tOf(pred) }));
-  const RETURN = ev.filter((e) => ['CAPSULE_LOAD', 'CAPSULE_SEP', 'DEORBIT_BURN', 'ENTRY_INTERFACE', 'PEAK_HEATING', 'DROGUE', 'MAIN_CHUTE', 'SPLASHDOWN', 'RECOVERY', 'SAMPLE_HANDOVER'].includes(e.code));
-  const AUDIT = ev.filter((e) => e.data && e.data.final && (e.data.target === 'module-' + MOD || e.data.target === 'arm' || (e.data.target === 'platform' && /mode|capsule|passivate|key/.test(e.data.verb))));
+  const RETURN = ev.filter((e) => ['RETURN_PREP', 'DEORBIT_BURN', 'STAGE_SEP', 'HIAD_INFLATE', 'ENTRY_INTERFACE', 'PEAK_HEATING', 'MAIN_CHUTE', 'SPLASHDOWN', 'RECOVERY', 'SAMPLE_HANDOVER'].includes(e.code));
+  const AUDIT = ev.filter((e) => e.data && e.data.final && (e.data.target === 'module-' + MOD || e.data.target === 'arm' || (e.data.target === 'platform' && /mode|return_prep|deorbit|passivate|key/.test(e.data.verb))));
   const DELIV = ev.filter((e) => e.code === 'DELIVERED' && /Adriana|Module 17/.test(e.text));
   const IMAGING = ev.filter((e) => e.code === 'IMAGING'), ANALYSIS = ev.find((e) => e.code === 'ANALYSIS');
   const ATTACK17 = X.atkCmds.filter((e) => e.data.target === 'module-' + MOD);
-  const tCapsule = tOf((e) => e.code === 'CAPSULE_LOAD'), tCapSep = tOf((e) => e.code === 'CAPSULE_SEP'), tSplash = tOf((e) => e.code === 'SPLASHDOWN'), tHand = tOf((e) => e.code === 'SAMPLE_HANDOVER');
+  const tPrep = tOf((e) => e.code === 'RETURN_PREP'), tStageSep = tOf((e) => e.code === 'STAGE_SEP'), tSplash = tOf((e) => e.code === 'SPLASHDOWN'), tHand = tOf((e) => e.code === 'SAMPLE_HANDOVER');
   const tLab = tOf((e) => e.code === 'MODE' && /-> CENTRAL_ANALYSIS/.test(e.text));
-  // where the sample is on its way home (key times from the twin's capsule model)
-  const returnState = (t) => t >= tHand ? 'WITH YOUR COURIER' : t >= X.tRecovery ? 'ON THE RECOVERY SHIP' : t >= tSplash ? 'IN THE WATER'
-    : t >= X.tMain ? 'UNDER MAIN CANOPY' : t >= X.tDrogue ? 'UNDER DROGUE' : t >= X.tEI ? 'RE-ENTRY' : t >= tCapSep ? 'COASTING TO ENTRY' : 'IN RETURN CAPSULE';
+  // where the module is on its way home (key times from the twin's whole-payload return model)
+  const returnState = (t) => t >= tHand ? 'WITH YOUR COURIER' : t >= X.tRecovery ? 'ON THE RECOVERY SHIP' : t >= tSplash ? 'AFLOAT'
+    : t >= X.tMain ? 'UNDER MAIN CANOPY' : t >= X.tEI ? 'RE-ENTRY' : t >= X.tInflate ? 'HEAT SHIELD DEPLOYED' : t >= tStageSep ? 'COASTING TO ENTRY' : 'SECURED FOR RETURN';
   const MARKS = ev.filter((e) => e.t >= T0 && (e.seg === 'CUSTOMER' || e.seg === 'RETURN' || (e.data && e.data.target === 'module-' + MOD) || ['LIFTOFF', 'TOUCHDOWN', 'INTRUSION', 'CONTAIN'].includes(e.code) || (e.code === 'ORBIT' && e.seg === 'ORBIT')));
 
   $('steps').innerHTML = STEPS.map((s) => `<li><i></i><span>${s.label}</span><span class="st">—</span></li>`).join('');
@@ -63,7 +63,7 @@
   // ---------- charts ----------
   const size = (svg) => { const r = svg.getBoundingClientRect(); return [Math.max(140, Math.round(r.width)), Math.max(40, Math.round(r.height))]; };
   let chartKey = '';
-  function drawCharts(fi) {
+  function drawCharts(fi, returning) {
     const key = fi + ':' + $('chart-t').clientWidth; if (key === chartKey) return; chartKey = key;
     const i0 = Math.max(0, fi - 720), win = []; for (let i = i0; i <= fi; i += 4) win.push(F[i].modules[MOD - 1]); win.push(F[fi].modules[MOD - 1]);
     const draw = (id, get, lo, hi, color, band, ticks) => {
@@ -75,7 +75,7 @@
         `<polyline fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" points="${win.map((m, k) => px(k).toFixed(1) + ',' + py(get(m)).toFixed(1)).join(' ')}"/>` +
         `<circle cx="${px(win.length - 1)}" cy="${py(get(win[win.length - 1]))}" r="3.5" fill="${color}" stroke="#1d1f21" stroke-width="2"/>`;
     };
-    draw('chart-t', (m) => m.t, 18, 42, '#3987e5', BAND, [20, 30, 37]);
+    draw('chart-t', (m) => m.t, 0, 42, '#3987e5', returning ? [3.5, 4.5] : BAND, [4, 20, 37]);
     draw('chart-h', (m) => m.health * 100, 0, 100, '#199e70', null, [0, 50, 100]);
   }
   let vialKey = '';
@@ -96,20 +96,22 @@
   let auditN = -1, delivN = -1;
   function panels(t, f, fi) {
     set('met-sign', t < 0 ? 'T−' : 'T+'); set('met', clock(t)); set('rate', '×' + (S.rate >= 10 ? Math.round(S.rate) : S.rate.toFixed(1)));
-    const phase = t < 0 ? 'PRE-LAUNCH' : t < X.tSeco ? 'LAUNCH' : t < X.opsStart ? 'IN ORBIT' : t >= tHand ? 'COMPLETE' : t >= tSplash ? 'RECOVERY' : t >= X.tEI ? 'RE-ENTRY' : t >= tCapSep ? 'RETURNING' : nice(f.platform.mode);
+    const phase = t < 0 ? 'PRE-LAUNCH' : t < X.tSeco ? 'LAUNCH' : t < X.opsStart ? 'IN ORBIT' : t >= tHand ? 'COMPLETE' : t >= tSplash ? 'RECOVERY' : t >= X.tEI ? 'RE-ENTRY' : t >= tPrep ? 'RETURNING' : nice(f.platform.mode);
     set('phase-pill', phase); cls('phase-pill', 'chip ' + (t >= tHand ? 'good' : 'info'));
-    const m = f ? f.modules[MOD - 1] : null, inCapsule = t >= tCapsule;
-    if (m && !inCapsule) {
-      set('m-t', m.t.toFixed(2)); const ok = m.state === 'stowed' || (m.t >= BAND[0] && m.t <= BAND[1]);
-      set('m-t-sub', m.state === 'stowed' ? 'not activated yet' : ok ? 'inside protocol 37.0 ± 0.3' : m.t < BAND[0] ? 'warming up to 37.0 ± 0.3' : 'ABOVE protocol 37.0 ± 0.3'); cls('m-t-sub', 'hero-sub ' + (m.state === 'stowed' ? '' : ok ? 'ok' : m.t > BAND[1] ? 'bad' : ''));
+    const m = f ? f.modules[MOD - 1] : null, returning = t >= tPrep;
+    if (m) {   // the module stays in the lab twin all the way home: live temperature throughout
+      set('m-t', m.t.toFixed(2));
+      if (returning) {
+        const ok = Math.abs(m.t - 4) <= 0.5;
+        set('m-t-sub', ok ? 'transport mode 4 °C · whole lab returning' : 'cooling to 4 °C transport mode'); cls('m-t-sub', 'hero-sub ' + (ok ? 'ok' : ''));
+        set('m-state', returnState(t)); cls('m-state', 'chip push ' + (t >= tHand ? 'good' : 'info'));
+      } else {
+        const ok = m.state === 'stowed' || (m.t >= BAND[0] && m.t <= BAND[1]);
+        set('m-t-sub', m.state === 'stowed' ? 'not activated yet' : ok ? 'inside protocol 37.0 ± 0.3' : m.t < BAND[0] ? 'warming up to 37.0 ± 0.3' : 'ABOVE protocol 37.0 ± 0.3'); cls('m-t-sub', 'hero-sub ' + (m.state === 'stowed' ? '' : ok ? 'ok' : m.t > BAND[1] ? 'bad' : ''));
+        set('m-state', { stowed: 'STOWED', active: 'CULTURE RUNNING', in_transfer: 'WITH THE ARM', in_lab: 'IN CENTRAL LAB', isolated: 'ISOLATED' }[m.state] || nice(m.state).toUpperCase());
+        cls('m-state', 'chip push ' + (m.state === 'active' ? 'good' : m.state === 'stowed' ? '' : 'info'));
+      }
       set('m-p', m.p + ' kPa'); set('m-seal', m.sealed ? 'SEALED' : 'BREACH'); set('m-heat', m.heater_w + ' W'); set('m-sp', m.protocol && m.protocol.setpoint ? m.protocol.setpoint + ' °C' : '—');
-      set('m-state', { stowed: 'STOWED', active: 'CULTURE RUNNING', in_transfer: 'WITH THE ARM', in_lab: 'IN CENTRAL LAB', isolated: 'ISOLATED' }[m.state] || nice(m.state).toUpperCase());
-      cls('m-state', 'chip push ' + (m.state === 'active' ? 'good' : m.state === 'stowed' ? '' : 'info'));
-    } else if (inCapsule) {
-      const ce = lastEvent(t, (e) => e.seg === 'RETURN' && /(\d+(?:\.\d)?) C\b/.test(e.text)), ct = ce ? +ce.text.match(/(\d+(?:\.\d)?) C\b/)[1] : 4.0;
-      set('m-t', ct.toFixed(1)); set('m-t-sub', 'return capsule cold chain, 4 °C'); cls('m-t-sub', 'hero-sub ok');
-      set('m-p', '—'); set('m-seal', 'SEALED'); set('m-heat', '—'); set('m-sp', '4 °C');
-      set('m-state', returnState(t)); cls('m-state', 'chip push ' + (t >= tHand ? 'good' : 'info'));
     } else {
       ['m-t', 'm-p', 'm-seal', 'm-heat', 'm-sp'].forEach((id) => set(id, '—')); set('m-t-sub', 'protocol 37.0 ± 0.3 once in orbit'); cls('m-t-sub', 'hero-sub');
       set('m-state', t < 0 ? 'ON THE PAD' : t < X.tSeco ? 'RIDING TO ORBIT' : 'IN ORBIT'); cls('m-state', 'chip push');
@@ -118,7 +120,7 @@
     set('m-h', health == null ? '—' : health);
     set('m-h-sub', health == null ? 'culture health index from the twin' : (ANALYSIS && t >= ANALYSIS.t ? `measured viability ${Math.round(ANALYSIS.data.viability * 100)} % at T+${hms(ANALYSIS.t)}` : health > 90 ? 'nominal' : health > 50 ? 'stressed' : 'culture lost'));
     cls('m-h-sub', 'hero-sub ' + (health == null ? '' : health > 90 ? 'ok' : 'bad'));
-    if (f) drawCharts(Math.min(fi, Math.max(lastBefore(F, tCapsule), 0)));
+    if (f) drawCharts(fi, returning);
     STEPS.forEach((s, k) => { const li = $('steps').children[k], done = t >= s.t, now = !done && (k === 0 || t >= STEPS[k - 1].t); cls(li, done ? 'done' : now ? 'now' : ''); set(li.lastElementChild, done ? feedT(s.t) : now ? 'in progress' : '—'); });
     JOURNEY.forEach((j, k) => cls($('journey').children[k], t >= j.t ? 'done' : (k === 0 || t >= JOURNEY[k - 1].t) ? 'now' : ''));
     RETURN.forEach((e, k) => cls($('return').children[k], t >= e.t ? 'done' : ''));
@@ -140,7 +142,7 @@
     const tiles = [['ATTACKS ON YOUR MODULE', t < X.tIntr ? '—' : `${blocked} / ${n} BLOCKED`, t < X.tIntr ? '' : blocked === n ? 'good' : 'bad'],
       ['CULTURE HEALTH', health == null ? '—' : health + ' %', health == null ? '' : health > 90 ? 'good' : 'bad'],
       ['CUSTODY LEDGER', led ? (led.data.ok ? 'VERIFIED' : 'TAMPER CAUGHT') : 'HASH-CHAINED', led ? (led.data.ok ? 'good' : 'bad') : ''],
-      ['SAMPLE RETURN', t >= tHand ? 'HANDED OVER' : t >= tCapsule ? returnState(t).replace('COASTING TO ENTRY', 'COASTING').replace('IN RETURN CAPSULE', 'IN CAPSULE') : 'PENDING', t >= tHand ? 'good' : '']];
+      ['MODULE RETURN', t >= tHand ? 'HANDED OVER' : t >= tPrep ? returnState(t).replace('COASTING TO ENTRY', 'COASTING').replace('HEAT SHIELD DEPLOYED', 'SHIELD DEPLOYED').replace('SECURED FOR RETURN', 'SECURED') : 'PENDING', t >= tHand ? 'good' : '']];
     const html = tiles.map(([l, v, k]) => `<div class="sc ${k}"><span>${l}</span><b>${v}</b></div>`).join('');
     if ($('scorecard').dataset.h !== html) { $('scorecard').innerHTML = html; $('scorecard').dataset.h = html; }
     if (!S.task) { const cap = lastEvent(t, (e) => e.seg === 'CUSTOMER' || e.seg === 'RETURN' || e.seg === 'LAUNCH' || e.seg === 'ORBIT' || (e.data && e.data.target === 'module-' + MOD) || (e.code === 'ARM' && /17/.test(e.text)));
@@ -161,7 +163,7 @@
     set('v-paths', `A ${d.A} · B ${d.B === 'SKIPPED' ? 'not reached' : d.B}${res.signature_bytes ? ' · ML-DSA-87 ' + res.signature_bytes + ' B' : ''}`);
     set('v-why', (d.reasons || []).slice(-3).join(' · ')); $('v-ack').hidden = d.final !== 'ESCALATED';
   }
-  function baseFrame() { const t = S.t >= X.opsStart && S.t < tCapsule ? Math.max(S.t, isFinite(tLab) ? tLab + 30 : S.t) : (isFinite(tLab) ? tLab + 30 : X.opsStart + 600); return R.opsFrame(M, t); }
+  function baseFrame() { const t = S.t >= X.opsStart && S.t < tPrep ? Math.max(S.t, isFinite(tLab) ? tLab + 30 : S.t) : (isFinite(tLab) ? tLab + 30 : X.opsStart + 600); return R.opsFrame(M, t); }
   function startTask(res) {
     const tr = res.trace || []; if (!tr.length) return;
     play(false); S.task = { res, tr, t: 0, end: tr[tr.length - 1].t, hold: 0, base: baseFrame(), aborted: false };
@@ -176,7 +178,7 @@
     const arm = { busy: true, module: MOD, step: a.step, joints: a.joints.map((v, j) => lerp(v, b.joints[j], u)), ring_deg: ringA + dr * u, grip: a.grip, umbilical: a.umbilical, torques: a.torques };
     const base = k.base, states = base.states.slice(); states[MOD - 1] = a.module_state === 'in_transfer' || a.module_state === 'in_lab' ? 'move' : 'good';
     scene.setPhase('ops'); scene.setSolar(true);
-    scene.updateOps({ t: base.f.t, modules: base.f.modules, comms: base.f.comms, gate: base.f.gate, platform: Object.assign({}, base.f.platform, { arm }) }, states, [], dt, { cam: 'arm', capsuleState: 'docked' });
+    scene.updateOps({ t: base.f.t, modules: base.f.modules, comms: base.f.comms, gate: base.f.gate, platform: Object.assign({}, base.f.platform, { arm }) }, states, [], dt, { cam: 'arm' });
     set('al-step', k.aborted ? 'ABORTED · arm holding position, brakes on' : `${nice(a.step)} · ${Math.round(a.step_t)} / ${a.step_dur} s`); set('al-t', Math.round(k.t) + ' / ' + Math.round(k.end) + ' s');
     $('al-prog').style.width = (k.end ? k.t / k.end * 100 : 0) + '%';
     set('al-grip', a.grip ? 'LATCHED' : 'OPEN'); set('al-umb', a.umbilical ? 'MATED · 28 V' : 'OFF'); set('al-temp', a.module_t.toFixed(2) + ' °C'); set('al-ft', a.ft_n + ' N');
@@ -199,12 +201,12 @@
   function frame(dt, now) {
     const t = S.t, launch = t < X.opsStart, doPanels = S.dirty || now - S.lastPanels > 120;
     let f = null, fi = -1;
-    const cap = launch ? null : R.capsuleAt(M, t);
+    const cap = launch ? null : R.reentryAt(M, t);
     if (!launch) { const o = R.opsFrame(M, t); f = o.f; fi = o.i;
       if (!S.task && cap) { scene.setPhase('return'); scene.updateReturn(cap, dt); }
-      else if (!S.task) { scene.setPhase('ops'); scene.setSolar(!!lastEvent(t, (e) => e.code === 'SOLAR')); scene.updateOps(o.view, o.states, f.gate.isolated || [], dt, { capsuleState: R.capsuleState(M, t), cam: 'arm' }); } }
+      else if (!S.task) { scene.setPhase('ops'); scene.setSolar(!!lastEvent(t, (e) => e.code === 'SOLAR') && t < X.tSep); scene.updateOps(o.view, o.states, f.gate.isolated || [], dt, { ret: R.returnState(M, t), cam: 'arm' }); } }
     else if (!S.task) { const L = R.launchState(M, t); scene.setPhase('launch'); scene.updateLaunch(t > X.tTouch + 20 ? { upper: L.upper, sepAtt: L.sepAtt, sepAge: L.sepAge } : L, !!L.upper, dt); }
-    if (doPanels) { $('ret-readout').hidden = !cap || !!S.task; if (cap && !S.task) set('ret-readout', R.capsuleReadout(cap)); }
+    if (doPanels) { $('ret-readout').hidden = !cap || !!S.task; if (cap && !S.task) set('ret-readout', R.reentryReadout(cap)); }
     if (S.task) stepTask(dt);
     $('track-fill').style.width = $('track-head').style.left = (R.t2x(M, t) * 100).toFixed(3) + '%';
     if (doPanels) { panels(t, f, fi); S.lastPanels = now; S.dirty = false; }
