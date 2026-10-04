@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bioreactor for tissue engineering and biomanufacturing · LELP-1</title>
 <meta name="description" content="Engineered tissues such as cartilage and heart muscle are hard to grow on Earth. Thick 3D constructs starve in the middle, and gravity makes cells and soft gels settle. In microgra">
-<meta name="build" content="89b89e1">
+<meta name="build" content="b8da32d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lab.css?v=89b89e1">
+<link rel="stylesheet" href="lab.css?v=b8da32d">
 </head>
 <body>
-<header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="index.html">Overview</a><a href="satellite.html">The satellite</a><a href="index.html#experiments" class=on>Experiments</a><a href="../index.html">Mission console</a></nav></div></header>
+<header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html">Configure your mission</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments" class=on>Experiments</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
 <main class="wrap">
 
 <div class="crumbs"><a href="index.html#experiments">Experiments</a> · 06 of 15 · Bioreactor</div>
@@ -37,6 +37,35 @@
   <section><h2>Ground control</h2><p>An identical perfusion module in a ground bay with constructs from the same batch, run at 1 g on the same feeding, imaging and fixation timeline. It is offset by a few hours so it can replay the flight temperature log. Launch vibration and re-entry loads are replayed on a shaker where possible. An optional third group in a rotating-wall or clinostat setup separates flow and shear effects from gravity effects.</p></section>
   <section><h2>Coming home</h2><p>Fixed and RNA-stabilized constructs and medium aliquots should stay at 4 C from the end of operations to the customer lab. About 20 min to the courier plus 1-2 days of transport fits within 72 h. Mechanical testing needs live, unfixed constructs. A live-return option would need the bay held near 37 C (or at a validated holding temperature) through recovery, which has not yet been demonstrated for LELP-1.</p></section>
   <section><h2>Limits of this flight</h2><ul class="lim"><li>14 days is short for tissue growth. The Mir cartilage ran 4 months after 3 months on Earth. LELP-1 suits early responses and method tests, not growing mature tissue.</li><li>Microgravity has not been shown to make better tissue. Mir cartilage was smaller and mechanically weaker, and ISS heart tissues lost contractile force. Customers should expect to study gravity effects, not to receive a better product.</li><li>No crew. On CRS-20 the crew exchanged medium by syringe; on LELP-1 every medium change and fixation must be automatic, and nobody can clear a blocked line. Gas bubbles do not rise in microgravity, so the flow path needs a bubble trap and fully automatic recovery.</li><li>No CO2 supply. The Mir BTS used 10% CO2 and the CRS-20 incubator used 5% CO2. HEPES-buffered medium changes metabolism compared with those setups, so the ground control must use the same medium.</li><li>Oxygen comes only from the sealed bay air, and the cells&#x27; CO2 builds up there. The gas budget must be sized for each customer, because cardiac tissue uses far more oxygen than cartilage.</li><li>Live tissue must wait about 2 days at the pad and survive ascent loads. Returned tissue is fixed or stabilized, so mechanical properties cannot be tested after return unless a live-return mode is developed.</li><li>Robotic-arm moves raise acceleration to about 1e-4 to 1e-3 g.</li><li>Volumes are millilitres and there are 8 constructs per bay: a research-scale study, not production biomanufacturing.</li><li>In-line glucose/lactate sensing and the per-chamber cold pads are our design choices and have not flown on LELP-1.</li></ul></section>
+  
+<section class="ff" id="satellite"><h2>A satellite of its own: SP-BRX</h2>
+<p>If this experiment flies alone instead of in a LELP-1 bay, SP-BRX is a 79 kg free-flyer:
+a service module with a 0.40 m² sun-tracking array (120 W), a 241 Wh battery, S-band radios
+and a green-monopropellant deorbit module (2 × 22 N, a 340 s burn), carrying a
+25 kg return capsule with a 0.87 m heat shield. It flies the same 550 km dawn-dusk orbit: two days of checkout, then
+14 days of protocol, then deorbit; the capsule holds its samples at temperature for 8 h while the ship finds it.</p>
+<div class="ffgrid">
+  <div class="card"><h3>Payload in the capsule</h3><table class="tbl"><thead><tr><th>Item</th><th class=num>kg</th><th class=num>W peak</th></tr></thead><tbody><tr><td>Bioreactor for tissue engineering and biomanufacturing module</td><td class=num>5.5</td><td class=num>22</td></tr></tbody></table></div>
+  <div class="card"><h3>Mass · estimate</h3><table class="tbl">
+    <tr><td>Return capsule (payload, hold battery 200 Wh, heat shield, parachute)</td><td class=num>24.9</td></tr>
+    <tr><td>Service module dry (structure, power, avionics, attitude, propulsion)</td><td class=num>47.0</td></tr>
+    <tr><td>Propellant for 190 m/s</td><td class=num>6.8</td></tr>
+    <tr class="tot"><td>At launch</td><td class=num>78.6</td></tr></table></div>
+  <div class="card"><h3>Power · estimate</h3><table class="tbl">
+    <tr><td>Average / peak load</td><td class=num>55 / 107 W</td></tr>
+    <tr><td>Array (worst eclipse season, 22 min shadow)</td><td class=num>120 W</td></tr>
+    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr></table></div>
+</div>
+<div class="two">
+  <div><h3>Tailored for this experiment</h3><ul class="lim"><li>Bay powered at 37 C during the pad wait and ascent, with late load no more than about 48 h before launch (live tissues)</li><li>Small 4 C cold pads and an insulated pocket inside the 37 C bay for fixed chambers and medium aliquots, since a bay holds only one setpoint</li><li>Image and sensor downlink on each ground pass so the ground team can adjust flow and feeding</li><li>Robotic-arm moves scheduled outside imaging and fixation windows to keep the bay near 1e-6 g</li><li>Optional: a small pre-charged 5% CO2 gas cartridge if a customer needs bicarbonate-buffered medium (not a standard bay service)</li></ul></div>
+  <div><h3>Bay or satellite?</h3><p>On LELP-1 this payload takes one bay (5.5 kg, 2.3 % of the lab's launch mass), shares
+  power, radios and the return with 31 others, and comes home with the whole lab. Alone, it needs 79 kg of satellite, about
+  14 times its own mass, but it gets the schedule to itself and a quieter ride: about 7.3 × 10⁻⁸ g at the payload, with no robotic
+  arm, against about 7 × 10⁻⁷ g in a LELP-1 bay.</p></div>
+</div>
+<p class="small">First-order sizing with a 20 % system margin by <a href="satellites.html#method">the same model for every experiment</a>, reviewed independently;
+<a href="satellites.html#review">read the caveats</a>. Flown recoverable free-flyers are heavier, so treat these masses as optimistic.</p>
+</section>
   <section class="refs"><h2>References</h2><ol><li id="ref-1">Freed LE, Langer R, Martin I, Pellis NR, Vunjak-Novakovic G. 1997. Tissue engineering of cartilage in space. Proc Natl Acad Sci USA 94(25):13885-13890. doi:10.1073/pnas.94.25.13885 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC28402" rel="noopener" target="_blank">https://pmc.ncbi.nlm.nih.gov/articles/PMC28402</a></li><li id="ref-2">NASA Ames Research Center. Bioculture System (Space Biosciences, Cell Science). NASA web page. <a href="https://www.nasa.gov/ames/space-biosciences/cell-science/bioculture-system/" rel="noopener" target="_blank">https://www.nasa.gov/ames/space-biosciences/cell-science/bioculture-system/</a></li><li id="ref-3">Sato KY, Almeida E, Austin EM. 2014. NASA Bioculture System: From Experiment Definition to Flight Payload. Conference abstract, NASA Technical Reports Server 20150000190. <a href="https://ntrs.nasa.gov/citations/20150000190" rel="noopener" target="_blank">https://ntrs.nasa.gov/citations/20150000190</a></li><li id="ref-4">Mair DB, Tsui JH, Higashi T, et al. 2024. Spaceflight-induced contractile and mitochondrial dysfunction in an automated heart-on-a-chip platform. Proc Natl Acad Sci USA 121(40):e2404644121. doi:10.1073/pnas.2404644121 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11459163/" rel="noopener" target="_blank">https://pmc.ncbi.nlm.nih.gov/articles/PMC11459163/</a></li><li id="ref-5">ISS National Laboratory. 2020 (7 April). SpaceX Successfully Completes CRS-20, Returning ISS National Lab-sponsored Payloads to Earth. <a href="https://issnationallab.org/?p=38463" rel="noopener" target="_blank">https://issnationallab.org/?p=38463</a></li><li id="ref-6">Sharma A, Clemens RA, Garcia O, Taylor DL, Wagner NL, et al. 2022 (online 30 Dec 2021). Biomanufacturing in low Earth orbit for regenerative medicine. Stem Cell Reports 17(1):1-13. doi:10.1016/j.stemcr.2021.12.001 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8758939" rel="noopener" target="_blank">https://pmc.ncbi.nlm.nih.gov/articles/PMC8758939</a></li><li id="ref-7">ISS National Laboratory. Bioculture System (facility page). <a href="https://issnationallab.org/facilities/bioculture-system" rel="noopener" target="_blank">https://issnationallab.org/facilities/bioculture-system</a></li></ol><p class="verify">Fact-check: 17 claims and sources checked, 10 confirmed, 6 corrected, 1 removed · confidence high</p></section>
 </div>
 <aside class="side">
@@ -56,7 +85,7 @@
 mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
 Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
 each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
-<p class="mono">build 89b89e1</p>
+<p class="mono">build b8da32d</p>
 </div></footer>
 </body>
 </html>

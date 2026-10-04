@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configure your mission · LELP-1</title>
+<meta name="description" content="Configure a satellite, load an experiment, get the payload instructions and the mission plan.">
+<meta name="build" content="b8da32d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lab.css?v=b8da32d">
+</head>
+<body>
+<header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html" class=on>Configure your mission</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments">Experiments</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
+<main class="wrap">
+<section class="hero cfg-hero">
+  <p class="kicker">CONFIGURE YOUR MISSION</p>
+  <h1>Configure a satellite, load an experiment, fly it</h1>
+  <p class="lede">Four steps. Choose how your experiment flies, load a researched experiment template, get your protocol and the
+  instructions for packing the payload, and see the mission that follows from it. Everything is computed in your browser from
+  LELP-1's design and the experiment catalog; satellite numbers are first-order estimates.</p>
+</section>
+<ol class="cfg-steps" id="cfg-steps">
+  <li data-step="1"><b>1</b><span>Satellite</span></li>
+  <li data-step="2"><b>2</b><span>Experiment</span></li>
+  <li data-step="3"><b>3</b><span>Protocol and payload guide</span></li>
+  <li data-step="4"><b>4</b><span>Mission</span></li>
+</ol>
+<div class="cfg">
+  <div class="cfg-main">
+    <section class="cfg-step" data-step="1"></section>
+    <section class="cfg-step" data-step="2" hidden></section>
+    <section class="cfg-step" data-step="3" hidden></section>
+    <section class="cfg-step" data-step="4" hidden></section>
+    <div class="cfg-nav"><button type="button" id="cfg-prev" class="btn ghost">← Back</button><button type="button" id="cfg-next" class="btn">Next →</button></div>
+  </div>
+  <aside class="cfg-sum card" id="cfg-sum" aria-live="polite"></aside>
+</div>
+<noscript><p>This configurator needs JavaScript.</p></noscript>
+
+</main>
+<footer class="foot"><div class="wrap">
+<p><b>LELP-1 is in design.</b> Bay limits, budgets, timelines and environment numbers come from Space Philic's digital twin of the
+mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
+Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
+each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
+<p class="mono">build b8da32d</p>
+</div></footer>
+<script src="configure.js?v=b8da32d"></script>
+</body>
+</html>

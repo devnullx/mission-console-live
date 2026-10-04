@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Protein crystallization for drug formulation · LELP-1</title>
 <meta name="description" content="Many drugs are proteins, such as monoclonal antibodies, and today these are usually given by intravenous infusion in hospital. A concentrated, less viscous crystalline suspension c">
-<meta name="build" content="89b89e1">
+<meta name="build" content="b8da32d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lab.css?v=89b89e1">
+<link rel="stylesheet" href="lab.css?v=b8da32d">
 </head>
 <body>
-<header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="index.html">Overview</a><a href="satellite.html">The satellite</a><a href="index.html#experiments" class=on>Experiments</a><a href="../index.html">Mission console</a></nav></div></header>
+<header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html">Configure your mission</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments" class=on>Experiments</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
 <main class="wrap">
 
 <div class="crumbs"><a href="index.html#experiments">Experiments</a> · 02 of 15 · Protein crystallisation</div>
@@ -37,6 +37,35 @@
   <section><h2>Ground control</h2><p>A matching cassette from the same protein lot and solutions, loaded at the same time, runs in a flight-equivalent bay on the ground. Telemetry drives its temperature to replay the flight log, including launch, activation, ramp and return-hold phases. It is activated at the same time by the same type of fluidics. Ideally a launch-vibration profile is applied before activation. Ground and flight samples go to the same lab and are analysed blind with the same methods. A third passive set, never activated, can show what launch and return alone do to the solutions.</p></section>
   <section><h2>Coming home</h2><p>Hold the cassette at the customer&#x27;s growth or hold temperature (default 20 C, within about +/-2 C) from end of growth to the lab. Do not warm, cool or freeze it unless ground tests show that is safe for that protein. How crystals react to temperature depends on the protein: pembrolizumab crystallized on warming from 4 to 30 C, while JAXA saw space-grown crystals degrade when Soyuz rose above 30 C on return. Handle gently, because crystals sit in liquid and can break under shock. The 72 h limit is our estimate (about 20 min to courier handover plus 1-2 days to the lab) and must be confirmed in ground tests for each protein.</p></section>
   <section><h2>Limits of this flight</h2><ul class="lim"><li>Lab operations last at most 14 days. Merck&#x27;s samples spent 18 days in the incubator and JAXA growth took six weeks to four months, so LELP-1 suits only fast-growing systems whose conditions are fixed on the ground beforehand.</li><li>There is no crew to harvest, mount or flash-cool crystals in orbit. Crystals come back in their mother liquor and can be damaged by reentry and splashdown shocks or by temperature excursions.</li><li>There is no X-ray diffraction in flight. Crystal quality is known only after return.</li><li>The bay microscope cannot reliably resolve particles of a few microns, so the in-flight size data are qualitative. The full particle size distribution needs ground instruments.</li><li>Microgravity helps only some proteins. In JAXA&#x27;s flights 1 to 5, 40 of 215 samples (19%) gave good results, and success needed highly homogeneous samples in viscous solutions.</li><li>Sample volumes are millilitres per well. This is a research and formulation-development service, not drug manufacturing.</li><li>The bay range is 4 to 45 C. Melt-based small-molecule processes such as Varda&#x27;s W-1 ritonavir run (131 C melt, 80 C growth) are out of scope.</li><li>Arm motion and any thruster use raise the g-level. Growth wells need quiet periods, and the timeline must be shared with other bays.</li><li>LELP-1 is a design in a digital twin. None of this has flown, and all LELP-1 numbers are our estimates.</li></ul></section>
+  
+<section class="ff" id="satellite"><h2>A satellite of its own: SP-XTL</h2>
+<p>If this experiment flies alone instead of in a LELP-1 bay, SP-XTL is a 78 kg free-flyer:
+a service module with a 0.42 m² sun-tracking array (125 W), a 241 Wh battery, S-band radios
+and a green-monopropellant deorbit module (2 × 22 N, a 339 s burn), carrying a
+25 kg return capsule with a 0.87 m heat shield. It flies the same 550 km dawn-dusk orbit: two days of checkout, then
+10 days of protocol, then deorbit; the capsule holds its samples at temperature for 8 h while the ship finds it.</p>
+<div class="ffgrid">
+  <div class="card"><h3>Payload in the capsule</h3><table class="tbl"><thead><tr><th>Item</th><th class=num>kg</th><th class=num>W peak</th></tr></thead><tbody><tr><td>Protein crystallization for drug formulation module</td><td class=num>5.4</td><td class=num>26</td></tr></tbody></table></div>
+  <div class="card"><h3>Mass · estimate</h3><table class="tbl">
+    <tr><td>Return capsule (payload, hold battery 200 Wh, heat shield, parachute)</td><td class=num>24.6</td></tr>
+    <tr><td>Service module dry (structure, power, avionics, attitude, propulsion)</td><td class=num>47.1</td></tr>
+    <tr><td>Propellant for 190 m/s</td><td class=num>6.8</td></tr>
+    <tr class="tot"><td>At launch</td><td class=num>78.5</td></tr></table></div>
+  <div class="card"><h3>Power · estimate</h3><table class="tbl">
+    <tr><td>Average / peak load</td><td class=num>58 / 111 W</td></tr>
+    <tr><td>Array (worst eclipse season, 22 min shadow)</td><td class=num>125 W</td></tr>
+    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr></table></div>
+</div>
+<div class="two">
+  <div><h3>Tailored for this experiment</h3><ul class="lim"><li>Powered thermal control on the launch pad and through ascent to hold 4 C after a late load (about 1 day before launch)</li><li>Continuous, battery-backed thermal control of the bay through deorbit, reentry, splashdown and until courier handover, with no gap in setpoint</li><li>Active thermal shipper for the courier at the customer&#x27;s hold temperature, with a temperature logger</li><li>Quiet-period scheduling: no robotic arm motion during nucleation and growth (arm motion raises the level to about 1e-4 to 1e-3 g)</li><li>Accelerometer data time-stamped and delivered with the images, so the customer can link disturbances to crystal defects</li><li>Optional crossed polarizer in the bay microscope to see crystal birefringence (not part of the standard LumaScope-class set-up)</li></ul></div>
+  <div><h3>Bay or satellite?</h3><p>On LELP-1 this payload takes one bay (5.4 kg, 2.2 % of the lab's launch mass), shares
+  power, radios and the return with 31 others, and comes home with the whole lab. Alone, it needs 78 kg of satellite, about
+  15 times its own mass, but it gets the schedule to itself and a quieter ride: about 7.3 × 10⁻⁸ g at the payload, with no robotic
+  arm, against about 7 × 10⁻⁷ g in a LELP-1 bay.</p></div>
+</div>
+<p class="small">First-order sizing with a 20 % system margin by <a href="satellites.html#method">the same model for every experiment</a>, reviewed independently;
+<a href="satellites.html#review">read the caveats</a>. Flown recoverable free-flyers are heavier, so treat these masses as optimistic.</p>
+</section>
   <section class="refs"><h2>References</h2><ol><li id="ref-1">Reichert P, Prosise W, Fischmann TO, et al. (2019). Pembrolizumab microgravity crystallization experimentation. npj Microgravity 5:28. doi:10.1038/s41526-019-0090-3 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6889310/" rel="noopener" target="_blank">https://pmc.ncbi.nlm.nih.gov/articles/PMC6889310/</a></li><li id="ref-2">ISS National Laboratory (2 Dec 2019). Published Results From Crystallization Experiments on the ISS Could Help Merck Improve Cancer Drug Delivery. <a href="https://www.issnationallab.org/merck-lab-publishes-pembrolizumab-results/" rel="noopener" target="_blank">https://www.issnationallab.org/merck-lab-publishes-pembrolizumab-results/</a></li><li id="ref-3">Takahashi S, Ohta K, Furubayashi N, et al. (2013). JAXA protein crystallization in space: ongoing improvements for growing high-quality crystals. Journal of Synchrotron Radiation 20(6):968-973. doi:10.1107/S0909049513021596 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3795566/" rel="noopener" target="_blank">https://pmc.ncbi.nlm.nih.gov/articles/PMC3795566/</a></li><li id="ref-4">Bauser HC, Smith PA, Parent SD, et al. (2024). Return of the Ritonavir: A Study on the Stability of Pharmaceuticals Processed in Orbit and Returned to Earth. ChemRxiv preprint. doi:10.26434/chemrxiv-2024-vb20g-v3 <a href="https://www.varda.com/science/return-of-the-ritonavir" rel="noopener" target="_blank">https://www.varda.com/science/return-of-the-ritonavir</a></li><li id="ref-5">Varda Space Industries. W-1 mission page. <a href="https://www.varda.com/mission/w-1" rel="noopener" target="_blank">https://www.varda.com/mission/w-1</a></li><li id="ref-6">New Space Economy (1 Apr 2024). Return of the Ritonavir: stability of pharmaceuticals processed in orbit (news summary of the Varda / Improved Pharma preprint). <a href="https://newspaceeconomy.ca/2024/04/01/return-of-the-ritonavir-stability-of-pharmaceuticals-processed-in-orbit/" rel="noopener" target="_blank">https://newspaceeconomy.ca/2024/04/01/return-of-the-ritonavir-stability-of-pharmaceuticals-processed-in-orbit/</a></li></ol><p class="verify">Fact-check: 22 claims and sources checked, 14 confirmed, 8 corrected, 0 removed · confidence high</p></section>
 </div>
 <aside class="side">
@@ -56,7 +85,7 @@
 mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
 Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
 each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
-<p class="mono">build 89b89e1</p>
+<p class="mono">build b8da32d</p>
 </div></footer>
 </body>
 </html>

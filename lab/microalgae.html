@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Microalgae and cyanobacteria for oxygen and food · LELP-1</title>
 <meta name="description" content="Long crewed missions cannot carry all their oxygen and food from Earth. Photosynthetic microbes such as the cyanobacterium Limnospira indica (spirulina) and the green alga Chlorell">
-<meta name="build" content="89b89e1">
+<meta name="build" content="b8da32d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lab.css?v=89b89e1">
+<link rel="stylesheet" href="lab.css?v=b8da32d">
 </head>
 <body>
-<header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="index.html">Overview</a><a href="satellite.html">The satellite</a><a href="index.html#experiments" class=on>Experiments</a><a href="../index.html">Mission console</a></nav></div></header>
+<header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html">Configure your mission</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments" class=on>Experiments</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
 <main class="wrap">
 
 <div class="crumbs"><a href="index.html#experiments">Experiments</a> · 10 of 15</div>
@@ -37,6 +37,35 @@
   <section><h2>Ground control</h2><p>An identical flight-model module runs on the ground at the same time. It uses the same culture lot, medium batch, light settings, temperature profile (replayed from flight telemetry, including the 10 C launch hold and 4 C return) and sampling times. Optional: a second set of reactors on a 1 g centrifuge in flight would separate microgravity effects from launch and radiation effects.</p></section>
   <section><h2>Coming home</h2><p>Fixed samples and live culture both stay at 4 C and in the dark. Cool-down is on day 11, splashdown about a day later, and the courier needs 1-2 days, so plan for up to about 96 h from cool-down to the lab. The live culture is only for viability and purity; fixed samples tolerate longer. This is our estimate and must be confirmed by the customer&#x27;s ground tests.</p></section>
   <section><h2>Limits of this flight</h2><ul class="lim"><li>The sealed bay has no CO2 supply, so growth is batch or semi-continuous on bicarbonate in the medium. It cannot copy a reactor fed by cabin CO2 the way PBR@LSR was. Arthrospira-B saw oxygen output drop late in each batch, which its authors linked to bicarbonate limitation.</li><li>12 days and about 160 ml of culture cannot test the months-long stability a real life support reactor needs. PBR@LSR was designed for up to 180 days.</li><li>No crew: bubbles, membrane fouling or a stuck pump cannot be fixed by hand. Running four reactors in parallel is the only backup.</li><li>No pH probe or pH control in this design (Arthrospira-B had none either), so pH drift is only measured after return.</li><li>There is too little biomass to test taste, food safety or feeding. Only composition and purity can be checked.</li><li>The live culture must survive a dark hold at launch and several days of cold return. This may bias viability and gene expression results.</li><li>Radiation in a 550 km sun-synchronous orbit differs from the ISS, so dose results do not compare directly with ISS data.</li><li>Robotic-arm moves raise acceleration to about 1e-4 to 1e-3 g. Arm activity should pause during key measurements.</li></ul></section>
+  
+<section class="ff" id="satellite"><h2>A satellite of its own: SP-ALG</h2>
+<p>If this experiment flies alone instead of in a LELP-1 bay, SP-ALG is a 79 kg free-flyer:
+a service module with a 0.43 m² sun-tracking array (128 W), a 241 Wh battery, S-band radios
+and a green-monopropellant deorbit module (2 × 22 N, a 340 s burn), carrying a
+25 kg return capsule with a 0.87 m heat shield. It flies the same 550 km dawn-dusk orbit: two days of checkout, then
+12 days of protocol, then deorbit; the capsule holds its samples at temperature for 8 h while the ship finds it.</p>
+<div class="ffgrid">
+  <div class="card"><h3>Payload in the capsule</h3><table class="tbl"><thead><tr><th>Item</th><th class=num>kg</th><th class=num>W peak</th></tr></thead><tbody><tr><td>Microalgae and cyanobacteria for oxygen and food module</td><td class=num>5.4</td><td class=num>28</td></tr></tbody></table></div>
+  <div class="card"><h3>Mass · estimate</h3><table class="tbl">
+    <tr><td>Return capsule (payload, hold battery 200 Wh, heat shield, parachute)</td><td class=num>24.6</td></tr>
+    <tr><td>Service module dry (structure, power, avionics, attitude, propulsion)</td><td class=num>47.3</td></tr>
+    <tr><td>Propellant for 190 m/s</td><td class=num>6.8</td></tr>
+    <tr class="tot"><td>At launch</td><td class=num>78.6</td></tr></table></div>
+  <div class="card"><h3>Power · estimate</h3><table class="tbl">
+    <tr><td>Average / peak load</td><td class=num>59 / 113 W</td></tr>
+    <tr><td>Array (worst eclipse season, 22 min shadow)</td><td class=num>128 W</td></tr>
+    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr></table></div>
+</div>
+<div class="two">
+  <div><h3>Tailored for this experiment</h3><ul class="lim"><li>Controlled LED lighting inside the bay with a light sensor (the standard bay has no growth light)</li><li>Continuous mixing by recirculation, because there is no buoyancy-driven mixing or bubble rise</li><li>Optical density and oxygen sensing for each reactor</li><li>A headspace pressure relief or vent path inside the triple containment for the oxygen produced</li><li>Optional 1 g centrifuge position for an in-flight control</li></ul></div>
+  <div><h3>Bay or satellite?</h3><p>On LELP-1 this payload takes one bay (5.4 kg, 2.2 % of the lab's launch mass), shares
+  power, radios and the return with 31 others, and comes home with the whole lab. Alone, it needs 79 kg of satellite, about
+  15 times its own mass, but it gets the schedule to itself and a quieter ride: about 7.3 × 10⁻⁸ g at the payload, with no robotic
+  arm, against about 7 × 10⁻⁷ g in a LELP-1 bay.</p></div>
+</div>
+<p class="small">First-order sizing with a 20 % system margin by <a href="satellites.html#method">the same model for every experiment</a>, reviewed independently;
+<a href="satellites.html#review">read the caveats</a>. Flown recoverable free-flyers are heavier, so treat these masses as optimistic.</p>
+</section>
   <section class="refs"><h2>References</h2><ol><li id="ref-1">Poughon L., Creuly C., Godia F., Leys N., Dussap C.-G., 2021, Photobioreactor Limnospira indica Growth Model: Application From the MELiSSA Plant Pilot Scale to ISS Flight Experiment, Frontiers in Astronomy and Space Sciences 8:700277 <a href="https://www.frontiersin.org/articles/10.3389/fspas.2021.700277/full" rel="noopener" target="_blank">https://www.frontiersin.org/articles/10.3389/fspas.2021.700277/full</a></li><li id="ref-2">Poughon L. et al., 2020, Limnospira indica PCC8005 growth in photobioreactor: model and simulation of the ISS and ground experiments, Life Sciences in Space Research 25:53-65 <a href="https://researchportal.sckcen.be/en/publications/limnospira-indica-pcc8005-growth-in-photobioreactor-model-and-sim/" rel="noopener" target="_blank">https://researchportal.sckcen.be/en/publications/limnospira-indica-pcc8005-growth-in-photobioreactor-model-and-sim/</a></li><li id="ref-3">ESA, 2018, Green smoothies in space (news article, 4 October 2018) <a href="https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Research/Green_smoothies_in_space" rel="noopener" target="_blank">https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Research/Green_smoothies_in_space</a></li><li id="ref-4">Detrell G., Helisch H., Keppler J., Martin J., Henn N., Angerer O., Peters W., Ewald R., Fasoulas S., 2019, PBR@LSR: The algae-based photobioreactor experiment at the ISS - Operations Phase, 70th International Astronautical Congress, Washington DC <a href="https://portal.fis.tum.de/en/publications/pbrlsr-the-algae-based-photobioreactor-experiment-at-the-iss-oper/" rel="noopener" target="_blank">https://portal.fis.tum.de/en/publications/pbrlsr-the-algae-based-photobioreactor-experiment-at-the-iss-oper/</a></li><li id="ref-5">Airbus, 2019, Photobioreactor: oxygen and a source of nutrition for astronauts (press release, 25 April 2019) <a href="https://www.airbus.com/en/newsroom/press-releases/2019-04-photobioreactor-oxygen-and-a-source-of-nutrition-for-astronauts" rel="noopener" target="_blank">https://www.airbus.com/en/newsroom/press-releases/2019-04-photobioreactor-oxygen-and-a-source-of-nutrition-for-astronauts</a></li><li id="ref-6">Area Science Park, 2025, ICGEB takes a leap into Space with Axiom-4 Mission (news article, 2 July 2025) <a href="https://www.areasciencepark.it/en/icgeb-takes-a-leap-into-space-with-axiom-4-mission/" rel="noopener" target="_blank">https://www.areasciencepark.it/en/icgeb-takes-a-leap-into-space-with-axiom-4-mission/</a></li><li id="ref-7">ISRO, 2025, Axiom-4 Mission: Successful completion of Microgravity experiments (14 July 2025) <a href="https://new1.isro.gov.in/Axiom4_Mission_Successful_completion_of_microgravity_experiments.html" rel="noopener" target="_blank">https://new1.isro.gov.in/Axiom4_Mission_Successful_completion_of_microgravity_experiments.html</a></li></ol><p class="verify">Fact-check: 15 claims and sources checked, 11 confirmed, 4 corrected, 0 removed · confidence high</p></section>
 </div>
 <aside class="side">
@@ -56,7 +85,7 @@
 mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
 Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
 each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
-<p class="mono">build 89b89e1</p>
+<p class="mono">build b8da32d</p>
 </div></footer>
 </body>
 </html>

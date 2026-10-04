@@ -121,3 +121,69 @@ main section { margin: 26px 0; }
   .top, .pager, .cta { display: none; } body { background: #fff; } .side { position: static; }
   .xcard, .card, .tbl { break-inside: avoid; }
 }
+
+/* dedicated satellite section */
+.ff { background: var(--paper); border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: 10px; padding: 16px; }
+.ffgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin: 12px 0; }
+.ff .card { padding: 10px; } .ff .card .tbl { font-size: 12.5px; }
+.ff h3 { margin-top: 6px; }
+.params td { padding: 4px 10px; }
+
+/* configurator */
+.cfg-hero { padding-bottom: 6px; }
+.cfg-steps { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 0; margin: 10px 0 16px; }
+.cfg-steps li { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: flex; gap: 10px; align-items: center; cursor: pointer; min-width: 0; }
+.cfg-steps li b { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: #eef1f4; font: 600 13px var(--mono); }
+.cfg-steps li span { font-weight: 600; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cfg-steps li.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; } .cfg-steps li.on b { background: var(--accent); color: #fff; }
+.cfg-steps li.done b { background: var(--good-bg); color: var(--good); }
+.cfg { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 22px; align-items: start; }
+.cfg-main { min-width: 0; }
+.cfg-step h2 { margin-top: 4px; }
+.cfg-nav { display: flex; justify-content: space-between; margin: 22px 0 10px; }
+.cfg-nav .btn { border: 0; cursor: pointer; } .cfg-nav .btn.ghost { border: 1px solid var(--line-2); }
+.cfg-nav .btn:disabled { opacity: .35; cursor: default; }
+.cfg-sum { position: sticky; top: 72px; }
+.cfg-sum dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 10px; margin: 8px 0; font-size: 13px; }
+.cfg-sum dt { color: var(--ink-3); } .cfg-sum dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+.cfg-sum .btn { border: 1px solid var(--line-2); cursor: pointer; }
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+.mode { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
+.mode input { position: absolute; opacity: 0; pointer-events: none; }
+.mode b { font-size: 16px; } .mode span { color: var(--ink-2); font-size: 13.5px; }
+.mode.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; background: #f6f9fe; }
+.opts { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 12px 0; font-size: 14px; }
+.opts label { display: flex; align-items: center; gap: 6px; } .opts small { color: var(--ink-3); }
+.opts input[type=number] { width: 72px; padding: 6px 8px; border: 1px solid var(--line-2); border-radius: 6px; font: 14px var(--mono); }
+.opts input[type=date] { padding: 6px 8px; border: 1px solid var(--line-2); border-radius: 6px; font: 14px var(--sans); }
+.opts .btn { border: 1px solid var(--line-2); cursor: pointer; padding: 6px 10px; }
+.satview { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 14px; align-items: center; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+.satsvg { width: 100%; height: auto; display: block; }
+.satsvg .hull { fill: #dfe5ec; stroke: #8a97a6; } .satsvg .wing { fill: #1d3b66; stroke: #0e2240; } .satsvg .stage { fill: #b9c2cc; }
+.satsvg .capsule { fill: #f0e4cf; stroke: #a8895a; } .satsvg .hiad { fill: #e9dcc5; stroke: #a8895a; }
+.satsvg .b-std { fill: #f7f8fa; stroke: #b5bfca; } .satsvg .b-mine { fill: var(--accent); } .satsvg .b-cf { fill: #13a07a; } .satsvg .b-hot { fill: #d0612a; }
+.satsvg .lbl { font: 10px var(--sans); fill: var(--ink-2); }
+.satnums { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.satnums div { background: #f8f9fb; border-radius: 6px; padding: 8px; min-width: 0; }
+.satnums span { display: block; font: 600 10.5px var(--sans); letter-spacing: .06em; color: var(--ink-3); text-transform: uppercase; }
+.satnums b { font-size: 14px; overflow-wrap: anywhere; }
+button.xcard { font: inherit; text-align: left; cursor: pointer; }
+.xcard.pick.on { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset; }
+.loaded { margin: 12px 0 6px; border-left: 4px solid var(--accent); }
+.loaded p { color: var(--ink-2); font-size: 14px; }
+.small-lede { font-size: 15.5px; }
+.guide-h { margin-top: 26px; }
+.guide { counter-reset: g; list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.guide li { counter-increment: g; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px 10px 48px; position: relative; }
+.guide li::before { content: counter(g); position: absolute; left: 12px; top: 10px; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font: 600 13px var(--mono); }
+.guide b { display: block; } .guide p { margin: 2px 0 0; color: var(--ink-2); font-size: 14px; }
+.mbar { position: relative; height: 10px; background: linear-gradient(90deg, #dbe6f6, #c7d8f2); border-radius: 5px; margin: 14px 0 12px; }
+.mbar i { position: absolute; top: -3px; width: 4px; height: 16px; border-radius: 2px; background: var(--accent); transform: translateX(-2px); }
+.mission td { font-size: 13px; }
+@media (max-width: 1000px) { .cfg { grid-template-columns: 1fr; } .cfg-sum { position: static; } }
+@media (max-width: 700px) { .modes, .satview { grid-template-columns: 1fr; } .cfg-steps { grid-template-columns: 1fr 1fr; } }
+
+.start a { display: grid; grid-template-columns: auto repeat(4, minmax(0, 1fr)); gap: 10px; align-items: center; background: var(--brand); color: #fff; border-radius: 10px; padding: 14px 16px; text-decoration: none; }
+.start a:hover { text-decoration: none; background: #18202a; }
+.start b { font-size: 16px; padding-right: 8px; } .start span { font-size: 13px; color: #c9d2db; border-left: 1px solid #2c3642; padding-left: 10px; }
+@media (max-width: 900px) { .start a { grid-template-columns: 1fr; } .start span { border-left: 0; padding-left: 0; } }

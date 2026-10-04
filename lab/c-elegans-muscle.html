@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>C. elegans muscle and ageing · LELP-1</title>
 <meta name="description" content="Astronauts lose muscle in orbit, and people on Earth lose muscle with age, disuse and diseases such as Duchenne muscular dystrophy. The worm C. elegans grows from larva to adult in">
-<meta name="build" content="89b89e1">
+<meta name="build" content="b8da32d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lab.css?v=89b89e1">
+<link rel="stylesheet" href="lab.css?v=b8da32d">
 </head>
 <body>
-<header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="index.html">Overview</a><a href="satellite.html">The satellite</a><a href="index.html#experiments" class=on>Experiments</a><a href="../index.html">Mission console</a></nav></div></header>
+<header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html">Configure your mission</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments" class=on>Experiments</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
 <main class="wrap">
 
 <div class="crumbs"><a href="index.html#experiments">Experiments</a> · 14 of 15</div>
@@ -37,6 +37,35 @@
   <section><h2>Ground control</h2><p>Two identical ground modules with the same worm batches, food, reservoirs and cassette lots, run in a flight-like bay. Each step follows the flight timeline, with the bay&#x27;s recorded temperature profile replayed about 1-2 days behind the flight (micro-16 replicated the flight temperature profile on a two-day delay). Ground modules are fixed, preserved, chilled and shipped the same way. This control cannot separate microgravity from space radiation or launch and re-entry loads. That needs an in-flight 1 G centrifuge control, as flown on CERISE and NIS.</p></section>
   <section><h2>Coming home</h2><p>Fixed and RNA-preserved worms return sealed at 4 C. Module A samples are about 9 days past preservation at splashdown and about 10-11 days by the time they reach the lab. The 336 h (14 day) window is OUR ESTIMATE, and the customer must check it on the ground for both the fixative and the RNA solution. Heritage flights froze worms for gene and protein work: liquid nitrogen within 2 h of landing on ICE-First, and -80 C on orbit on CERISE, MME and micro-16. Only the NIS morphology samples were PFA-fixed and held at 4 C. If live worms are wanted for after-flight motility or lifespan tests, an extra well set must return unfixed at 15-20 C and reach the lab within about 48 h; this is also our estimate.</p></section>
   <section><h2>Limits of this flight</h2><ul class="lim"><li>14 days of lab time covers development and early ageing (to about day 9 of adulthood) only; the worms&#x27; full lifespan cannot be followed in orbit</li><li>No on-orbit freezing to -80 C. All the heritage gene and protein datasets we checked came from frozen worms, so chemical preservation (RNA solution, paraformaldehyde) at 4 C is a change that must be validated on the ground</li><li>No crew, so the micro-16 strength assay (crew loaded worms into micropillar devices) cannot be repeated as flown; strength would need a new automated chip</li><li>Without an in-flight 1 G centrifuge, the experiment cannot separate microgravity from radiation and launch or re-entry effects; CERISE and NIS had this control</li><li>Sealed wells limit oxygen and food, so worm number per well must stay low; MME ground tests found gas exchange limited growth in sealed bags, and a lid-only well has less gas-exchange area per mL than the heritage bags</li><li>The bay microscope is low magnification; sarcomere and mitochondrial detail needs the 40x central microscope or post-flight staining</li><li>Arm moves raise acceleration to about 1e-4 to 1e-3 g, which may disturb swimming measurements; imaging must avoid those periods</li><li>About 2 h to hand-over and 1-2 days to the lab means live worms partly readapt to 1 g before any post-flight motility test</li><li>Worm muscle has no satellite stem cells and differs from human muscle; results point to mechanisms and need follow-up in mammalian models</li><li>Two L bays per run use a large share of the 16 large bays</li></ul></section>
+  
+<section class="ff" id="satellite"><h2>A satellite of its own: SP-WORM</h2>
+<p>If this experiment flies alone instead of in a LELP-1 bay, SP-WORM is a 84 kg free-flyer:
+a service module with a 0.49 m² sun-tracking array (145 W), a 241 Wh battery, S-band and X-band radios
+and a green-monopropellant deorbit module (2 × 22 N, a 363 s burn), carrying a
+25 kg return capsule with a 0.88 m heat shield. It flies the same 550 km dawn-dusk orbit: two days of checkout, then
+14 days of protocol, then deorbit; the capsule holds its samples at temperature for 8 h while the ship finds it.</p>
+<div class="ffgrid">
+  <div class="card"><h3>Payload in the capsule</h3><table class="tbl"><thead><tr><th>Item</th><th class=num>kg</th><th class=num>W peak</th></tr></thead><tbody><tr><td>C. elegans muscle and ageing module</td><td class=num>5.6</td><td class=num>28</td></tr></tbody></table></div>
+  <div class="card"><h3>Mass · estimate</h3><table class="tbl">
+    <tr><td>Return capsule (payload, hold battery 200 Wh, heat shield, parachute)</td><td class=num>25.0</td></tr>
+    <tr><td>Service module dry (structure, power, avionics, attitude, propulsion)</td><td class=num>51.8</td></tr>
+    <tr><td>Propellant for 190 m/s</td><td class=num>7.2</td></tr>
+    <tr class="tot"><td>At launch</td><td class=num>84.1</td></tr></table></div>
+  <div class="card"><h3>Power · estimate</h3><table class="tbl">
+    <tr><td>Average / peak load</td><td class=num>67 / 113 W</td></tr>
+    <tr><td>Array (worst eclipse season, 22 min shadow)</td><td class=num>145 W</td></tr>
+    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr></table></div>
+</div>
+<div class="two">
+  <div><h3>Tailored for this experiment</h3><ul class="lim"><li>Two large bays at once (one per time point), because each bay block holds a single temperature setpoint</li><li>Launch hold at 12 C from handover until orbit, then a step to 20 C, then 4 C after preservation and through re-entry and recovery (all inside the 4-45 C range, but the bay must be powered during ascent and descent)</li><li>Video imaging: 30-60 s brightfield clips per well each day, with some downlink bandwidth for compressed video</li><li>Arm transfer of each module to the central 40x fluorescence microscope for muscle reporter and aggregate imaging, scheduled so arm moves do not overlap the daily swimming videos</li><li>Optional: a small 1 G centrifuge position for an in-flight gravity control (not part of the standard bay)</li><li>Optional: an automated micropillar strength chip (NemaFlex-type). On micro-16 the crew loaded the worms, so this would need a new automated loading design</li></ul></div>
+  <div><h3>Bay or satellite?</h3><p>On LELP-1 this payload takes one bay (5.6 kg, 2.3 % of the lab's launch mass), shares
+  power, radios and the return with 31 others, and comes home with the whole lab. Alone, it needs 84 kg of satellite, about
+  15 times its own mass, but it gets the schedule to itself and a quieter ride: about 7.3 × 10⁻⁸ g at the payload, with no robotic
+  arm, against about 7 × 10⁻⁷ g in a LELP-1 bay.</p></div>
+</div>
+<p class="small">First-order sizing with a 20 % system margin by <a href="satellites.html#method">the same model for every experiment</a>, reviewed independently;
+<a href="satellites.html#review">read the caveats</a>. Flown recoverable free-flyers are heavier, so treat these masses as optimistic.</p>
+</section>
   <section class="refs"><h2>References</h2><ol><li id="ref-1">Higashibata A, Szewczyk NJ, Conley CA, et al., 2006. Decreased expression of myogenic transcription factors and myosin heavy chains in Caenorhabditis elegans muscles developed during spaceflight. Journal of Experimental Biology 209(16):3209-3218 <a href="https://doi.org/10.1242/jeb.02365" rel="noopener" target="_blank">https://doi.org/10.1242/jeb.02365</a></li><li id="ref-2">Honda Y, Higashibata A, Matsunaga Y, et al., 2012. Genes down-regulated in spaceflight are involved in the control of longevity in Caenorhabditis elegans. Scientific Reports 2:487 <a href="https://doi.org/10.1038/srep00487" rel="noopener" target="_blank">https://doi.org/10.1038/srep00487</a></li><li id="ref-3">Higashibata A, Hashizume T, Nemoto K, et al., 2016. Microgravity elicits reproducible alterations in cytoskeletal and metabolic gene and protein expression in space-flown Caenorhabditis elegans. npj Microgravity 2:15022 <a href="https://doi.org/10.1038/npjmgrav.2015.22" rel="noopener" target="_blank">https://doi.org/10.1038/npjmgrav.2015.22</a></li><li id="ref-4">Pollard AK, Gaffney CJ, Deane CS, et al., 2020. Molecular Muscle Experiment: Hardware and Operational Lessons for Future Astrobiology Space Experiments. Astrobiology 20(8):935-943 <a href="https://doi.org/10.1089/ast.2019.2181" rel="noopener" target="_blank">https://doi.org/10.1089/ast.2019.2181</a></li><li id="ref-5">University of Nottingham, 2018. Blast off for first UK-led experiment on the International Space Station (press release) <a href="https://www.nottingham.ac.uk/news/pressreleases/2018/december/blast-off-for-first-uk-led-experiment-on-the-international-space-station.aspx" rel="noopener" target="_blank">https://www.nottingham.ac.uk/news/pressreleases/2018/december/blast-off-for-first-uk-led-experiment-on-the-international-space-station.aspx</a></li><li id="ref-6">Kim BS, Alcantara AV Jr, Moon JH, et al., 2023. Comparative Analysis of Muscle Atrophy During Spaceflight, Nutritional Deficiency and Disuse in the Nematode Caenorhabditis elegans. International Journal of Molecular Sciences 24(16):12640 <a href="https://doi.org/10.3390/ijms241612640" rel="noopener" target="_blank">https://doi.org/10.3390/ijms241612640</a></li><li id="ref-7">Soni P, Edwards H, Anupom T, et al., 2023. Spaceflight Induces Strength Decline in Caenorhabditis elegans. Cells 12(20):2470 <a href="https://doi.org/10.3390/cells12202470" rel="noopener" target="_blank">https://doi.org/10.3390/cells12202470</a></li></ol><p class="verify">Fact-check: 23 claims and sources checked, 12 confirmed, 11 corrected, 0 removed · confidence high</p></section>
 </div>
 <aside class="side">
@@ -56,7 +85,7 @@
 mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
 Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
 each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
-<p class="mono">build 89b89e1</p>
+<p class="mono">build b8da32d</p>
 </div></footer>
 </body>
 </html>

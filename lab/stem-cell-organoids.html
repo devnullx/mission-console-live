@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Stem-cell organoids · LELP-1</title>
 <meta name="description" content="Organoids grown from human induced pluripotent stem cells (iPSCs) are small 3-D models of human brain or heart tissue. Researchers use them to study diseases such as Parkinson&#x27;s di">
-<meta name="build" content="89b89e1">
+<meta name="build" content="b8da32d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lab.css?v=89b89e1">
+<link rel="stylesheet" href="lab.css?v=b8da32d">
 </head>
 <body>
-<header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="index.html">Overview</a><a href="satellite.html">The satellite</a><a href="index.html#experiments" class=on>Experiments</a><a href="../index.html">Mission console</a></nav></div></header>
+<header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html">Configure your mission</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments" class=on>Experiments</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
 <main class="wrap">
 
 <div class="crumbs"><a href="index.html#experiments">Experiments</a> · 01 of 15 · Stem-cell organoids</div>
@@ -37,6 +37,35 @@
   <section><h2>Ground control</h2><p>An identical flight-spare large-bay module and 24-well cassette, filled from the same organoid batch on the same day and kept at 37 C in the customer&#x27;s or the integrator&#x27;s lab. It runs the same fluidics timeline: RNA stabilization on day 3, an optional exchange on day 7, PFA fixation and RNA stabilization on day 13, the swap from PFA to PBS, and the cool-down to 4 C. It runs a few hours behind the flight so it can replay the flight bay&#x27;s temperature log, and it goes through the same 4 C hold and courier trip. Launch-baseline organoids fixed on day -1 show the starting state. The standard bay has no in-orbit 1 g centrifuge, so the only microgravity control is on the ground. Launch vibration, radiation and 1 g are not matched; the dosimeter and accelerometer logs are used to account for them.</p></section>
   <section><h2>Coming home</h2><p>The organoids are fixed or RNA-stabilized in orbit on day 13, before deorbit, so re-entry and the 1 g trip home do not change the end-point. Fixed organoids are moved from PFA to PBS after about 4 hours to avoid over-fixation. Live-return wells are cooled to 4 C, the temperature the heritage team used to ship live organoids before launch. The 72-hour window from preservation to the lab is our planning value: about 1 day in orbit, about 20 minutes to handover, then 1 to 2 days by courier. In the 2019 heritage flight, the CubeLab was opened six days after undocking.</p></section>
   <section><h2>Limits of this flight</h2><ul class="lim"><li>LELP-1 runs at most 14 days. The neural-organoid heritage flights lasted about 30 days, so changes seen after a month may be smaller or missing at 14 days. The 3-day cardiac data suggest that early gene changes can be measured.</li><li>The standard bay has no in-orbit 1 g centrifuge. Microgravity effects cannot be separated from launch, radiation and hardware effects as cleanly as with the centrifuge control in the ISS MVP.</li><li>Mature brain organoids launch live, not frozen, which needs a powered late load and a short pad timeline. We did not find a flight-proven method to cryopreserve whole mature neural organoids and thaw them automatically. The cryopreserved option has flight heritage only for cardiac progenitor spheres, and that thaw was done by hand on the ISS.</li><li>There is no crew on board. Bubbles, a blocked line or a leaking well cannot be fixed by hand, so the protocol depends on the automated fluidics working the first time.</li><li>The bay has no CO2 supply. The culture relies on HEPES buffering in sealed wells, which limits how long and how dense the culture can be before pH and oxygen drift. Without the optional sensors, pH and oxygen are not measured in flight.</li><li>With 24 wells and one organoid per well, groups are small once lines, microglia conditions and time points are split. The heritage authors said their protein data lacked statistical power.</li><li>Live-return organoids spend up to about 3 days at 4 C after the flight. Cold storage changes gene expression, so only organoids fixed or RNA-stabilized in orbit give a clean flight end-point.</li><li>Electrophysiology (multi-electrode arrays) and single-cell sequencing happen only after return. The bay cannot record neural activity in flight.</li><li>Each robotic-arm move raises the g level to about 1e-4 to 1e-3 g, so imaging at the central microscope slightly disturbs the microgravity condition.</li><li>The BOARDS (Muotri) results quoted here come from ISS National Lab reports. We did not find a peer-reviewed flight paper for them.</li></ul></section>
+  
+<section class="ff" id="satellite"><h2>A satellite of its own: SP-ORG</h2>
+<p>If this experiment flies alone instead of in a LELP-1 bay, SP-ORG is a 78 kg free-flyer:
+a service module with a 0.43 m² sun-tracking array (128 W), a 241 Wh battery, S-band radios
+and a green-monopropellant deorbit module (2 × 22 N, a 338 s burn), carrying a
+24 kg return capsule with a 0.86 m heat shield. It flies the same 550 km dawn-dusk orbit: two days of checkout, then
+14 days of protocol, then deorbit; the capsule holds its samples at temperature for 8 h while the ship finds it.</p>
+<div class="ffgrid">
+  <div class="card"><h3>Payload in the capsule</h3><table class="tbl"><thead><tr><th>Item</th><th class=num>kg</th><th class=num>W peak</th></tr></thead><tbody><tr><td>Stem-cell organoids module</td><td class=num>5.3</td><td class=num>28</td></tr></tbody></table></div>
+  <div class="card"><h3>Mass · estimate</h3><table class="tbl">
+    <tr><td>Return capsule (payload, hold battery 200 Wh, heat shield, parachute)</td><td class=num>24.3</td></tr>
+    <tr><td>Service module dry (structure, power, avionics, attitude, propulsion)</td><td class=num>47.2</td></tr>
+    <tr><td>Propellant for 190 m/s</td><td class=num>6.7</td></tr>
+    <tr class="tot"><td>At launch</td><td class=num>78.3</td></tr></table></div>
+  <div class="card"><h3>Power · estimate</h3><table class="tbl">
+    <tr><td>Average / peak load</td><td class=num>59 / 113 W</td></tr>
+    <tr><td>Array (worst eclipse season, 22 min shadow)</td><td class=num>128 W</td></tr>
+    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr></table></div>
+</div>
+<div class="two">
+  <div><h3>Tailored for this experiment</h3><ul class="lim"><li>The bay must stay powered at 37 C from cassette sealing on day -1, through integration, the launch pad and ascent, because the organoids launch live. This late-load, powered-ascent service goes beyond a passive cryo launch.</li><li>The bay must hold 4 C on battery through deorbit, splashdown and handover, and a 4 C insulated courier shipper must be ready on the recovery ship.</li><li>Robotic-arm moves and attitude manoeuvres must be scheduled outside imaging windows, with acceleration logged for every well image.</li><li>Optional, not standard: a small on-orbit 1 g centrifuge cassette as an in-flight gravity control, like the MVP hardware on the 2020 cardiac flight. This would need a dedicated large bay.</li><li>Optional, not standard: optical pH and oxygen sensor spots in the wells, read by the bay microscope, to monitor the sealed HEPES culture.</li></ul></div>
+  <div><h3>Bay or satellite?</h3><p>On LELP-1 this payload takes one bay (5.3 kg, 2.2 % of the lab's launch mass), shares
+  power, radios and the return with 31 others, and comes home with the whole lab. Alone, it needs 78 kg of satellite, about
+  15 times its own mass, but it gets the schedule to itself and a quieter ride: about 7.3 × 10⁻⁸ g at the payload, with no robotic
+  arm, against about 7 × 10⁻⁷ g in a LELP-1 bay.</p></div>
+</div>
+<p class="small">First-order sizing with a 20 % system margin by <a href="satellites.html#method">the same model for every experiment</a>, reviewed independently;
+<a href="satellites.html#review">read the caveats</a>. Flown recoverable free-flyers are heavier, so treat these masses as optimistic.</p>
+</section>
   <section class="refs"><h2>References</h2><ol><li id="ref-1">Marotta D, et al. (2024). Effects of microgravity on human iPSC-derived neural organoids on the International Space Station. Stem Cells Translational Medicine 13(12):1186-1197. <a href="https://doi.org/10.1093/stcltm/szae070" rel="noopener" target="_blank">https://doi.org/10.1093/stcltm/szae070</a></li><li id="ref-2">Scripps Research (2024). Brain cells remain healthy after a month on the International Space Station, but mature faster than brain cells on Earth. News release, December 16, 2024. <a href="https://www.scripps.edu/news-events/news/20241216-loring-stem-cells/" rel="noopener" target="_blank">https://www.scripps.edu/news-events/news/20241216-loring-stem-cells/</a></li><li id="ref-3">UC San Diego (2019). 2019: A Space Organoid. UC San Diego Today, July 8, 2019. <a href="https://today.ucsd.edu/story/2019-a-space-organoid" rel="noopener" target="_blank">https://today.ucsd.edu/story/2019-a-space-organoid</a></li><li id="ref-4">Livingston S (2026). How Space Is Opening a Window Into the Brain. ISS National Laboratory, Upward magazine, July 28, 2026. <a href="https://issnationallab.org/?p=60499" rel="noopener" target="_blank">https://issnationallab.org/?p=60499</a></li><li id="ref-5">ISS National Laboratory (2026). Brain Organoid Studies on the ISS Move Closer to New Treatments. August 18, 2026. <a href="https://issnationallab.org/?p=60690" rel="noopener" target="_blank">https://issnationallab.org/?p=60690</a></li><li id="ref-6">Rampoldi A, et al. (2022). Space microgravity improves proliferation of human iPSC-derived cardiomyocytes. Stem Cell Reports 17(10):2272-2285. <a href="https://doi.org/10.1016/j.stemcr.2022.08.007" rel="noopener" target="_blank">https://doi.org/10.1016/j.stemcr.2022.08.007</a></li></ol><p class="verify">Fact-check: 25 claims and sources checked, 18 confirmed, 7 corrected, 0 removed · confidence high</p></section>
 </div>
 <aside class="side">
@@ -56,7 +85,7 @@
 mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
 Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
 each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
-<p class="mono">build 89b89e1</p>
+<p class="mono">build b8da32d</p>
 </div></footer>
 </body>
 </html>
