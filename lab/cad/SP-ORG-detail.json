@@ -1,0 +1,15 @@
+{
+ "name": "SP-ORG-detail",
+ "base": "SP-ORG",
+ "panel_mm": 20.0,
+ "views": {
+  "front": "SP-ORG-detail-front.svg",
+  "side": "SP-ORG-detail-side.svg",
+  "top": "SP-ORG-detail-top.svg"
+ },
+ "parts": 183,
+ "harness_runs": 62,
+ "fasteners": 16,
+ "brackets": 6,
+ "note": "Detailed concept model: structure, brackets, fasteners and harness routing on the reference design."
+}
