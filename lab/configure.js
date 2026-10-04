@@ -141,7 +141,7 @@
       const cells = [];
       for (let k = 0; k < 32; k++) {
         const col = k % 8, row = Math.floor(k / 8), x = 104 + col * 19, y = 52 + row * 30;
-        const mine = k >= 16 && k < 16 + S.n, cf = S.centrifuge && k === 16 + S.n;
+        const mine = k >= 18 && k < 18 + S.n, cf = S.centrifuge && k === 18 + S.n;
         cells.push(`<rect x="${x}" y="${y}" width="16" height="26" rx="2" class="${mine ? 'b-mine' : cf ? 'b-cf' : 'b-std'}"/>`);
       }
       return `<svg viewBox="0 0 360 230" class="satsvg" role="img" aria-label="LELP-1 with your bays highlighted">
@@ -194,7 +194,7 @@
         <div><span>Your bays</span><b>${S.n}${S.centrifuge ? ' + centrifuge' : ''} of 32</b></div><div><span>LELP-1 launch mass</span><b>${f1(bayMass())} of ${f0(T.lelp_alloc_kg)} kg</b></div>
         <div><span>Per bay</span><b>${f1(ICD.mass_kg)} kg · ${f0(ICD.power_w)} W · ${ICD.wells} wells</b></div><div><span>Bay temperature</span><b>${TLO} to ${THI} °C</b></div>`}
       </div></div>
-    <p class="small">${own ? `Sized for ${e ? esc(e.title) : 'a large-bay module at its limits (load an experiment in step 2 to size it for yours)'} by the same model as <a href="satellites.html#method">the fifteen dedicated designs</a>. First-order estimates.` : 'Bays are booked in the large-bay rows; the twin checks every manifest against the 250 kg allocation.'}</p>`;
+    <p class="small">${own ? `Sized for ${e ? esc(e.title) : 'a large-bay module at its limits (load an experiment in step 2 to size it for yours)'} by the same model as <a href="satellites.html#method">the fifteen dedicated designs</a>. First-order estimates.` : 'Bays are booked in the large-bay rows from bay 19 (17 and 18 fly RadSenRegen and Bengaluru Biosciences in the twin); every manifest is checked against the 250 kg allocation.'}</p>`;
   }
 
   // ---------- step 2: load an experiment ----------
@@ -347,7 +347,14 @@
     if (cad) {
       const show = S.step === 1 && S.mode === 'own' && !!e && !!window.LelpCad;
       cad.hidden = !show;
+      if (window.LelpCad && S.mode !== 'bay') window.LelpCad.mark([]);
       if (show) { const nm = 'SP-' + D.codes[e.id] + (archOf() === 'A' ? '-6U' : ''); if (nm !== lastCad) { lastCad = nm; window.LelpCad.show(nm, archOf() !== 'A'); } }
+      const showBay = S.step === 1 && S.mode === 'bay' && !!window.LelpCad;
+      if (showBay) {
+        cad.hidden = false; cad.querySelector('h3').textContent = 'LELP-1 in CAD: your bays in blue';
+        if (lastCad !== 'LELP-1') { lastCad = 'LELP-1'; window.LelpCad.show('LELP-1', true); }
+        window.LelpCad.mark(Array.from({ length: S.n + (S.centrifuge ? 1 : 0) }, (_, i) => 19 + i));
+      } else if (show) cad.querySelector('h3').textContent = "CAD of this experiment's baseline satellite";
     }
     $('#cfg-prev').disabled = S.step === 1; $('#cfg-next').textContent = S.step === 4 ? 'Start over' : 'Next →';
     save(); wire();

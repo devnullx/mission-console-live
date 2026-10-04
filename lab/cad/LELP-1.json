@@ -1,0 +1,595 @@
+{
+ "name": "LELP-1",
+ "note": "Concept geometry from the twin (scene, mass budget, payload sheets); the upper stage is simplified context.",
+ "orbit": {
+  "mass_kg": 969.8,
+  "com_m": [
+   0.004,
+   0.004,
+   -1.34
+  ],
+  "inertia_kgm2": [
+   [
+    1996.5,
+    -0.4,
+    -14.8
+   ],
+   [
+    -0.4,
+    2019.1,
+    -4.6
+   ],
+   [
+    -14.8,
+    -4.6,
+    191.0
+   ]
+  ],
+  "principal_kgm2": [
+   1996.5,
+   2019.1,
+   191.0
+  ],
+  "parts": [
+   {
+    "part": "bay ring 1",
+    "kg": 2.176
+   },
+   {
+    "part": "bay ring 2",
+    "kg": 2.176
+   },
+   {
+    "part": "bay ring 3",
+    "kg": 2.176
+   },
+   {
+    "part": "bay ring 4",
+    "kg": 2.176
+   },
+   {
+    "part": "bay ring 5 (top)",
+    "kg": 2.176
+   },
+   {
+    "part": "central core",
+    "kg": 20.4
+   },
+   {
+    "part": "bay M 01 (Zurich Biotech Lab)",
+    "kg": 2.8
+   },
+   {
+    "part": "bay M 02 (Bengaluru Biosciences)",
+    "kg": 1.7
+   },
+   {
+    "part": "bay M 03 (Basel Pharma Research)",
+    "kg": 2.2
+   },
+   {
+    "part": "bay M 04 (Hyderabad Cell Lab)",
+    "kg": 2.8
+   },
+   {
+    "part": "bay M 05 (Lausanne Materials)",
+    "kg": 3.3
+   },
+   {
+    "part": "bay M 06 (Geneva Protein Lab)",
+    "kg": 3.0
+   },
+   {
+    "part": "bay M 07 (Chennai Microfluidics)",
+    "kg": 1.4
+   },
+   {
+    "part": "bay M 08 (Pune Plant Science)",
+    "kg": 1.9
+   },
+   {
+    "part": "bay M 09 (Zurich Biotech Lab)",
+    "kg": 2.8
+   },
+   {
+    "part": "bay M 10 (Bengaluru Biosciences)",
+    "kg": 1.7
+   },
+   {
+    "part": "bay M 11 (Basel Pharma Research)",
+    "kg": 2.2
+   },
+   {
+    "part": "bay M 12 (Hyderabad Cell Lab)",
+    "kg": 2.8
+   },
+   {
+    "part": "bay M 13 (Lausanne Materials)",
+    "kg": 3.3
+   },
+   {
+    "part": "bay M 14 (Geneva Protein Lab)",
+    "kg": 3.0
+   },
+   {
+    "part": "bay M 15 (Chennai Microfluidics)",
+    "kg": 1.4
+   },
+   {
+    "part": "bay M 16 (Pune Plant Science)",
+    "kg": 1.9
+   },
+   {
+    "part": "bay L 17 (RadSenRegen)",
+    "kg": 6.0
+   },
+   {
+    "part": "bay L 18 (Bengaluru Biosciences)",
+    "kg": 5.4
+   },
+   {
+    "part": "bay L 19 (Basel Pharma Research)",
+    "kg": 4.0
+   },
+   {
+    "part": "bay L 20 (Hyderabad Cell Lab)",
+    "kg": 5.0
+   },
+   {
+    "part": "bay L 21 (Lausanne Materials)",
+    "kg": 6.0
+   },
+   {
+    "part": "bay L 22 (Geneva Protein Lab)",
+    "kg": 5.5
+   },
+   {
+    "part": "bay L 23 (Chennai Microfluidics)",
+    "kg": 2.5
+   },
+   {
+    "part": "bay L 24 (Pune Plant Science)",
+    "kg": 3.5
+   },
+   {
+    "part": "bay L 25 (Zurich Biotech Lab)",
+    "kg": 5.0
+   },
+   {
+    "part": "bay L 26 (Bengaluru Biosciences)",
+    "kg": 3.0
+   },
+   {
+    "part": "bay L 27 (Basel Pharma Research)",
+    "kg": 4.0
+   },
+   {
+    "part": "bay L 28 (Hyderabad Cell Lab)",
+    "kg": 5.0
+   },
+   {
+    "part": "bay L 29 (Lausanne Materials)",
+    "kg": 6.0
+   },
+   {
+    "part": "bay L 30 (Geneva Protein Lab)",
+    "kg": 5.5
+   },
+   {
+    "part": "bay L 31 (Chennai Microfluidics)",
+    "kg": 2.5
+   },
+   {
+    "part": "bay L 32 (Pune Plant Science)",
+    "kg": 3.5
+   },
+   {
+    "part": "translation rig",
+    "kg": 4.0
+   },
+   {
+    "part": "central chamber wall",
+    "kg": 3.5
+   },
+   {
+    "part": "40x fluorescence microscope",
+    "kg": 2.5
+   },
+   {
+    "part": "chamber lid",
+    "kg": 2.72
+   },
+   {
+    "part": "parachute canister (9 m main)",
+    "kg": 5.0
+   },
+   {
+    "part": "recovery beacon",
+    "kg": null
+   },
+   {
+    "part": "avionics, radios, Sentinel crypto unit",
+    "kg": 13.0
+   },
+   {
+    "part": "battery 1.5 kWh",
+    "kg": 10.0
+   },
+   {
+    "part": "ADCS: 3 reaction wheels, star tracker, magnetorquers",
+    "kg": 11.0
+   },
+   {
+    "part": "thermal control",
+    "kg": 6.0
+   },
+   {
+    "part": "heat shield packed (4 tori, flexible TPS)",
+    "kg": 13.799999999999999
+   },
+   {
+    "part": "rigid nose (stowed under the lab)",
+    "kg": 9.200000000000001
+   },
+   {
+    "part": "Dexter-L ring track",
+    "kg": 1.0
+   },
+   {
+    "part": "Dexter-L base and shoulder",
+    "kg": 2.5
+   },
+   {
+    "part": "Dexter-L upper arm (0.80 m)",
+    "kg": 3.0
+   },
+   {
+    "part": "Dexter-L elbow",
+    "kg": 1.0
+   },
+   {
+    "part": "Dexter-L forearm (0.80 m)",
+    "kg": 2.5
+   },
+   {
+    "part": "Dexter-L wrist and gripper (0.15 m)",
+    "kg": 2.0
+   },
+   {
+    "part": "stage adapter",
+    "kg": 15.0
+   },
+   {
+    "part": "RUPAK upper stage (simplified)",
+    "kg": 653.384
+   },
+   {
+    "part": "Vibhu engine 1",
+    "kg": 18.938666666666666
+   },
+   {
+    "part": "Vibhu engine 2",
+    "kg": 18.938666666666666
+   },
+   {
+    "part": "Vibhu engine 3",
+    "kg": 18.938666666666666
+   },
+   {
+    "part": "solar wing -X (300 W)",
+    "kg": 3.5
+   },
+   {
+    "part": "wing drive -X",
+    "kg": 0.5
+   },
+   {
+    "part": "solar wing +X (300 W)",
+    "kg": 3.5
+   },
+   {
+    "part": "wing drive +X",
+    "kg": 0.5
+   },
+   {
+    "part": "ISL antenna boom",
+    "kg": 0.5
+   },
+   {
+    "part": "ISL antenna",
+    "kg": 0.5
+   },
+   {
+    "part": "grapple post (Dexter-L park)",
+    "kg": 0.5
+   },
+   {
+    "part": "grapple bracket",
+    "kg": 0.5
+   }
+  ]
+ },
+ "return": {
+  "mass_kg": 222.6,
+  "com_m": [
+   -0.017,
+   0.009,
+   0.646
+  ],
+  "inertia_kgm2": [
+   [
+    64.6,
+    -0.3,
+    -0.3
+   ],
+   [
+    -0.3,
+    67.6,
+    0.1
+   ],
+   [
+    -0.3,
+    0.1,
+    44.2
+   ]
+  ],
+  "principal_kgm2": [
+   64.6,
+   67.6,
+   44.2
+  ],
+  "parts": [
+   {
+    "part": "bay ring 1",
+    "kg": 2.176
+   },
+   {
+    "part": "bay ring 2",
+    "kg": 2.176
+   },
+   {
+    "part": "bay ring 3",
+    "kg": 2.176
+   },
+   {
+    "part": "bay ring 4",
+    "kg": 2.176
+   },
+   {
+    "part": "bay ring 5 (top)",
+    "kg": 2.176
+   },
+   {
+    "part": "central core",
+    "kg": 20.4
+   },
+   {
+    "part": "bay M 01 (Zurich Biotech Lab)",
+    "kg": 2.8
+   },
+   {
+    "part": "bay M 02 (Bengaluru Biosciences)",
+    "kg": 1.7
+   },
+   {
+    "part": "bay M 03 (Basel Pharma Research)",
+    "kg": 2.2
+   },
+   {
+    "part": "bay M 04 (Hyderabad Cell Lab)",
+    "kg": 2.8
+   },
+   {
+    "part": "bay M 05 (Lausanne Materials)",
+    "kg": 3.3
+   },
+   {
+    "part": "bay M 06 (Geneva Protein Lab)",
+    "kg": 3.0
+   },
+   {
+    "part": "bay M 07 (Chennai Microfluidics)",
+    "kg": 1.4
+   },
+   {
+    "part": "bay M 08 (Pune Plant Science)",
+    "kg": 1.9
+   },
+   {
+    "part": "bay M 09 (Zurich Biotech Lab)",
+    "kg": 2.8
+   },
+   {
+    "part": "bay M 10 (Bengaluru Biosciences)",
+    "kg": 1.7
+   },
+   {
+    "part": "bay M 11 (Basel Pharma Research)",
+    "kg": 2.2
+   },
+   {
+    "part": "bay M 12 (Hyderabad Cell Lab)",
+    "kg": 2.8
+   },
+   {
+    "part": "bay M 13 (Lausanne Materials)",
+    "kg": 3.3
+   },
+   {
+    "part": "bay M 14 (Geneva Protein Lab)",
+    "kg": 3.0
+   },
+   {
+    "part": "bay M 15 (Chennai Microfluidics)",
+    "kg": 1.4
+   },
+   {
+    "part": "bay M 16 (Pune Plant Science)",
+    "kg": 1.9
+   },
+   {
+    "part": "bay L 17 (RadSenRegen)",
+    "kg": 6.0
+   },
+   {
+    "part": "bay L 18 (Bengaluru Biosciences)",
+    "kg": 5.4
+   },
+   {
+    "part": "bay L 19 (Basel Pharma Research)",
+    "kg": 4.0
+   },
+   {
+    "part": "bay L 20 (Hyderabad Cell Lab)",
+    "kg": 5.0
+   },
+   {
+    "part": "bay L 21 (Lausanne Materials)",
+    "kg": 6.0
+   },
+   {
+    "part": "bay L 22 (Geneva Protein Lab)",
+    "kg": 5.5
+   },
+   {
+    "part": "bay L 23 (Chennai Microfluidics)",
+    "kg": 2.5
+   },
+   {
+    "part": "bay L 24 (Pune Plant Science)",
+    "kg": 3.5
+   },
+   {
+    "part": "bay L 25 (Zurich Biotech Lab)",
+    "kg": 5.0
+   },
+   {
+    "part": "bay L 26 (Bengaluru Biosciences)",
+    "kg": 3.0
+   },
+   {
+    "part": "bay L 27 (Basel Pharma Research)",
+    "kg": 4.0
+   },
+   {
+    "part": "bay L 28 (Hyderabad Cell Lab)",
+    "kg": 5.0
+   },
+   {
+    "part": "bay L 29 (Lausanne Materials)",
+    "kg": 6.0
+   },
+   {
+    "part": "bay L 30 (Geneva Protein Lab)",
+    "kg": 5.5
+   },
+   {
+    "part": "bay L 31 (Chennai Microfluidics)",
+    "kg": 2.5
+   },
+   {
+    "part": "bay L 32 (Pune Plant Science)",
+    "kg": 3.5
+   },
+   {
+    "part": "translation rig",
+    "kg": 4.0
+   },
+   {
+    "part": "central chamber wall",
+    "kg": 3.5
+   },
+   {
+    "part": "40x fluorescence microscope",
+    "kg": 2.5
+   },
+   {
+    "part": "chamber lid",
+    "kg": 2.72
+   },
+   {
+    "part": "parachute canister (9 m main)",
+    "kg": 5.0
+   },
+   {
+    "part": "recovery beacon",
+    "kg": null
+   },
+   {
+    "part": "avionics, radios, Sentinel crypto unit",
+    "kg": 13.0
+   },
+   {
+    "part": "battery 1.5 kWh",
+    "kg": 10.0
+   },
+   {
+    "part": "ADCS: 3 reaction wheels, star tracker, magnetorquers",
+    "kg": 11.0
+   },
+   {
+    "part": "thermal control",
+    "kg": 6.0
+   },
+   {
+    "part": "nose",
+    "kg": 7.666666666666666
+   },
+   {
+    "part": "flexible TPS",
+    "kg": 3.833333333333333
+   },
+   {
+    "part": "inflatable torus 1",
+    "kg": 2.875
+   },
+   {
+    "part": "inflatable torus 2",
+    "kg": 2.875
+   },
+   {
+    "part": "inflatable torus 3",
+    "kg": 2.875
+   },
+   {
+    "part": "inflatable torus 4",
+    "kg": 2.875
+   }
+  ]
+ },
+ "lab_only": {
+  "mass_kg": 234.6,
+  "com_m": [
+   0.015,
+   0.008,
+   0.672
+  ],
+  "inertia_kgm2": [
+   [
+    76.4,
+    -0.2,
+    -7.1
+   ],
+   [
+    -0.2,
+    84.2,
+    0.1
+   ],
+   [
+    -7.1,
+    0.1,
+    37.6
+   ]
+  ],
+  "principal_kgm2": [
+   76.4,
+   84.2,
+   37.6
+  ]
+ },
+ "twin_estimate_kgm2": [
+  420,
+  420,
+  110
+ ]
+}
