@@ -338,10 +338,17 @@
 
   // ---------- render and wire ----------
   const STEPS = { 1: step1, 2: step2, 3: step3, 4: step4 };
+  let lastCad = '';
   function render() {
     for (const k of [1, 2, 3, 4]) { const sec = $(`.cfg-step[data-step="${k}"]`); sec.hidden = k !== S.step; if (k === S.step) sec.innerHTML = STEPS[k](); }
     $$('#cfg-steps li').forEach((li) => { const k = +li.dataset.step; li.classList.toggle('on', k === S.step); li.classList.toggle('done', k < S.step); });
     $('#cfg-sum').innerHTML = summary();
+    const cad = $('.cfg-cad'), e = exp();
+    if (cad) {
+      const show = S.step === 1 && S.mode === 'own' && !!e && !!window.LelpCad;
+      cad.hidden = !show;
+      if (show) { const nm = 'SP-' + D.codes[e.id] + (archOf() === 'A' ? '-6U' : ''); if (nm !== lastCad) { lastCad = nm; window.LelpCad.show(nm, archOf() !== 'A'); } }
+    }
     $('#cfg-prev').disabled = S.step === 1; $('#cfg-next').textContent = S.step === 4 ? 'Start over' : 'Next →';
     save(); wire();
   }

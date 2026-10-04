@@ -1,0 +1,88 @@
+{
+ "name": "SP-AMR-6U",
+ "experiment": "Antibiotic resistance of pathogenic bacteria (option A)",
+ "arch": "A",
+ "wet_kg": 10.7,
+ "bbox_m": [
+  0.691,
+  0.1,
+  0.366
+ ],
+ "parts": [
+  {
+   "part": "6U structure",
+   "kg": 8.56,
+   "dims_m": [
+    0.2263,
+    0.1,
+    0.366
+   ]
+  },
+  {
+   "part": "deployable panel -X",
+   "kg": 1.07,
+   "dims_m": [
+    0.2263,
+    0.004,
+    0.366
+   ]
+  },
+  {
+   "part": "deployable panel +X",
+   "kg": 1.07,
+   "dims_m": [
+    0.2263,
+    0.004,
+    0.366
+   ]
+  }
+ ],
+ "assigned_kg": 10.7,
+ "com_m": [
+  -0.0,
+  0.0,
+  0.183
+ ],
+ "inertia_kgm2": [
+  [
+   0.0,
+   0.0,
+   0.0
+  ],
+  [
+   0.0,
+   0.12,
+   0.0
+  ],
+  [
+   0.0,
+   0.0,
+   0.12
+  ]
+ ],
+ "rules": {
+  "lmp103s_kg_m3": 1240.0,
+  "tank_fill": 0.75,
+  "batt_wh_l": 150.0,
+  "electronics_kg_m3": 600.0,
+  "bus_kg_m3": 300.0,
+  "packing": 0.85,
+  "body_frac": 0.42,
+  "cone_half_deg": 70.0,
+  "tori": 4,
+  "sbs_plate_m": [
+   0.1278,
+   0.0855,
+   0.02
+  ],
+  "thruster_22n_m": [
+   0.045,
+   0.2
+  ],
+  "lightband_small_m": 0.203,
+  "lightband_large_m": 0.381,
+  "radiator_w_m2": 300.0,
+  "hinge_gap_m": 0.015
+ },
+ "note": "Concept geometry generated from the sizing model (sentinel/lelp/freeflyer.py); not a released design."
+}

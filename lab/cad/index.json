@@ -1,0 +1,368 @@
+[
+ {
+  "name": "SP-ORG",
+  "id": "stem-cell-organoids",
+  "arch": "B",
+  "bbox_m": [
+   2.354,
+   0.718,
+   1.125
+  ],
+  "com_m": [
+   -0.003,
+   -0.01,
+   -0.17
+  ],
+  "files_kb": {
+   "SP-ORG-entry.step": 158,
+   "SP-ORG.step": 557,
+   "SP-ORG-entry.glb": 167,
+   "SP-ORG-step.zip": 121,
+   "SP-ORG.json": 7,
+   "SP-ORG.glb": 221
+  }
+ },
+ {
+  "name": "SP-XTL",
+  "id": "protein-crystals",
+  "arch": "B",
+  "bbox_m": [
+   2.337,
+   0.718,
+   1.118
+  ],
+  "com_m": [
+   -0.003,
+   -0.01,
+   -0.166
+  ],
+  "files_kb": {
+   "SP-XTL-entry.glb": 170,
+   "SP-XTL.json": 7,
+   "SP-XTL-entry.step": 176,
+   "SP-XTL.glb": 224,
+   "SP-XTL.step": 576,
+   "SP-XTL-step.zip": 127
+  }
+ },
+ {
+  "name": "SP-AMR",
+  "id": "antibiotic-resistance",
+  "arch": "B",
+  "bbox_m": [
+   2.354,
+   0.718,
+   1.124
+  ],
+  "com_m": [
+   -0.003,
+   -0.01,
+   -0.169
+  ],
+  "files_kb": {
+   "SP-AMR-entry.glb": 170,
+   "SP-AMR.step": 576,
+   "SP-AMR-entry.step": 176,
+   "SP-AMR.glb": 224,
+   "SP-AMR.json": 7,
+   "SP-AMR-step.zip": 127
+  }
+ },
+ {
+  "name": "SP-PLT",
+  "id": "plant-germination",
+  "arch": "B",
+  "bbox_m": [
+   2.303,
+   0.718,
+   1.121
+  ],
+  "com_m": [
+   -0.003,
+   -0.01,
+   -0.167
+  ],
+  "files_kb": {
+   "SP-PLT.json": 7,
+   "SP-PLT-entry.glb": 170,
+   "SP-PLT-entry.step": 176,
+   "SP-PLT.glb": 224,
+   "SP-PLT-step.zip": 127,
+   "SP-PLT.step": 576
+  }
+ },
+ {
+  "name": "SP-ALY",
+  "id": "alloy-solidification",
+  "arch": "B",
+  "bbox_m": [
+   2.943,
+   0.718,
+   1.464
+  ],
+  "com_m": [
+   0.017,
+   -0.017,
+   -0.366
+  ],
+  "files_kb": {
+   "SP-ALY.step": 607,
+   "SP-ALY-entry.step": 158,
+   "SP-ALY-step.zip": 129,
+   "SP-ALY-entry.glb": 167,
+   "SP-ALY.glb": 236,
+   "SP-ALY.json": 7
+  }
+ },
+ {
+  "name": "SP-BRX",
+  "id": "bioreactor",
+  "arch": "B",
+  "bbox_m": [
+   2.303,
+   0.718,
+   1.117
+  ],
+  "com_m": [
+   -0.003,
+   -0.01,
+   -0.165
+  ],
+  "files_kb": {
+   "SP-BRX.json": 7,
+   "SP-BRX-step.zip": 127,
+   "SP-BRX.glb": 224,
+   "SP-BRX-entry.glb": 170,
+   "SP-BRX-entry.step": 176,
+   "SP-BRX.step": 576
+  }
+ },
+ {
+  "name": "SP-CHIP",
+  "id": "microfluidics",
+  "arch": "B",
+  "bbox_m": [
+   2.45,
+   0.718,
+   1.164
+  ],
+  "com_m": [
+   -0.002,
+   -0.011,
+   -0.189
+  ],
+  "files_kb": {
+   "SP-CHIP.json": 7,
+   "SP-CHIP-entry.step": 176,
+   "SP-CHIP.glb": 228,
+   "SP-CHIP-entry.glb": 170,
+   "SP-CHIP-step.zip": 130,
+   "SP-CHIP.step": 594
+  }
+ },
+ {
+  "name": "SP-MECH",
+  "id": "cell-mechanobiology",
+  "arch": "B",
+  "bbox_m": [
+   2.667,
+   0.718,
+   1.32
+  ],
+  "com_m": [
+   -0.008,
+   -0.005,
+   -0.272
+  ],
+  "files_kb": {
+   "SP-MECH-step.zip": 140,
+   "SP-MECH.step": 640,
+   "SP-MECH-entry.glb": 174,
+   "SP-MECH-entry.step": 193,
+   "SP-MECH.json": 8,
+   "SP-MECH.glb": 251
+  }
+ },
+ {
+  "name": "SP-BFM",
+  "id": "biofilms",
+  "arch": "B",
+  "bbox_m": [
+   2.354,
+   0.718,
+   1.126
+  ],
+  "com_m": [
+   -0.003,
+   -0.01,
+   -0.17
+  ],
+  "files_kb": {
+   "SP-BFM-step.zip": 127,
+   "SP-BFM.step": 576,
+   "SP-BFM.json": 7,
+   "SP-BFM.glb": 224,
+   "SP-BFM-entry.glb": 170,
+   "SP-BFM-entry.step": 176
+  }
+ },
+ {
+  "name": "SP-ALG",
+  "id": "microalgae",
+  "arch": "B",
+  "bbox_m": [
+   2.354,
+   0.718,
+   1.11
+  ],
+  "com_m": [
+   -0.003,
+   -0.01,
+   -0.163
+  ],
+  "files_kb": {
+   "SP-ALG-entry.step": 193,
+   "SP-ALG.step": 594,
+   "SP-ALG.glb": 227,
+   "SP-ALG.json": 7,
+   "SP-ALG-entry.glb": 174,
+   "SP-ALG-step.zip": 133
+  }
+ },
+ {
+  "name": "SP-HRT",
+  "id": "heart-cells",
+  "arch": "C",
+  "bbox_m": [
+   2.45,
+   0.718,
+   1.138
+  ],
+  "com_m": [
+   -0.002,
+   -0.011,
+   -0.178
+  ],
+  "files_kb": {
+   "SP-HRT-entry.step": 159,
+   "SP-HRT-step.zip": 124,
+   "SP-HRT.json": 7,
+   "SP-HRT-entry.glb": 167,
+   "SP-HRT.glb": 224,
+   "SP-HRT.step": 577
+  }
+ },
+ {
+  "name": "SP-IMM",
+  "id": "t-cell-activation",
+  "arch": "B",
+  "bbox_m": [
+   2.612,
+   0.718,
+   1.263
+  ],
+  "com_m": [
+   -0.009,
+   -0.004,
+   -0.243
+  ],
+  "files_kb": {
+   "SP-IMM.step": 615,
+   "SP-IMM.glb": 244,
+   "SP-IMM-entry.step": 193,
+   "SP-IMM-step.zip": 136,
+   "SP-IMM-entry.glb": 174,
+   "SP-IMM.json": 8
+  }
+ },
+ {
+  "name": "SP-BONE",
+  "id": "bone-cells",
+  "arch": "B",
+  "bbox_m": [
+   2.354,
+   0.718,
+   1.132
+  ],
+  "com_m": [
+   -0.003,
+   -0.01,
+   -0.173
+  ],
+  "files_kb": {
+   "SP-BONE.glb": 224,
+   "SP-BONE-step.zip": 127,
+   "SP-BONE-entry.glb": 170,
+   "SP-BONE.step": 576,
+   "SP-BONE.json": 7,
+   "SP-BONE-entry.step": 176
+  }
+ },
+ {
+  "name": "SP-WORM",
+  "id": "c-elegans-muscle",
+  "arch": "B",
+  "bbox_m": [
+   2.733,
+   0.718,
+   1.296
+  ],
+  "com_m": [
+   -0.001,
+   -0.011,
+   -0.255
+  ],
+  "files_kb": {
+   "SP-WORM-step.zip": 131,
+   "SP-WORM.json": 7,
+   "SP-WORM.step": 601,
+   "SP-WORM.glb": 232,
+   "SP-WORM-entry.glb": 170,
+   "SP-WORM-entry.step": 176
+  }
+ },
+ {
+  "name": "SP-ONC",
+  "id": "tumour-spheroids",
+  "arch": "B",
+  "bbox_m": [
+   2.354,
+   0.718,
+   1.128
+  ],
+  "com_m": [
+   -0.003,
+   -0.01,
+   -0.171
+  ],
+  "files_kb": {
+   "SP-ONC-step.zip": 127,
+   "SP-ONC.json": 7,
+   "SP-ONC.glb": 224,
+   "SP-ONC-entry.glb": 170,
+   "SP-ONC.step": 576,
+   "SP-ONC-entry.step": 176
+  }
+ },
+ {
+  "name": "SP-AMR-6U",
+  "id": "antibiotic-resistance",
+  "arch": "A",
+  "bbox_m": [
+   0.691,
+   0.1,
+   0.366
+  ],
+  "com_m": [
+   -0.0,
+   0.0,
+   0.183
+  ],
+  "files_kb": {
+   "SP-AMR-6U.json": 1,
+   "SP-AMR-6U.step": 50,
+   "SP-AMR-6U.glb": 10,
+   "SP-AMR-6U-step.zip": 10
+  }
+ }
+]
