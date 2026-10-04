@@ -66,6 +66,7 @@
   // where the module is on its way home (key times from the twin's whole-payload return model)
   const returnState = (t) => t >= tHand ? 'WITH YOUR COURIER' : t >= X.tRecovery ? 'ON THE RECOVERY SHIP' : t >= tSplash ? 'AFLOAT'
     : t >= X.tMain ? 'UNDER MAIN CANOPY' : t >= X.tEI ? 'RE-ENTRY' : t >= X.tInflate ? 'HEAT SHIELD DEPLOYED' : t >= tStageSep ? 'COASTING TO ENTRY' : 'SECURED FOR RETURN';
+  const CF = EM.culture_format || null;
   const ACT = { media_full: 'full medium change', media_half: 'medium exchange', treat: TNAME ? TNAME + ' dosing' : 'treatment', topup: (TNAME || 'treatment') + ' top-up', differentiate: 'differentiation medium', preserve: 'preservation' };
   const stepWords = (s) => s.do.filter((a) => a !== 'topup' || !s.do.includes('media_half')).map((a) => ACT[a] || a).join(', ');
   // the flow: the spec's own before-launch and after-flight steps around the flight steps the twin runs
@@ -76,7 +77,7 @@
     { label: 'Launch · ' + lsText, full: 'Launch: ' + ((EM.launch_storage && EM.launch_storage.text) || 'the module rides to orbit stowed'), a: tLift, b: tOrbit, now: () => 'riding to orbit' },
     { label: `Automated thaw · ${EM.culture_c.toFixed(0)} °C`, full: `Automated thawing of ${nVials} cryovials, then recovery at ${EM.culture_c.toFixed(1)} °C`, a: tStart, b: tFirst,
       now: (t, x) => x && x.phase === 'thawing' ? 'thawing' : 'day ' + day1(x ? x.day : 0) },
-    { label: 'Culture · automated media', full: 'Cell culture with automated media exchange: ' + STEPS.filter((s) => !s.do.includes('preserve')).map((s) => `day ${(s.at_h / 24).toFixed(0)} ${stepWords(s)}`).join('; '), a: tThaw, b: tPres, now: (t, x) => 'day ' + day1(x.day) },
+    { label: `${CF ? CF.format + ' culture' : 'Culture'} · automated media`, full: (CF && CF.note ? CF.note + ' ' : '') + 'Automated media exchange: ' + STEPS.filter((s) => !s.do.includes('preserve')).map((s) => `day ${(s.at_h / 24).toFixed(0)} ${stepWords(s)}`).join('; '), a: tThaw, b: tPres, now: (t, x) => 'day ' + day1(x.day) },
     ...diffSteps.map((s) => ({ label: 'Differentiation medium', full: `Day ${(s.at_h / 24).toFixed(0)}: switch to differentiation medium`, a: s.t, b: s.t })),
     ...treatSteps.map((s) => ({ label: `${TNAME ? TNAME[0].toUpperCase() + TNAME.slice(1) : 'Treatment'} · ${nTreated} treated group${nTreated === 1 ? '' : 's'}`,
       full: `Day ${(s.at_h / 24).toFixed(0)}: ${TNAME || 'treatment'} added automatically to ${EM.groups.filter((g) => g.treatment).map((g) => g.label).join(' and ')}` + (TREAT && TREAT.dose ? ` at ${TREAT.dose}` : ''), a: s.t, b: s.t })),
@@ -102,10 +103,33 @@
   $('journey').innerHTML = JOURNEY.map(([label]) => `<li>${esc(label)}</li>`).join('');
   $('return').innerHTML = RETURN.map((e) => `<div><span class="ft">${feedT(e.t)}</span><span>${esc(e.text)}</span></div>`).join('');
   const lastRow = E.rows[E.rows.length - 1];
-  $('after').innerHTML = '<tr><th>SAMPLE · EACH GROUP</th><th>MEASURED</th></tr>' + [{ sample: `${EM.imaging.instrument} archive, ${lastRow[E.ix.rounds]} rounds`, measures: `${FAM.metrics.map((m) => m.name).join(', ')} over ${NDAYS} days` }].concat(EM.preservation || [])
+  $('after').innerHTML = '<tr><th>SAMPLE OR RECORD</th><th>MEASURED</th></tr>' + [{ sample: `${EM.imaging.instrument} archive, ${lastRow[E.ix.rounds]} rounds`, measures: `${FAM.metrics.map((m) => m.name).join(', ')} over ${NDAYS} days` },
+    { sample: 'dosimeter, TLDs and environment log', measures: 'dose by phase, SAA passes, temperatures, pressure, seal, residual g: launch to handover' }].concat(EM.preservation || [])
     .map((p) => `<tr><td>${esc(p.sample)}</td><td>${esc(String(p.measures).replace(/alpha/g, 'α'))}</td></tr>`).join('');
   document.querySelector('.note.compare').innerHTML = `<b>Compare</b> ${esc(EM.compare || '')}<br><b>Result</b> ${esc(EM.result || '')} It comes from the lab analysis, not from the twin.`;
   set('scn-note', EM.scenario_note || '');
+  // the customer's own brief (spec `brief`): their answers, and what this flight does about each blocker
+  const B = EM.brief;
+  if (B) {
+    const where = Object.fromEntries((EM.endpoints || []).map((e) => [e.name, e.where]));
+    const ep = (n) => { const live = /flight/.test(where[n] || '');
+      return `<span class="ep${live ? ' live' : ''}" title="${live ? 'live in flight, and in the lab' : 'in the lab, after the return'}">${esc(n.replace(/-alpha/, '-α'))}</span>`; };
+    const row = (k, v, title) => `<div class="bf-row"${title ? ` title="${esc(title)}"` : ''}><span>${k}</span><p>${v}</p></div>`;
+    const BADGE = { designed: ['DESIGNED', 'info', 'designed in the twin, not yet flight hardware'], offered: ['OFFERED', 'good', 'Space Philic flies it'], open: ['OPEN', 'warn', 'not solved by this flight'] };
+    $('brief').innerHTML =
+      `<div class="sub-h"><h3>FROM YOUR BRIEF</h3><span class="h-sub" title="${esc(B.source || '')}">in your words</span></div>` +
+      row('FOR', esc((B.for_whom || []).join(' · '))) + row('WANTS', esc(B.wants || '')) + row('PROBLEM', esc(B.problem || ''), B.evidence) +
+      row('WHY', esc(B.why || '')) +
+      `<div class="sub-h"><h3>MEASURED BY</h3><span class="h-sub bf-key">green: live in flight too</span></div>` +
+      (B.mechanisms || []).map((m) => row(esc(m.mechanism), (m.endpoints || []).map(ep).join(''))).join('') +
+      `<div class="sub-h"><h3>SCOPE</h3></div>` + row('IN', esc(B.in_scope || '')) + row('NOT IN', esc(B.out_of_scope || '')) +
+      `<div class="sub-h"><h3>WHO DOES WHAT</h3></div>` +
+      (B.roles || []).map((r) => row(esc(r.who), esc(r.does) + (r.here ? `<small>${esc(r.here)}</small>` : ''))).join('') +
+      `<div class="sub-h"><h3>WHAT WAS STOPPING YOU</h3></div>` +
+      (B.blockers || []).map((x) => { const [txt, c, tip] = BADGE[x.status] || [String(x.status).toUpperCase(), '', ''];
+        return `<div class="bf-row bk"><span><i class="chip ${c}" title="${tip}">${txt}</i></span><p><b>${esc(x.blocker.charAt(0).toUpperCase() + x.blocker.slice(1))}</b>${esc(x.answer || '')}</p></div>`; }).join('') +
+      `<div class="sub-h"><h3>EXPECTED RESULT</h3></div><p class="note">${esc(B.expected || '')} Measured by ${(EM.endpoints || []).map((e) => ep(e.name)).join('')}. It comes from the lab analysis, not from the twin.</p>`;
+  } else $('tab-brief').hidden = true;
   set('chart-title', FAM.chart.title); set('img-title', `${String(EM.imaging.instrument).toUpperCase()} · ${GROUPS.length * EM.wells_per_group} WELLS`);
   set('e-img', `every ${EM.imaging.every_h} h`); set('e-clock', EM.protocol_x === 1 ? 'real time' : '×' + EM.protocol_x);
   set('e-cryo-l', `CRYO CASSETTE · ${nVials} cryovials` + (TNAME ? `, then the ${TNAME} aliquots` : ''));
@@ -155,7 +179,7 @@
     let g = [1, 10, 100, 1000].map((v) => `<line x1="${l}" x2="${W - r}" y1="${py(v)}" y2="${py(v)}" class="grid"/><text x="${l - 5}" y="${py(v) + 3.5}" text-anchor="end" class="tick">${v >= 1000 ? '1k' : v}</text>`).join('');
     if (j >= 1) { const pts = []; for (let k = Math.max(0, j - n); k <= j; k++) pts.push(px(k).toFixed(1) + ',' + py(rr.v[k]).toFixed(1));
       g += `<polyline fill="none" stroke="#c98500" stroke-width="1.6" stroke-linejoin="round" points="${pts.join(' ')}"/>`; }
-    else g += `<text x="${(l + W - r) / 2}" y="${H / 2}" text-anchor="middle" class="tick">dosimeter log starts at the thaw</text>`;
+    else g += `<text x="${(l + W - r) / 2}" y="${H / 2}" text-anchor="middle" class="tick">dosimeter log starts at lab power-on</text>`;
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.innerHTML = g;
   }
   function drawWells(x) {
@@ -178,6 +202,7 @@
   const fmt = (mt, v) => mt.fmt === 'pct' ? String(Math.round(v * 100)) : mt.fmt === 'x2' ? v.toFixed(2) : v.toFixed(1);
   const cryoText = (t, x) => { const c = x ? x.cryo_c : ((EM.launch_storage && EM.launch_storage.temp_c) || -80) + 0.15 * (Math.max(t, 0) / 3600 + 24);
     return !x || t < (isFinite(tTreat) ? tTreat : tThaw) ? c.toFixed(1) + ' °C' : 'empty'; };
+  const doseText = (d) => (d < 0.1 ? Math.round(d * 1000) + ' µGy' : d.toFixed(2) + ' mGy');
   const nextStep = (x) => { const s = STEPS.find((q) => q.at_h / 24 > x.day + 1e-6); return s ? `next: ${stepWords(s)}, day ${(s.at_h / 24).toFixed(0)}` : ''; };
   function stateChip(t, m, x) {
     if (t >= tPrep) return [returnState(t), t >= tHand ? 'good' : 'info'];
@@ -218,7 +243,7 @@
       : x.phase === 'preserved' ? `preserved on day ${day1(presDay)}` + (EM.preserved_by && EM.preserved_by !== CUST ? ' by ' + EM.preserved_by : '')
       : nextStep(x) || `preservation at day ${NDAYS}`);
     const via = live && FAM.viability ? Math.round(mean(GROUPS.map((g) => x.g[g].flight[FAM.viability])) * 100) : null;
-    set('m-h', via == null ? '—' : via + ' %'); set('m-dose', x && x.phase !== 'cryo' ? x.dose.toFixed(2) + ' mGy' : '—'); set('m-cryo', cryoText(t, x));
+    set('m-h', via == null ? '—' : via + ' %'); set('m-dose', x ? doseText(x.dose) : '—'); set('m-cryo', cryoText(t, x));
     if (f) drawTemp(fi, returning);
     // flow, journey, return
     FLOW.forEach((s, k) => { if (s.pre) return; const li = $('steps').children[k];
@@ -242,7 +267,8 @@
     const del = DELIV.filter((e) => e.t <= t);
     if (del.length !== delivN) { delivN = del.length; $('deliveries').innerHTML = del.length ? del.slice().reverse().map((e) => `<li><span class="ft">${feedT(e.t)}</span><span>${esc(e.text)}</span></li>`).join('') : '<li><span class="ft">—</span><span>Nothing delivered yet. Per-well metrics come down once a protocol day.</span></li>'; }
     // environment
-    set('e-dose', x && x.phase !== 'cryo' ? x.dose.toFixed(2) + ' mGy' : '—'); set('e-saa', x && x.phase !== 'cryo' ? String(x.passes) : '—');
+    set('e-dose', x ? doseText(x.dose) : '—'); set('e-saa', x ? String(x.passes) : '—');
+    for (let k = 0; k < 3; k++) set('e-d' + k, x && x.split ? doseText(x.split[k]) : '—');
     set('e-rate', x && x.rate != null ? Math.round(x.rate) + (x.rate > 80 ? ' · SAA' : '') : '—'); cls('e-rate', x && x.rate > 80 ? 'warn' : '');
     set('e-t', m ? m.t.toFixed(2) + ' °C' : '—'); set('e-cryo', cryoText(t, x)); set('e-p', m ? m.p + ' kPa' : '—'); set('e-seal', m ? (m.sealed ? 'SEALED' : 'BREACH') : '—');
     set('e-ug', !f ? '—' : t >= tStageSep ? 'returning' : m && m.state === 'in_transfer' ? '≈ 10⁻³ g · arm transfer' : f.platform.arm.busy ? '≈ 10⁻⁴ g · arm moving' : '≈ 10⁻⁵ g · quiet');

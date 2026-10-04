@@ -211,9 +211,13 @@
     const first = m.t_steps && m.t_steps.length ? m.t_steps[0].t : Infinity;     // recovery lasts until the first scheduled step
     const phase = m.t_start == null || t < m.t_start ? 'cryo' : t < m.t_thaw ? 'thawing' : pres ? 'preserved' : t < first ? 'recovery' : 'culture';
     const o = { t, phase, day: v('day'), block_c: v('block_c'), cryo_c: v('cryo_c'), dose: v('dose_mgy'), passes: a[ix.saa_passes], rounds: a[ix.rounds],
-                down_mb: a[ix.down_mb], health: v('health'), rate: null, g: {} };
+                down_mb: a[ix.down_mb], health: v('health'), rate: null, g: {},
+                split: null };
+    if (ix.dose_frozen != null) {   // dose by phase, consistent with the interpolated total: frozen, in culture, preserved
+      const z = rows[rows.length - 1], F = z[ix.dose_frozen], C = z[ix.dose_culture], tot = o.dose;
+      o.split = m.t_thaw == null || t < m.t_thaw ? [tot, 0, 0] : !pres ? [F, Math.max(0, tot - F), 0] : [F, C, Math.max(0, tot - F - C)]; }
     const rr = E.rate, j = rr && rr.t0 != null ? Math.floor((t - rr.t0) / rr.dt) : -1;
-    if ((phase === 'recovery' || phase === 'culture' || phase === 'thawing') && j >= 0 && j < rr.v.length) o.rate = rr.v[j];
+    if (j >= 0 && j < rr.v.length) o.rate = rr.v[j];             // the dosimeter logs from lab power-on to entry
     for (const g of m.groups) { o.g[g.id] = {}; for (const e of m.envs) { const q = o.g[g.id][e] = {}; for (const mt of m.family.metrics) q[mt.key] = v(g.id + '|' + e + '|' + mt.key); } }
     return o;
   }
