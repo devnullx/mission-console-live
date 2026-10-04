@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LELP-1 · The satellite</title>
 <meta name="description" content="Design of LELP-1, a free-flying, recoverable life-science laboratory in a 550 km dawn-dusk orbit.">
-<meta name="build" content="cd9aa63">
+<meta name="build" content="48dd2f0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lab.css?v=cd9aa63">
+<link rel="stylesheet" href="lab.css?v=48dd2f0">
 </head>
 <body>
 <header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html">Configure your mission</a><a href="index.html">Overview</a><a href="satellite.html" class=on>LELP-1</a><a href="index.html#experiments">Experiments</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
@@ -36,8 +36,9 @@ Switch to Entry for the Return Module with its 2.6 m heat shield inflated.</p>
 <h3>Mass properties from the solids</h3>
 <div class="scroll"><table class="tbl"><thead><tr><th>Configuration</th><th class=num>Mass kg</th><th class=num>CoM z, m</th><th class=num>Principal inertia, kg m²</th>
 <th class=num>Twin's estimate</th></tr></thead><tbody><tr><td>In orbit: lab on the RUPAK upper stage</td><td class=num>970</td><td class=num>-1.34</td><td class=num>1996 / 2019 / 191</td><td class=num>420 / 420 / 110</td></tr><tr><td>Return Module, heat shield inflated</td><td class=num>222.6</td><td class=num>+0.65</td><td class=num>65 / 68 / 44</td><td>-</td></tr></tbody></table></div>
-<p><b>Finding.</b> The inertia computed from the CAD is about 4.8 times the twin's estimate about the transverse axes, because the upper stage's mass sits
-metres from the stack's centre of mass. The attitude model (reaction-wheel sizing, gravity-gradient torque, momentum dumping) should be rerun with the CAD values.</p></section>
+<p><b>Finding.</b> The inertia computed from the CAD is about 4.8 times the twin's earlier estimate about the transverse axes, because the upper stage's
+mass sits metres from the stack's centre of mass. The twin now uses the CAD values; whole-mission runs of the attitude model:</p>
+<div class="scroll"><table class="tbl"><thead><tr><th>Case</th><th class=num>Peak wheel momentum</th><th class=num>Margin at peak</th><th class=num>Pointing error, arm moving</th><th class=num>Peak disturbance</th><th class=num>Dumping, share of time</th></tr></thead><tbody><tr><td>twin estimate (before 4 Oct 2026)</td><td class=num>91.3 %</td><td class=num>9.5 %</td><td class=num>7.2°</td><td class=num>154 µN m</td><td class=num>4.9 %</td></tr><tr><td>CAD, 3 x 3.5 N m s wheels</td><td class=num>86.5 %</td><td class=num>15.6 %</td><td class=num>4.2°</td><td class=num>712 µN m</td><td class=num>7.6 %</td></tr><tr><td>CAD, 3 x 4.0 N m s wheels</td><td class=num>74.0 %</td><td class=num>35.1 %</td><td class=num>4.2°</td><td class=num>712 µN m</td><td class=num>5.4 %</td></tr></tbody></table></div><p>Gravity-gradient torque grows about five-fold and the magnetorquers dump more often, but Dexter-L's momentum still sizes the wheels. With 3 x 3.5 N m s wheels the margin at the peak is about 16 %, under a 25 % design target; 4.0 N m s wheels give about 35 %, at a wheel mass the vendor has to give. The larger inertia also cuts the pointing error while the arm moves from about 7° to about 4°.</p></section>
 
 <section id="requirements"><h2>What the 15 reference experiments ask, and how LELP-1 answers</h2>
 <p class="sub">The catalog's experiments are the design drivers. "Standard" is in every bay; "option" is a bay variant a customer books;
@@ -79,13 +80,13 @@ every bay at its limit would weigh about 281 kg, so every manifest is checked ag
 
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script><script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script><script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/controls/OrbitControls.js"></script><script src="cad.js?v=cd9aa63"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script><script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script><script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/controls/OrbitControls.js"></script><script src="cad.js?v=48dd2f0"></script>
 <footer class="foot"><div class="wrap">
 <p><b>LELP-1 is in design.</b> Bay limits, budgets, timelines and environment numbers come from Space Philic's digital twin of the
 mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
 Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
 each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
-<p class="mono">build cd9aa63</p>
+<p class="mono">build 48dd2f0</p>
 </div></footer>
 </body>
 </html>
