@@ -251,6 +251,7 @@
         <h3>Fit</h3>${checkTable()}</div></div>
       <h2 class="guide-h">Payload guide: place your cells, and it is good to go</h2>
       <ol class="guide">${guide(e).map(([a, b]) => `<li><b>${esc(a)}</b><p>${esc(b)}</p></li>`).join('')}</ol>
+      ${(D.modules || []).includes(e.id) ? '<p class="small">Your payload module is drawn below: what you fill before handover is blue. <a href="' + esc(e.id) + '.html#module-cad">Checks and parts list</a>.</p>' : ''}
       <p class="small">Template researched and fact-checked against its sources (<a href="${esc(e.id)}.html">full page with references</a>). Limits: ${esc(e.limitations[0] || '')}</p>`;
   }
 
@@ -346,8 +347,17 @@
     const cad = $('.cfg-cad'), e = exp();
     if (cad) {
       const show = S.step === 1 && S.mode === 'own' && !!e && !!window.LelpCad;
-      cad.hidden = !show;
+      const showMod = S.step === 3 && !!e && !!window.LelpCad && (D.modules || []).includes(e.id);
+      const note = cad.querySelector('.cfg-cad-note');
+      cad.hidden = !show && !showMod;
       if (window.LelpCad && S.mode !== 'bay') window.LelpCad.mark([]);
+      if (window.LelpCad) window.LelpCad.highlight(showMod ? 'sample__' : '');
+      if (showMod) {
+        cad.querySelector('h3').textContent = 'Your payload module in CAD: what you load is blue';
+        if (note) note.textContent = 'Every item in the module sheet, packed into the bay (cad/build_modules.py). Blue: the cassette, plates, chips or cryo cassette you fill before handover. Front panel left off so the inside shows.';
+        const nm = 'MOD-' + e.id;
+        if (nm !== lastCad) { lastCad = nm; window.LelpCad.views([{ name: nm, label: 'Payload module', kind: 'module' }]); }
+      } else if (note) note.textContent = 'Parametric CadQuery model of the baseline design (catalog options); the numbers above follow your options. STEP for engineering, GLB for viewing.';
       if (show) { const nm = 'SP-' + D.codes[e.id] + (archOf() === 'A' ? '-6U' : ''); if (nm !== lastCad) { lastCad = nm; window.LelpCad.show(nm, archOf() !== 'A'); } }
       const showBay = S.step === 1 && S.mode === 'bay' && !!window.LelpCad;
       if (showBay) {

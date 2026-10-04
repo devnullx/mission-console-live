@@ -226,3 +226,8 @@ button.xcard { font: inherit; text-align: left; cursor: pointer; }
 .views figure { margin: 0; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 6px; }
 .views img { width: 100%; height: auto; display: block; }
 .views figcaption { font-size: 12px; color: var(--ink-3); padding: 4px 2px 0; }
+
+/* payload module CAD */
+.decks { margin: 0; padding-left: 18px; font-size: 13.5px; } .decks li { margin-bottom: 6px; }
+#module-cad details { margin: 10px 0; } #module-cad summary { cursor: pointer; font-weight: 600; font-size: 13.5px; }
+#module-cad .two { margin-top: 12px; }

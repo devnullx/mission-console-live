@@ -1,0 +1,2162 @@
+{
+ "name": "MOD-plant-germination",
+ "experiment": "Seed germination and root growth",
+ "bay": "L",
+ "envelope_m": [
+  0.313,
+  0.1913,
+  0.3652
+ ],
+ "interior_m": [
+  0.31,
+  0.1883,
+  0.3622
+ ],
+ "module_kg": 5.5,
+ "assigned_kg": 5.5,
+ "fits": true,
+ "height_used_m": 0.341,
+ "height_free_m": 0.0212,
+ "fill": 0.547,
+ "inside_envelope": true,
+ "clashes": [],
+ "decks": [
+  {
+   "deck": "A",
+   "z_m": 0.0,
+   "h_m": 0.075,
+   "holds": [
+    "controller and data storage",
+    "fluid pack",
+    "sensor pack",
+    "2 micro-pumps, 4 valves on a manifold"
+   ]
+  },
+  {
+   "deck": "B",
+   "z_m": 0.077,
+   "h_m": 0.264,
+   "holds": [
+    "seed plates, LED panel, cameras"
+   ]
+  }
+ ],
+ "housing": {
+  "kg": 1.615,
+  "skin_mm_aluminium": 0.76,
+  "from": "Structure, inner containment layer, harness"
+ },
+ "thermal": {
+  "kg": 0,
+  "thermoelectric_in_module": false,
+  "from": "bay thermoelectric block; cold wall from the housing mass"
+ },
+ "lines": 4,
+ "harness_runs": 3,
+ "com_m": [
+  -0.0166,
+  -0.0087,
+  0.137
+ ],
+ "inertia_kgm2": [
+  [
+   0.08899,
+   -0.00064,
+   -0.00449
+  ],
+  [
+   -0.00064,
+   0.11156,
+   -0.00159
+  ],
+  [
+   -0.00449,
+   -0.00159,
+   0.06386
+  ]
+ ],
+ "items": [
+  {
+   "item": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.8,
+   "as": [
+    "seed_plates"
+   ]
+  },
+  {
+   "item": "LED panel (white + one-sided blue + green/IR imaging light) with driver",
+   "kg": 0.6,
+   "as": [
+    "led_panel"
+   ]
+  },
+  {
+   "item": "Two macro cameras with fixed optics (whole-plate time-lapse)",
+   "kg": 0.5,
+   "as": [
+    "camera"
+   ]
+  },
+  {
+   "item": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 1.2,
+   "as": [
+    "bags",
+    "pumps"
+   ]
+  },
+  {
+   "item": "O2/CO2 and humidity sensor pack",
+   "kg": 0.2,
+   "as": [
+    "sensors"
+   ]
+  },
+  {
+   "item": "Module controller and data storage board",
+   "kg": 0.3,
+   "as": [
+    "avionics"
+   ]
+  },
+  {
+   "item": "Structure, inner containment layer, harness",
+   "kg": 1.9,
+   "as": [
+    "frame",
+    "harness"
+   ]
+  }
+ ],
+ "components": [
+  {
+   "name": "controller and data storage",
+   "deck": "A",
+   "kg": 0.3,
+   "box_m": [
+    -0.145,
+    -0.0182,
+    0.0015,
+    -0.0241,
+    0.0704,
+    0.0295
+   ],
+   "from": [
+    "Module controller and data storage board"
+   ]
+  },
+  {
+   "name": "fluid pack",
+   "deck": "A",
+   "kg": 0.66,
+   "box_m": [
+    -0.019,
+    -0.0562,
+    0.0015,
+    0.06,
+    0.0704,
+    0.0695
+   ],
+   "from": [
+    "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines"
+   ]
+  },
+  {
+   "name": "sensor pack",
+   "deck": "A",
+   "kg": 0.2,
+   "box_m": [
+    0.065,
+    -0.0822,
+    0.0015,
+    0.1385,
+    0.0208,
+    0.0295
+   ],
+   "from": [
+    "O2/CO2 and humidity sensor pack"
+   ]
+  },
+  {
+   "name": "2 micro-pumps, 4 valves on a manifold",
+   "deck": "A",
+   "kg": 0.54,
+   "box_m": [
+    -0.145,
+    -0.0822,
+    0.0015,
+    -0.051,
+    -0.0322,
+    0.0395
+   ],
+   "from": [
+    "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines"
+   ]
+  },
+  {
+   "name": "seed plates, LED panel, cameras",
+   "deck": "B",
+   "kg": 1.9,
+   "box_m": [
+    -0.145,
+    -0.0782,
+    0.0785,
+    0.113,
+    0.0708,
+    0.3365
+   ],
+   "from": [
+    "Four sealed seed plates with gas-permeable covers and frame",
+    "LED panel (white + one-sided blue + green/IR imaging light) with driver",
+    "Two macro cameras with fixed optics (whole-plate time-lapse)"
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "part": "controller enclosure (boards, data storage)",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Module controller and data storage board",
+   "kg": 0.27,
+   "bbox_m": [
+    0.1209,
+    0.0806,
+    0.028
+   ],
+   "centre_m": [
+    -0.0846,
+    0.0221,
+    0.0155
+   ]
+  },
+  {
+   "part": "connector 1",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Module controller and data storage board",
+   "kg": 0.015,
+   "bbox_m": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "centre_m": [
+    -0.125,
+    0.0664,
+    0.0155
+   ]
+  },
+  {
+   "part": "connector 2",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Module controller and data storage board",
+   "kg": 0.015,
+   "bbox_m": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "centre_m": [
+    -0.103,
+    0.0664,
+    0.0155
+   ]
+  },
+  {
+   "part": "nutrient (165 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.2024,
+   "bbox_m": [
+    0.0791,
+    0.1186,
+    0.022
+   ],
+   "centre_m": [
+    0.0205,
+    0.0031,
+    0.0125
+   ]
+  },
+  {
+   "part": "nutrient port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.0176,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.0205,
+    0.0664,
+    0.0125
+   ]
+  },
+  {
+   "part": "fixative 1 (165 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.2024,
+   "bbox_m": [
+    0.0791,
+    0.1186,
+    0.022
+   ],
+   "centre_m": [
+    0.0205,
+    0.0031,
+    0.0355
+   ]
+  },
+  {
+   "part": "fixative 1 port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.0176,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.0205,
+    0.0664,
+    0.0355
+   ]
+  },
+  {
+   "part": "fixative 2 (165 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.2024,
+   "bbox_m": [
+    0.0791,
+    0.1186,
+    0.022
+   ],
+   "centre_m": [
+    0.0205,
+    0.0031,
+    0.0585
+   ]
+  },
+  {
+   "part": "fixative 2 port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.0176,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.0205,
+    0.0664,
+    0.0585
+   ]
+  },
+  {
+   "part": "sensor pack",
+   "role": "sensor",
+   "component": "sensor pack",
+   "from": "O2/CO2 and humidity sensor pack",
+   "kg": 0.18,
+   "bbox_m": [
+    0.0736,
+    0.103,
+    0.022
+   ],
+   "centre_m": [
+    0.1018,
+    -0.0307,
+    0.0125
+   ]
+  },
+  {
+   "part": "sensor pack: head 1",
+   "role": "sensor",
+   "component": "sensor pack",
+   "from": "O2/CO2 and humidity sensor pack",
+   "kg": 0.01,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.006
+   ],
+   "centre_m": [
+    0.1018,
+    -0.0478,
+    0.0265
+   ]
+  },
+  {
+   "part": "sensor pack: head 2",
+   "role": "sensor",
+   "component": "sensor pack",
+   "from": "O2/CO2 and humidity sensor pack",
+   "kg": 0.01,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.006
+   ],
+   "centre_m": [
+    0.1018,
+    -0.0135,
+    0.0265
+   ]
+  },
+  {
+   "part": "fluid manifold",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.162,
+   "bbox_m": [
+    0.094,
+    0.05,
+    0.012
+   ],
+   "centre_m": [
+    -0.098,
+    -0.0572,
+    0.0075
+   ]
+  },
+  {
+   "part": "micro-pump 1",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.135,
+   "bbox_m": [
+    0.02,
+    0.02,
+    0.026
+   ],
+   "centre_m": [
+    -0.124,
+    -0.0572,
+    0.0265
+   ]
+  },
+  {
+   "part": "micro-pump 2",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.135,
+   "bbox_m": [
+    0.02,
+    0.02,
+    0.026
+   ],
+   "centre_m": [
+    -0.098,
+    -0.0572,
+    0.0265
+   ]
+  },
+  {
+   "part": "valve 1",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.027,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    -0.0785,
+    -0.0692,
+    0.0215
+   ]
+  },
+  {
+   "part": "valve 2",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.027,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    -0.0785,
+    -0.0452,
+    0.0215
+   ]
+  },
+  {
+   "part": "valve 3",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.027,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    -0.0655,
+    -0.0692,
+    0.0215
+   ]
+  },
+  {
+   "part": "valve 4",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.027,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    -0.0655,
+    -0.0452,
+    0.0215
+   ]
+  },
+  {
+   "part": "manifold inlet",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.0165
+   ]
+  },
+  {
+   "part": "manifold outlet",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: nutrient reservoir, two fixative reservoirs, micro-pumps, valves, lines",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    -0.057,
+    -0.0572,
+    0.0165
+   ]
+  },
+  {
+   "part": "rack side rail L",
+   "role": "experiment",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.04,
+   "bbox_m": [
+    0.006,
+    0.026,
+    0.258
+   ],
+   "centre_m": [
+    -0.142,
+    0.0578,
+    0.2075
+   ]
+  },
+  {
+   "part": "rack side rail R",
+   "role": "experiment",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.04,
+   "bbox_m": [
+    0.006,
+    0.026,
+    0.258
+   ],
+   "centre_m": [
+    0.11,
+    0.0578,
+    0.2075
+   ]
+  },
+  {
+   "part": "rack cross rail 1",
+   "role": "experiment",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.04,
+   "bbox_m": [
+    0.258,
+    0.026,
+    0.006
+   ],
+   "centre_m": [
+    -0.016,
+    0.0578,
+    0.0815
+   ]
+  },
+  {
+   "part": "rack cross rail 2",
+   "role": "experiment",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.04,
+   "bbox_m": [
+    0.258,
+    0.026,
+    0.006
+   ],
+   "centre_m": [
+    -0.016,
+    0.0578,
+    0.2075
+   ]
+  },
+  {
+   "part": "rack cross rail 3",
+   "role": "experiment",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.04,
+   "bbox_m": [
+    0.258,
+    0.026,
+    0.006
+   ],
+   "centre_m": [
+    -0.016,
+    0.0578,
+    0.3335
+   ]
+  },
+  {
+   "part": "seed plate 1 (120 x 120 mm square dish)",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.0675,
+   "bbox_m": [
+    0.12,
+    0.017,
+    0.12
+   ],
+   "centre_m": [
+    -0.079,
+    0.0583,
+    0.1445
+   ]
+  },
+  {
+   "part": "seed plate 1 agar",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.0675,
+   "bbox_m": [
+    0.114,
+    0.006,
+    0.114
+   ],
+   "centre_m": [
+    -0.079,
+    0.0608,
+    0.1445
+   ]
+  },
+  {
+   "part": "seed plate 1 seeds",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.003,
+   "bbox_m": [
+    0.0936,
+    0.003,
+    0.0036
+   ],
+   "centre_m": [
+    -0.079,
+    0.0563,
+    0.1709
+   ]
+  },
+  {
+   "part": "seed plate 1 gas-permeable cover",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.012,
+   "bbox_m": [
+    0.12,
+    0.001,
+    0.12
+   ],
+   "centre_m": [
+    -0.079,
+    0.0503,
+    0.1445
+   ]
+  },
+  {
+   "part": "seed plate 3 (120 x 120 mm square dish)",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.0675,
+   "bbox_m": [
+    0.12,
+    0.017,
+    0.12
+   ],
+   "centre_m": [
+    -0.079,
+    0.0583,
+    0.2705
+   ]
+  },
+  {
+   "part": "seed plate 3 agar",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.0675,
+   "bbox_m": [
+    0.114,
+    0.006,
+    0.114
+   ],
+   "centre_m": [
+    -0.079,
+    0.0608,
+    0.2705
+   ]
+  },
+  {
+   "part": "seed plate 3 seeds",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.003,
+   "bbox_m": [
+    0.0936,
+    0.003,
+    0.0036
+   ],
+   "centre_m": [
+    -0.079,
+    0.0563,
+    0.2969
+   ]
+  },
+  {
+   "part": "seed plate 3 gas-permeable cover",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.012,
+   "bbox_m": [
+    0.12,
+    0.001,
+    0.12
+   ],
+   "centre_m": [
+    -0.079,
+    0.0503,
+    0.2705
+   ]
+  },
+  {
+   "part": "seed plate 2 (120 x 120 mm square dish)",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.0675,
+   "bbox_m": [
+    0.12,
+    0.017,
+    0.12
+   ],
+   "centre_m": [
+    0.047,
+    0.0583,
+    0.1445
+   ]
+  },
+  {
+   "part": "seed plate 2 agar",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.0675,
+   "bbox_m": [
+    0.114,
+    0.006,
+    0.114
+   ],
+   "centre_m": [
+    0.047,
+    0.0608,
+    0.1445
+   ]
+  },
+  {
+   "part": "seed plate 2 seeds",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.003,
+   "bbox_m": [
+    0.0936,
+    0.003,
+    0.0036
+   ],
+   "centre_m": [
+    0.047,
+    0.0563,
+    0.1709
+   ]
+  },
+  {
+   "part": "seed plate 2 gas-permeable cover",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.012,
+   "bbox_m": [
+    0.12,
+    0.001,
+    0.12
+   ],
+   "centre_m": [
+    0.047,
+    0.0503,
+    0.1445
+   ]
+  },
+  {
+   "part": "seed plate 4 (120 x 120 mm square dish)",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.0675,
+   "bbox_m": [
+    0.12,
+    0.017,
+    0.12
+   ],
+   "centre_m": [
+    0.047,
+    0.0583,
+    0.2705
+   ]
+  },
+  {
+   "part": "seed plate 4 agar",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.0675,
+   "bbox_m": [
+    0.114,
+    0.006,
+    0.114
+   ],
+   "centre_m": [
+    0.047,
+    0.0608,
+    0.2705
+   ]
+  },
+  {
+   "part": "seed plate 4 seeds",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.003,
+   "bbox_m": [
+    0.0936,
+    0.003,
+    0.0036
+   ],
+   "centre_m": [
+    0.047,
+    0.0563,
+    0.2969
+   ]
+  },
+  {
+   "part": "seed plate 4 gas-permeable cover",
+   "role": "sample",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.012,
+   "bbox_m": [
+    0.12,
+    0.001,
+    0.12
+   ],
+   "centre_m": [
+    0.047,
+    0.0503,
+    0.2705
+   ]
+  },
+  {
+   "part": "LED panel: white, one-sided blue, green/IR imaging light",
+   "role": "imaging",
+   "component": "seed plates, LED panel, cameras",
+   "from": "LED panel (white + one-sided blue + green/IR imaging light) with driver",
+   "kg": 0.48,
+   "bbox_m": [
+    0.258,
+    0.006,
+    0.234
+   ],
+   "centre_m": [
+    -0.016,
+    -0.0632,
+    0.1955
+   ]
+  },
+  {
+   "part": "LEDs facing the plates",
+   "role": "experiment",
+   "component": "seed plates, LED panel, cameras",
+   "from": "LED panel (white + one-sided blue + green/IR imaging light) with driver",
+   "kg": 0.03,
+   "bbox_m": [
+    0.204,
+    0.002,
+    0.18
+   ],
+   "centre_m": [
+    -0.016,
+    -0.0592,
+    0.1955
+   ]
+  },
+  {
+   "part": "LED driver",
+   "role": "experiment",
+   "component": "seed plates, LED panel, cameras",
+   "from": "LED panel (white + one-sided blue + green/IR imaging light) with driver",
+   "kg": 0.09,
+   "bbox_m": [
+    0.05,
+    0.012,
+    0.028
+   ],
+   "centre_m": [
+    0.078,
+    -0.0722,
+    0.2965
+   ]
+  },
+  {
+   "part": "macro camera 1",
+   "role": "imaging",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Two macro cameras with fixed optics (whole-plate time-lapse)",
+   "kg": 0.2,
+   "bbox_m": [
+    0.032,
+    0.022,
+    0.032
+   ],
+   "centre_m": [
+    -0.079,
+    -0.0652,
+    0.1955
+   ]
+  },
+  {
+   "part": "camera 1 lens",
+   "role": "experiment",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Two macro cameras with fixed optics (whole-plate time-lapse)",
+   "kg": 0.05,
+   "bbox_m": [
+    0.018,
+    0.008,
+    0.018
+   ],
+   "centre_m": [
+    -0.079,
+    -0.0502,
+    0.1955
+   ]
+  },
+  {
+   "part": "macro camera 2",
+   "role": "imaging",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Two macro cameras with fixed optics (whole-plate time-lapse)",
+   "kg": 0.2,
+   "bbox_m": [
+    0.032,
+    0.022,
+    0.032
+   ],
+   "centre_m": [
+    0.047,
+    -0.0652,
+    0.1955
+   ]
+  },
+  {
+   "part": "camera 2 lens",
+   "role": "experiment",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Two macro cameras with fixed optics (whole-plate time-lapse)",
+   "kg": 0.05,
+   "bbox_m": [
+    0.018,
+    0.008,
+    0.018
+   ],
+   "centre_m": [
+    0.047,
+    -0.0502,
+    0.1955
+   ]
+  },
+  {
+   "part": "nutrient manifold on the rack",
+   "role": "experiment",
+   "component": "seed plates, LED panel, cameras",
+   "from": "Four sealed seed plates with gas-permeable covers and frame",
+   "kg": 0.0,
+   "bbox_m": [
+    0.228,
+    0.01,
+    0.006
+   ],
+   "centre_m": [
+    -0.016,
+    0.0498,
+    0.3335
+   ]
+  },
+  {
+   "part": "bottom panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.1234,
+   "bbox_m": [
+    0.313,
+    0.1913,
+    0.0015
+   ],
+   "centre_m": [
+    0.0,
+    0.0,
+    0.0008
+   ]
+  },
+  {
+   "part": "top panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.1234,
+   "bbox_m": [
+    0.313,
+    0.1913,
+    0.0015
+   ],
+   "centre_m": [
+    0.0,
+    0.0,
+    0.3645
+   ]
+  },
+  {
+   "part": "side panel L",
+   "role": "housing",
+   "component": "housing",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.144,
+   "bbox_m": [
+    0.0015,
+    0.1913,
+    0.3622
+   ],
+   "centre_m": [
+    -0.1558,
+    0.0,
+    0.1826
+   ]
+  },
+  {
+   "part": "side panel R",
+   "role": "housing",
+   "component": "housing",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.144,
+   "bbox_m": [
+    0.0015,
+    0.1913,
+    0.3622
+   ],
+   "centre_m": [
+    0.1558,
+    0.0,
+    0.1826
+   ]
+  },
+  {
+   "part": "back panel (bay interface)",
+   "role": "housing",
+   "component": "housing",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.2356,
+   "bbox_m": [
+    0.31,
+    0.0015,
+    0.3622
+   ],
+   "centre_m": [
+    0.0,
+    -0.0949,
+    0.1826
+   ]
+  },
+  {
+   "part": "front panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.2356,
+   "bbox_m": [
+    0.31,
+    0.0015,
+    0.3622
+   ],
+   "centre_m": [
+    0.0,
+    0.0949,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 1",
+   "role": "housing",
+   "component": "housing",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.0424,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    -0.151,
+    -0.0802,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 2",
+   "role": "housing",
+   "component": "housing",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.0424,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    -0.151,
+    0.0702,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 3",
+   "role": "housing",
+   "component": "housing",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.0424,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    0.151,
+    -0.0802,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 4",
+   "role": "housing",
+   "component": "housing",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.0424,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    0.151,
+    0.0702,
+    0.1826
+   ]
+  },
+  {
+   "part": "shelf 1",
+   "role": "housing",
+   "component": "housing",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.3149,
+   "bbox_m": [
+    0.31,
+    0.1583,
+    0.002
+   ],
+   "centre_m": [
+    0.0,
+    -0.005,
+    0.0775
+   ]
+  },
+  {
+   "part": "cold wall (to the bay's thermoelectric block)",
+   "role": "thermal",
+   "component": "housing",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.0565,
+   "bbox_m": [
+    0.29,
+    0.004,
+    0.3522
+   ],
+   "centre_m": [
+    0.0,
+    -0.0922,
+    0.1826
+   ]
+  },
+  {
+   "part": "blind-mate connector: power, data, video",
+   "role": "interface",
+   "component": "interface",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.0339,
+   "bbox_m": [
+    0.05,
+    0.01,
+    0.022
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0892,
+    0.3447
+   ]
+  },
+  {
+   "part": "grapple fixture base (Dexter-L)",
+   "role": "interface",
+   "component": "interface",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.0339,
+   "bbox_m": [
+    0.07,
+    0.004,
+    0.07
+   ],
+   "centre_m": [
+    0.0,
+    0.0977,
+    0.2614
+   ]
+  },
+  {
+   "part": "grapple fixture pin",
+   "role": "interface",
+   "component": "interface",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.016,
+    0.022,
+    0.016
+   ],
+   "centre_m": [
+    0.0,
+    0.1107,
+    0.2614
+   ]
+  },
+  {
+   "part": "status LEDs",
+   "role": "interface",
+   "component": "interface",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.018,
+    0.002,
+    0.006
+   ],
+   "centre_m": [
+    -0.1205,
+    0.0967,
+    0.0438
+   ]
+  },
+  {
+   "part": "label plate",
+   "role": "interface",
+   "component": "interface",
+   "from": "Structure, inner containment layer, harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.09,
+    0.001,
+    0.025
+   ],
+   "centre_m": [
+    0.0915,
+    0.0962,
+    0.049
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.0205,
+    0.0732,
+    0.0125
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0079,
+    0.0032
+   ],
+   "centre_m": [
+    0.0205,
+    0.0768,
+    0.0125
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0642
+   ],
+   "centre_m": [
+    0.0205,
+    0.0792,
+    0.043
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.1627,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0593,
+    0.0792,
+    0.0735
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1395,
+    0.0032
+   ],
+   "centre_m": [
+    -0.139,
+    0.011,
+    0.0735
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0532
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.0485
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.0205,
+    0.0732,
+    0.0355
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0113,
+    0.0032
+   ],
+   "centre_m": [
+    0.0205,
+    0.0785,
+    0.0355
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0412
+   ],
+   "centre_m": [
+    0.0205,
+    0.0826,
+    0.0545
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.1627,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0593,
+    0.0826,
+    0.0735
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1429,
+    0.0032
+   ],
+   "centre_m": [
+    -0.139,
+    0.0127,
+    0.0735
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0532
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.0485
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.0205,
+    0.0732,
+    0.0585
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0147,
+    0.0032
+   ],
+   "centre_m": [
+    0.0205,
+    0.0802,
+    0.0585
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0182
+   ],
+   "centre_m": [
+    0.0205,
+    0.086,
+    0.066
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.1627,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0593,
+    0.086,
+    0.0735
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1463,
+    0.0032
+   ],
+   "centre_m": [
+    -0.139,
+    0.0144,
+    0.0735
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0532
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.0485
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to seed plates run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    -0.057,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to seed plates run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0532
+   ],
+   "centre_m": [
+    -0.057,
+    -0.0572,
+    0.0485
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to seed plates run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1497,
+    0.0032
+   ],
+   "centre_m": [
+    -0.057,
+    0.0161,
+    0.0735
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to seed plates run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.2632
+   ],
+   "centre_m": [
+    -0.057,
+    0.0894,
+    0.2035
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to seed plates run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0442,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0365,
+    0.0894,
+    0.3335
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to seed plates run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0177,
+    0.0032
+   ],
+   "centre_m": [
+    -0.016,
+    0.0821,
+    0.3335
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to seed plates run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.016,
+    0.0736,
+    0.3335
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to seed plates run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0016,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    -0.125,
+    0.0737,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to seed plates run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0038,
+   "bbox_m": [
+    0.005,
+    0.0207,
+    0.005
+   ],
+   "centre_m": [
+    -0.125,
+    0.0823,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to seed plates run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0565,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.329
+   ],
+   "centre_m": [
+    -0.125,
+    0.0902,
+    0.1775
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to seed plates run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0357,
+   "bbox_m": [
+    0.208,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.0235,
+    0.0902,
+    0.3395
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to seed plates run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0287,
+   "bbox_m": [
+    0.005,
+    0.1673,
+    0.005
+   ],
+   "centre_m": [
+    0.078,
+    0.009,
+    0.3395
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to seed plates run 6",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0053,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.03
+   ],
+   "centre_m": [
+    0.078,
+    -0.0722,
+    0.327
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to seed plates run 7",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0016,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0065
+   ],
+   "centre_m": [
+    0.078,
+    -0.0722,
+    0.3137
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0016,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    -0.125,
+    0.0737,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0038,
+   "bbox_m": [
+    0.005,
+    0.0207,
+    0.005
+   ],
+   "centre_m": [
+    -0.125,
+    0.0823,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0109,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.063
+   ],
+   "centre_m": [
+    -0.125,
+    0.0902,
+    0.0445
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0056,
+   "bbox_m": [
+    0.032,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.1115,
+    0.0902,
+    0.0735
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0294,
+   "bbox_m": [
+    0.005,
+    0.1713,
+    0.005
+   ],
+   "centre_m": [
+    -0.098,
+    0.007,
+    0.0735
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 6",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0105,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.061
+   ],
+   "centre_m": [
+    -0.098,
+    -0.0762,
+    0.0455
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 7",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0016,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0065
+   ],
+   "centre_m": [
+    -0.098,
+    -0.0762,
+    0.0168
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0081,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0465
+   ],
+   "centre_m": [
+    -0.0391,
+    0.0221,
+    0.0528
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0178,
+   "bbox_m": [
+    0.005,
+    0.1033,
+    0.005
+   ],
+   "centre_m": [
+    -0.0391,
+    -0.027,
+    0.0735
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0131,
+   "bbox_m": [
+    0.0759,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.0746,
+    -0.0762,
+    0.0735
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0474,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.2762
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0762,
+    0.2091
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0019,
+   "bbox_m": [
+    0.005,
+    0.0085,
+    0.005
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0779,
+    0.3447
+   ]
+  }
+ ],
+ "notes": [
+  "Each camera sees one column of two plates from 116 mm: about 99 degrees of diagonal field, so the 'macro' optics have to be wide-angle; a third and fourth camera, or a longer module, would ease it.",
+  "Reagent volumes the catalog does not state are split evenly from 75 % of the reservoir item's mass.",
+  "Fluid pack: 3 reagent bags in 3 layers (79 x 119 x 69 mm), every port on a front edge.",
+  "The catalog gives 1.61 kg for structure and containment; as an aluminium box that is a 0.76 mm skin on 0.48 kg of posts and shelves.",
+  "The grapple fixture stands 26 mm proud of the front panel, into the bay opening; everything else is inside the bay envelope."
+ ]
+}

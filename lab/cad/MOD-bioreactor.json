@@ -1,0 +1,2854 @@
+{
+ "name": "MOD-bioreactor",
+ "experiment": "Bioreactor for tissue engineering and biomanufacturing",
+ "bay": "L",
+ "envelope_m": [
+  0.313,
+  0.1913,
+  0.3652
+ ],
+ "interior_m": [
+  0.31,
+  0.1883,
+  0.3622
+ ],
+ "module_kg": 5.55,
+ "assigned_kg": 5.55,
+ "fits": true,
+ "height_used_m": 0.246,
+ "height_free_m": 0.1162,
+ "fill": 0.221,
+ "inside_envelope": true,
+ "clashes": [],
+ "decks": [
+  {
+   "deck": "A",
+   "z_m": 0.0,
+   "h_m": 0.044,
+   "holds": [
+    "controller and data storage",
+    "glucose/lactate flow sensor",
+    "2 micro-pumps, 8 valves on a manifold",
+    "gas exchanger and bubble trap"
+   ]
+  },
+  {
+   "deck": "B",
+   "z_m": 0.046,
+   "h_m": 0.2,
+   "holds": [
+    "perfusion bioreactor: 4 chambers, camera",
+    "fluid pack",
+    "insulated aliquot pocket (4 C)",
+    "optical sensor reader"
+   ]
+  }
+ ],
+ "housing": {
+  "kg": 1.1,
+  "skin_mm_aluminium": 0.52,
+  "from": "Containment frame, tubing manifold and seals"
+ },
+ "thermal": {
+  "kg": 0,
+  "thermoelectric_in_module": false,
+  "from": "bay thermoelectric block; cold wall from the housing mass"
+ },
+ "lines": 8,
+ "harness_runs": 3,
+ "com_m": [
+  -0.0243,
+  -0.0179,
+  0.0969
+ ],
+ "inertia_kgm2": [
+  [
+   0.05436,
+   -0.00244,
+   0.00469
+  ],
+  [
+   -0.00244,
+   0.08209,
+   0.0005
+  ],
+  [
+   0.00469,
+   0.0005,
+   0.0528
+  ]
+ ],
+ "items": [
+  {
+   "item": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.6,
+   "as": [
+    "chambers"
+   ]
+  },
+  {
+   "item": "Medium reservoir (about 250 ml, filled) and waste bag",
+   "kg": 0.6,
+   "as": [
+    "bags"
+   ]
+  },
+  {
+   "item": "Fixative, RNA stabilizer and rinse-buffer reservoirs",
+   "kg": 0.35,
+   "as": [
+    "bags"
+   ]
+  },
+  {
+   "item": "2 micro pumps and 8 pinch valves",
+   "kg": 0.5,
+   "as": [
+    "pumps"
+   ]
+  },
+  {
+   "item": "Silicone membrane gas exchanger and bubble trap",
+   "kg": 0.2,
+   "as": [
+    "gas_exchanger"
+   ]
+  },
+  {
+   "item": "Optical pH and dissolved-oxygen sensor spots with reader",
+   "kg": 0.35,
+   "as": [
+    "reader"
+   ]
+  },
+  {
+   "item": "Glucose/lactate flow sensor",
+   "kg": 0.2,
+   "as": [
+    "flow_sensor"
+   ]
+  },
+  {
+   "item": "Compact camera with LED (brightfield and fluorescence)",
+   "kg": 0.8,
+   "as": [
+    "camera"
+   ]
+  },
+  {
+   "item": "Per-chamber thermoelectric cold pads and insulated aliquot pocket (4 C zone)",
+   "kg": 0.5,
+   "as": [
+    "cold_pads",
+    "aliquot_pocket"
+   ]
+  },
+  {
+   "item": "Controller and data electronics",
+   "kg": 0.35,
+   "as": [
+    "avionics"
+   ]
+  },
+  {
+   "item": "Containment frame, tubing manifold and seals",
+   "kg": 1.1,
+   "as": [
+    "shell"
+   ]
+  }
+ ],
+ "components": [
+  {
+   "name": "controller and data storage",
+   "deck": "A",
+   "kg": 0.35,
+   "box_m": [
+    -0.145,
+    -0.0242,
+    0.0015,
+    -0.0145,
+    0.0709,
+    0.0295
+   ],
+   "from": [
+    "Controller and data electronics"
+   ]
+  },
+  {
+   "name": "glucose/lactate flow sensor",
+   "deck": "A",
+   "kg": 0.2,
+   "box_m": [
+    -0.009,
+    -0.0822,
+    0.0015,
+    0.099,
+    -0.005,
+    0.0215
+   ],
+   "from": [
+    "Glucose/lactate flow sensor"
+   ]
+  },
+  {
+   "name": "2 micro-pumps, 8 valves on a manifold",
+   "deck": "A",
+   "kg": 0.5,
+   "box_m": [
+    -0.145,
+    -0.0822,
+    0.0015,
+    -0.025,
+    -0.0322,
+    0.0395
+   ],
+   "from": [
+    "2 micro pumps and 8 pinch valves"
+   ]
+  },
+  {
+   "name": "gas exchanger and bubble trap",
+   "deck": "A",
+   "kg": 0.2,
+   "box_m": [
+    -0.009,
+    0.0028,
+    0.0015,
+    0.084,
+    0.0268,
+    0.0315
+   ],
+   "from": [
+    "Silicone membrane gas exchanger and bubble trap"
+   ]
+  },
+  {
+   "name": "perfusion bioreactor: 4 chambers, camera",
+   "deck": "B",
+   "kg": 1.55,
+   "box_m": [
+    -0.145,
+    -0.0822,
+    0.0475,
+    -0.045,
+    0.0248,
+    0.2415
+   ],
+   "from": [
+    "4 perfusion chambers with scaffolds and constructs",
+    "Compact camera with LED (brightfield and fluorescence)",
+    "Per-chamber thermoelectric cold pads and insulated aliquot pocket (4 C zone)"
+   ]
+  },
+  {
+   "name": "fluid pack",
+   "deck": "B",
+   "kg": 0.95,
+   "box_m": [
+    -0.041,
+    -0.0822,
+    0.0475,
+    0.0563,
+    0.0718,
+    0.1445
+   ],
+   "from": [
+    "Fixative, RNA stabilizer and rinse-buffer reservoirs",
+    "Medium reservoir (about 250 ml, filled) and waste bag"
+   ]
+  },
+  {
+   "name": "insulated aliquot pocket (4 C)",
+   "deck": "B",
+   "kg": 0.35,
+   "box_m": [
+    0.061,
+    -0.0822,
+    0.0475,
+    0.141,
+    -0.0222,
+    0.0975
+   ],
+   "from": [
+    "Per-chamber thermoelectric cold pads and insulated aliquot pocket (4 C zone)"
+   ]
+  },
+  {
+   "name": "optical sensor reader",
+   "deck": "B",
+   "kg": 0.35,
+   "box_m": [
+    0.061,
+    -0.0182,
+    0.0475,
+    0.121,
+    0.0168,
+    0.0785
+   ],
+   "from": [
+    "Optical pH and dissolved-oxygen sensor spots with reader"
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "part": "controller enclosure (boards, data storage)",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Controller and data electronics",
+   "kg": 0.315,
+   "bbox_m": [
+    0.1306,
+    0.087,
+    0.028
+   ],
+   "centre_m": [
+    -0.0797,
+    0.0194,
+    0.0155
+   ]
+  },
+  {
+   "part": "connector 1",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Controller and data electronics",
+   "kg": 0.0175,
+   "bbox_m": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "centre_m": [
+    -0.125,
+    0.0669,
+    0.0155
+   ]
+  },
+  {
+   "part": "connector 2",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Controller and data electronics",
+   "kg": 0.0175,
+   "bbox_m": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "centre_m": [
+    -0.103,
+    0.0669,
+    0.0155
+   ]
+  },
+  {
+   "part": "glucose/lactate flow sensor",
+   "role": "sensor",
+   "component": "glucose/lactate flow sensor",
+   "from": "Glucose/lactate flow sensor",
+   "kg": 0.2,
+   "bbox_m": [
+    0.108,
+    0.0772,
+    0.02
+   ],
+   "centre_m": [
+    0.045,
+    -0.0436,
+    0.0115
+   ]
+  },
+  {
+   "part": "fluid manifold",
+   "role": "pump",
+   "component": "2 micro-pumps, 8 valves on a manifold",
+   "from": "2 micro pumps and 8 pinch valves",
+   "kg": 0.15,
+   "bbox_m": [
+    0.12,
+    0.05,
+    0.012
+   ],
+   "centre_m": [
+    -0.085,
+    -0.0572,
+    0.0075
+   ]
+  },
+  {
+   "part": "micro-pump 1",
+   "role": "pump",
+   "component": "2 micro-pumps, 8 valves on a manifold",
+   "from": "2 micro pumps and 8 pinch valves",
+   "kg": 0.125,
+   "bbox_m": [
+    0.02,
+    0.02,
+    0.026
+   ],
+   "centre_m": [
+    -0.124,
+    -0.0572,
+    0.0265
+   ]
+  },
+  {
+   "part": "micro-pump 2",
+   "role": "pump",
+   "component": "2 micro-pumps, 8 valves on a manifold",
+   "from": "2 micro pumps and 8 pinch valves",
+   "kg": 0.125,
+   "bbox_m": [
+    0.02,
+    0.02,
+    0.026
+   ],
+   "centre_m": [
+    -0.098,
+    -0.0572,
+    0.0265
+   ]
+  },
+  {
+   "part": "valve 1",
+   "role": "pump",
+   "component": "2 micro-pumps, 8 valves on a manifold",
+   "from": "2 micro pumps and 8 pinch valves",
+   "kg": 0.0125,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    -0.0785,
+    -0.0692,
+    0.0215
+   ]
+  },
+  {
+   "part": "valve 2",
+   "role": "pump",
+   "component": "2 micro-pumps, 8 valves on a manifold",
+   "from": "2 micro pumps and 8 pinch valves",
+   "kg": 0.0125,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    -0.0785,
+    -0.0452,
+    0.0215
+   ]
+  },
+  {
+   "part": "valve 3",
+   "role": "pump",
+   "component": "2 micro-pumps, 8 valves on a manifold",
+   "from": "2 micro pumps and 8 pinch valves",
+   "kg": 0.0125,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    -0.0655,
+    -0.0692,
+    0.0215
+   ]
+  },
+  {
+   "part": "valve 4",
+   "role": "pump",
+   "component": "2 micro-pumps, 8 valves on a manifold",
+   "from": "2 micro pumps and 8 pinch valves",
+   "kg": 0.0125,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    -0.0655,
+    -0.0452,
+    0.0215
+   ]
+  },
+  {
+   "part": "valve 5",
+   "role": "pump",
+   "component": "2 micro-pumps, 8 valves on a manifold",
+   "from": "2 micro pumps and 8 pinch valves",
+   "kg": 0.0125,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    -0.0525,
+    -0.0692,
+    0.0215
+   ]
+  },
+  {
+   "part": "valve 6",
+   "role": "pump",
+   "component": "2 micro-pumps, 8 valves on a manifold",
+   "from": "2 micro pumps and 8 pinch valves",
+   "kg": 0.0125,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    -0.0525,
+    -0.0452,
+    0.0215
+   ]
+  },
+  {
+   "part": "valve 7",
+   "role": "pump",
+   "component": "2 micro-pumps, 8 valves on a manifold",
+   "from": "2 micro pumps and 8 pinch valves",
+   "kg": 0.0125,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    -0.0395,
+    -0.0692,
+    0.0215
+   ]
+  },
+  {
+   "part": "valve 8",
+   "role": "pump",
+   "component": "2 micro-pumps, 8 valves on a manifold",
+   "from": "2 micro pumps and 8 pinch valves",
+   "kg": 0.0125,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    -0.0395,
+    -0.0452,
+    0.0215
+   ]
+  },
+  {
+   "part": "manifold inlet",
+   "role": "pump",
+   "component": "2 micro-pumps, 8 valves on a manifold",
+   "from": "2 micro pumps and 8 pinch valves",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.0165
+   ]
+  },
+  {
+   "part": "manifold outlet",
+   "role": "pump",
+   "component": "2 micro-pumps, 8 valves on a manifold",
+   "from": "2 micro pumps and 8 pinch valves",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    -0.031,
+    -0.0572,
+    0.0165
+   ]
+  },
+  {
+   "part": "silicone membrane gas exchanger",
+   "role": "fluid",
+   "component": "gas exchanger and bubble trap",
+   "from": "Silicone membrane gas exchanger and bubble trap",
+   "kg": 0.14,
+   "bbox_m": [
+    0.07,
+    0.024,
+    0.024
+   ],
+   "centre_m": [
+    0.026,
+    0.0148,
+    0.0135
+   ]
+  },
+  {
+   "part": "bubble trap",
+   "role": "fluid",
+   "component": "gas exchanger and bubble trap",
+   "from": "Silicone membrane gas exchanger and bubble trap",
+   "kg": 0.06,
+   "bbox_m": [
+    0.016,
+    0.016,
+    0.024
+   ],
+   "centre_m": [
+    0.076,
+    0.0148,
+    0.0135
+   ]
+  },
+  {
+   "part": "gas exchanger inlet",
+   "role": "fluid",
+   "component": "gas exchanger and bubble trap",
+   "from": "Silicone membrane gas exchanger and bubble trap",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    -0.005,
+    0.0148,
+    0.0285
+   ]
+  },
+  {
+   "part": "chamber manifold plate",
+   "role": "experiment",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.12,
+   "bbox_m": [
+    0.1,
+    0.1,
+    0.008
+   ],
+   "centre_m": [
+    -0.095,
+    -0.0322,
+    0.0515
+   ]
+  },
+  {
+   "part": "cold pad 1",
+   "role": "experiment",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "Per-chamber thermoelectric cold pads and insulated aliquot pocket (4 C zone)",
+   "kg": 0.0375,
+   "bbox_m": [
+    0.036,
+    0.036,
+    0.003
+   ],
+   "centre_m": [
+    -0.12,
+    -0.0572,
+    0.057
+   ]
+  },
+  {
+   "part": "perfusion chamber 1",
+   "role": "sample",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.078,
+   "bbox_m": [
+    0.035,
+    0.035,
+    0.05
+   ],
+   "centre_m": [
+    -0.12,
+    -0.0572,
+    0.0835
+   ]
+  },
+  {
+   "part": "scaffold with construct 1",
+   "role": "sample",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.018,
+   "bbox_m": [
+    0.022,
+    0.022,
+    0.014
+   ],
+   "centre_m": [
+    -0.12,
+    -0.0572,
+    0.0835
+   ]
+  },
+  {
+   "part": "chamber cap 1",
+   "role": "sample",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.024,
+   "bbox_m": [
+    0.038,
+    0.038,
+    0.006
+   ],
+   "centre_m": [
+    -0.12,
+    -0.0572,
+    0.1115
+   ]
+  },
+  {
+   "part": "cold pad 3",
+   "role": "experiment",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "Per-chamber thermoelectric cold pads and insulated aliquot pocket (4 C zone)",
+   "kg": 0.0375,
+   "bbox_m": [
+    0.036,
+    0.036,
+    0.003
+   ],
+   "centre_m": [
+    -0.12,
+    -0.0072,
+    0.057
+   ]
+  },
+  {
+   "part": "perfusion chamber 3",
+   "role": "sample",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.078,
+   "bbox_m": [
+    0.035,
+    0.035,
+    0.05
+   ],
+   "centre_m": [
+    -0.12,
+    -0.0072,
+    0.0835
+   ]
+  },
+  {
+   "part": "scaffold with construct 3",
+   "role": "sample",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.018,
+   "bbox_m": [
+    0.022,
+    0.022,
+    0.014
+   ],
+   "centre_m": [
+    -0.12,
+    -0.0072,
+    0.0835
+   ]
+  },
+  {
+   "part": "chamber cap 3",
+   "role": "sample",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.024,
+   "bbox_m": [
+    0.038,
+    0.038,
+    0.006
+   ],
+   "centre_m": [
+    -0.12,
+    -0.0072,
+    0.1115
+   ]
+  },
+  {
+   "part": "cold pad 2",
+   "role": "experiment",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "Per-chamber thermoelectric cold pads and insulated aliquot pocket (4 C zone)",
+   "kg": 0.0375,
+   "bbox_m": [
+    0.036,
+    0.036,
+    0.003
+   ],
+   "centre_m": [
+    -0.07,
+    -0.0572,
+    0.057
+   ]
+  },
+  {
+   "part": "perfusion chamber 2",
+   "role": "sample",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.078,
+   "bbox_m": [
+    0.035,
+    0.035,
+    0.05
+   ],
+   "centre_m": [
+    -0.07,
+    -0.0572,
+    0.0835
+   ]
+  },
+  {
+   "part": "scaffold with construct 2",
+   "role": "sample",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.018,
+   "bbox_m": [
+    0.022,
+    0.022,
+    0.014
+   ],
+   "centre_m": [
+    -0.07,
+    -0.0572,
+    0.0835
+   ]
+  },
+  {
+   "part": "chamber cap 2",
+   "role": "sample",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.024,
+   "bbox_m": [
+    0.038,
+    0.038,
+    0.006
+   ],
+   "centre_m": [
+    -0.07,
+    -0.0572,
+    0.1115
+   ]
+  },
+  {
+   "part": "cold pad 4",
+   "role": "experiment",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "Per-chamber thermoelectric cold pads and insulated aliquot pocket (4 C zone)",
+   "kg": 0.0375,
+   "bbox_m": [
+    0.036,
+    0.036,
+    0.003
+   ],
+   "centre_m": [
+    -0.07,
+    -0.0072,
+    0.057
+   ]
+  },
+  {
+   "part": "perfusion chamber 4",
+   "role": "sample",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.078,
+   "bbox_m": [
+    0.035,
+    0.035,
+    0.05
+   ],
+   "centre_m": [
+    -0.07,
+    -0.0072,
+    0.0835
+   ]
+  },
+  {
+   "part": "scaffold with construct 4",
+   "role": "sample",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.018,
+   "bbox_m": [
+    0.022,
+    0.022,
+    0.014
+   ],
+   "centre_m": [
+    -0.07,
+    -0.0072,
+    0.0835
+   ]
+  },
+  {
+   "part": "chamber cap 4",
+   "role": "sample",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.024,
+   "bbox_m": [
+    0.038,
+    0.038,
+    0.006
+   ],
+   "centre_m": [
+    -0.07,
+    -0.0072,
+    0.1115
+   ]
+  },
+  {
+   "part": "camera post",
+   "role": "experiment",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "Compact camera with LED (brightfield and fluorescence)",
+   "kg": 0.096,
+   "bbox_m": [
+    0.012,
+    0.012,
+    0.186
+   ],
+   "centre_m": [
+    -0.051,
+    -0.0762,
+    0.1485
+   ]
+  },
+  {
+   "part": "camera arm",
+   "role": "experiment",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "Compact camera with LED (brightfield and fluorescence)",
+   "kg": 0.064,
+   "bbox_m": [
+    0.05,
+    0.012,
+    0.012
+   ],
+   "centre_m": [
+    -0.07,
+    -0.0762,
+    0.2355
+   ]
+  },
+  {
+   "part": "camera arm to centre",
+   "role": "experiment",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "Compact camera with LED (brightfield and fluorescence)",
+   "kg": 0.0,
+   "bbox_m": [
+    0.012,
+    0.05,
+    0.012
+   ],
+   "centre_m": [
+    -0.095,
+    -0.0572,
+    0.2355
+   ]
+  },
+  {
+   "part": "compact camera (brightfield and fluorescence)",
+   "role": "imaging",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "Compact camera with LED (brightfield and fluorescence)",
+   "kg": 0.544,
+   "bbox_m": [
+    0.04,
+    0.04,
+    0.04
+   ],
+   "centre_m": [
+    -0.095,
+    -0.0322,
+    0.2095
+   ]
+  },
+  {
+   "part": "LED ring",
+   "role": "experiment",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "Compact camera with LED (brightfield and fluorescence)",
+   "kg": 0.096,
+   "bbox_m": [
+    0.052,
+    0.052,
+    0.004
+   ],
+   "centre_m": [
+    -0.095,
+    -0.0322,
+    0.1875
+   ]
+  },
+  {
+   "part": "manifold port 1",
+   "role": "experiment",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0056,
+    0.007,
+    0.0056
+   ],
+   "centre_m": [
+    -0.115,
+    0.0213,
+    0.0515
+   ]
+  },
+  {
+   "part": "manifold port 2",
+   "role": "experiment",
+   "component": "perfusion bioreactor: 4 chambers, camera",
+   "from": "4 perfusion chambers with scaffolds and constructs",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0056,
+    0.007,
+    0.0056
+   ],
+   "centre_m": [
+    -0.075,
+    0.0213,
+    0.0515
+   ]
+  },
+  {
+   "part": "Medium (250 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Medium reservoir (about 250 ml, filled) and waste bag",
+   "kg": 0.4968,
+   "bbox_m": [
+    0.0973,
+    0.146,
+    0.022
+   ],
+   "centre_m": [
+    0.0076,
+    -0.0092,
+    0.0645
+   ]
+  },
+  {
+   "part": "Medium port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Medium reservoir (about 250 ml, filled) and waste bag",
+   "kg": 0.0432,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.0076,
+    0.0678,
+    0.0645
+   ]
+  },
+  {
+   "part": "Fixative (87 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fixative, RNA stabilizer and rinse-buffer reservoirs",
+   "kg": 0.1073,
+   "bbox_m": [
+    0.0576,
+    0.0864,
+    0.022
+   ],
+   "centre_m": [
+    -0.0122,
+    0.0206,
+    0.0875
+   ]
+  },
+  {
+   "part": "Fixative port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fixative, RNA stabilizer and rinse-buffer reservoirs",
+   "kg": 0.0093,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    -0.0122,
+    0.0678,
+    0.0875
+   ]
+  },
+  {
+   "part": "RNA stabilizer (87 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fixative, RNA stabilizer and rinse-buffer reservoirs",
+   "kg": 0.1073,
+   "bbox_m": [
+    0.0576,
+    0.0864,
+    0.022
+   ],
+   "centre_m": [
+    -0.0122,
+    0.0206,
+    0.1105
+   ]
+  },
+  {
+   "part": "RNA stabilizer port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fixative, RNA stabilizer and rinse-buffer reservoirs",
+   "kg": 0.0093,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    -0.0122,
+    0.0678,
+    0.1105
+   ]
+  },
+  {
+   "part": "rinse-buffer (87 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fixative, RNA stabilizer and rinse-buffer reservoirs",
+   "kg": 0.1073,
+   "bbox_m": [
+    0.0576,
+    0.0864,
+    0.022
+   ],
+   "centre_m": [
+    -0.0122,
+    0.0206,
+    0.1335
+   ]
+  },
+  {
+   "part": "rinse-buffer port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fixative, RNA stabilizer and rinse-buffer reservoirs",
+   "kg": 0.0093,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    -0.0122,
+    0.0678,
+    0.1335
+   ]
+  },
+  {
+   "part": "waste bag (empty at launch, 338 mL capacity), under the reagent bags",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Medium reservoir (about 250 ml, filled) and waste bag",
+   "kg": 0.054,
+   "bbox_m": [
+    0.0973,
+    0.146,
+    0.005
+   ],
+   "centre_m": [
+    0.0076,
+    -0.0092,
+    0.05
+   ]
+  },
+  {
+   "part": "waste bag port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Medium reservoir (about 250 ml, filled) and waste bag",
+   "kg": 0.006,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.0463,
+    0.0678,
+    0.05
+   ]
+  },
+  {
+   "part": "insulated aliquot pocket",
+   "role": "store",
+   "component": "insulated aliquot pocket (4 C)",
+   "from": "Per-chamber thermoelectric cold pads and insulated aliquot pocket (4 C zone)",
+   "kg": 0.245,
+   "bbox_m": [
+    0.08,
+    0.06,
+    0.05
+   ],
+   "centre_m": [
+    0.101,
+    -0.0522,
+    0.0725
+   ]
+  },
+  {
+   "part": "pocket cold plate",
+   "role": "store",
+   "component": "insulated aliquot pocket (4 C)",
+   "from": "Per-chamber thermoelectric cold pads and insulated aliquot pocket (4 C zone)",
+   "kg": 0.105,
+   "bbox_m": [
+    0.06,
+    0.04,
+    0.004
+   ],
+   "centre_m": [
+    0.101,
+    -0.0522,
+    0.0595
+   ]
+  },
+  {
+   "part": "optical O2/pH reader",
+   "role": "sensor",
+   "component": "optical sensor reader",
+   "from": "Optical pH and dissolved-oxygen sensor spots with reader",
+   "kg": 0.315,
+   "bbox_m": [
+    0.06,
+    0.035,
+    0.025
+   ],
+   "centre_m": [
+    0.091,
+    -0.0007,
+    0.06
+   ]
+  },
+  {
+   "part": "reader fibre 1",
+   "role": "sensor",
+   "component": "optical sensor reader",
+   "from": "Optical pH and dissolved-oxygen sensor spots with reader",
+   "kg": 0.0175,
+   "bbox_m": [
+    0.003,
+    0.003,
+    0.006
+   ],
+   "centre_m": [
+    0.081,
+    -0.0007,
+    0.0755
+   ]
+  },
+  {
+   "part": "reader fibre 2",
+   "role": "sensor",
+   "component": "optical sensor reader",
+   "from": "Optical pH and dissolved-oxygen sensor spots with reader",
+   "kg": 0.0175,
+   "bbox_m": [
+    0.003,
+    0.003,
+    0.006
+   ],
+   "centre_m": [
+    0.101,
+    -0.0007,
+    0.0755
+   ]
+  },
+  {
+   "part": "bottom panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.0841,
+   "bbox_m": [
+    0.313,
+    0.1913,
+    0.0015
+   ],
+   "centre_m": [
+    0.0,
+    0.0,
+    0.0008
+   ]
+  },
+  {
+   "part": "top panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.0841,
+   "bbox_m": [
+    0.313,
+    0.1913,
+    0.0015
+   ],
+   "centre_m": [
+    0.0,
+    0.0,
+    0.3645
+   ]
+  },
+  {
+   "part": "side panel L",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.0981,
+   "bbox_m": [
+    0.0015,
+    0.1913,
+    0.3622
+   ],
+   "centre_m": [
+    -0.1558,
+    0.0,
+    0.1826
+   ]
+  },
+  {
+   "part": "side panel R",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.0981,
+   "bbox_m": [
+    0.0015,
+    0.1913,
+    0.3622
+   ],
+   "centre_m": [
+    0.1558,
+    0.0,
+    0.1826
+   ]
+  },
+  {
+   "part": "back panel (bay interface)",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.1605,
+   "bbox_m": [
+    0.31,
+    0.0015,
+    0.3622
+   ],
+   "centre_m": [
+    0.0,
+    -0.0949,
+    0.1826
+   ]
+  },
+  {
+   "part": "front panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.1605,
+   "bbox_m": [
+    0.31,
+    0.0015,
+    0.3622
+   ],
+   "centre_m": [
+    0.0,
+    0.0949,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 1",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.0289,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    -0.151,
+    -0.0802,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 2",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.0289,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    -0.151,
+    0.0702,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 3",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.0289,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    0.151,
+    -0.0802,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 4",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.0289,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    0.151,
+    0.0702,
+    0.1826
+   ]
+  },
+  {
+   "part": "shelf 1",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.2145,
+   "bbox_m": [
+    0.31,
+    0.1583,
+    0.002
+   ],
+   "centre_m": [
+    0.0,
+    -0.005,
+    0.0465
+   ]
+  },
+  {
+   "part": "cold wall (to the bay's thermoelectric block)",
+   "role": "thermal",
+   "component": "housing",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.0385,
+   "bbox_m": [
+    0.29,
+    0.004,
+    0.3522
+   ],
+   "centre_m": [
+    0.0,
+    -0.0922,
+    0.1826
+   ]
+  },
+  {
+   "part": "blind-mate connector: power, data, video",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.0231,
+   "bbox_m": [
+    0.05,
+    0.01,
+    0.022
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0892,
+    0.3447
+   ]
+  },
+  {
+   "part": "grapple fixture base (Dexter-L)",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.0231,
+   "bbox_m": [
+    0.07,
+    0.004,
+    0.07
+   ],
+   "centre_m": [
+    0.0,
+    0.0977,
+    0.2614
+   ]
+  },
+  {
+   "part": "grapple fixture pin",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.0,
+   "bbox_m": [
+    0.016,
+    0.022,
+    0.016
+   ],
+   "centre_m": [
+    0.0,
+    0.1107,
+    0.2614
+   ]
+  },
+  {
+   "part": "status LEDs",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.0,
+   "bbox_m": [
+    0.018,
+    0.002,
+    0.006
+   ],
+   "centre_m": [
+    -0.1205,
+    0.0967,
+    0.0438
+   ]
+  },
+  {
+   "part": "label plate",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment frame, tubing manifold and seals",
+   "kg": 0.0,
+   "bbox_m": [
+    0.09,
+    0.001,
+    0.025
+   ],
+   "centre_m": [
+    0.0915,
+    0.0962,
+    0.049
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.0076,
+    0.0746,
+    0.0645
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0065,
+    0.0032
+   ],
+   "centre_m": [
+    0.0076,
+    0.0775,
+    0.0645
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0252
+   ],
+   "centre_m": [
+    0.0076,
+    0.0792,
+    0.0535
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.1499,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0657,
+    0.0792,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1395,
+    0.0032
+   ],
+   "centre_m": [
+    -0.139,
+    0.011,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0222
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.033
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0122,
+    0.0746,
+    0.0875
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0099,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0122,
+    0.0792,
+    0.0875
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0482
+   ],
+   "centre_m": [
+    -0.0122,
+    0.0826,
+    0.065
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.13,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0756,
+    0.0826,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1429,
+    0.0032
+   ],
+   "centre_m": [
+    -0.139,
+    0.0127,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0222
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.033
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0122,
+    0.0746,
+    0.1105
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0133,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0122,
+    0.0809,
+    0.1105
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0712
+   ],
+   "centre_m": [
+    -0.0122,
+    0.086,
+    0.0765
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.13,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0756,
+    0.086,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1463,
+    0.0032
+   ],
+   "centre_m": [
+    -0.139,
+    0.0144,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0222
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.033
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0122,
+    0.0746,
+    0.1335
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0167,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0122,
+    0.0826,
+    0.1335
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0942
+   ],
+   "centre_m": [
+    -0.0122,
+    0.0894,
+    0.088
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.13,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0756,
+    0.0894,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1497,
+    0.0032
+   ],
+   "centre_m": [
+    -0.139,
+    0.0161,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0222
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.033
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    -0.139,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to gas exchanger and bubble trap run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    -0.031,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to gas exchanger and bubble trap run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0222
+   ],
+   "centre_m": [
+    -0.031,
+    -0.0572,
+    0.033
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to gas exchanger and bubble trap run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1395,
+    0.0032
+   ],
+   "centre_m": [
+    -0.031,
+    0.011,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to gas exchanger and bubble trap run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0292,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.018,
+    0.0792,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to gas exchanger and bubble trap run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0675,
+    0.0032
+   ],
+   "centre_m": [
+    -0.005,
+    0.047,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to gas exchanger and bubble trap run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0102
+   ],
+   "centre_m": [
+    -0.005,
+    0.0148,
+    0.039
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to gas exchanger and bubble trap run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    -0.005,
+    0.0148,
+    0.0343
+   ]
+  },
+  {
+   "part": "line: gas exchanger and bubble trap to perfusion bioreactor: 4 chambers run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.076,
+    0.0148,
+    0.0343
+   ]
+  },
+  {
+   "part": "line: gas exchanger and bubble trap to perfusion bioreactor: 4 chambers run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0102
+   ],
+   "centre_m": [
+    0.076,
+    0.0148,
+    0.039
+   ]
+  },
+  {
+   "part": "line: gas exchanger and bubble trap to perfusion bioreactor: 4 chambers run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0709,
+    0.0032
+   ],
+   "centre_m": [
+    0.076,
+    0.0487,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: gas exchanger and bubble trap to perfusion bioreactor: 4 chambers run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0122
+   ],
+   "centre_m": [
+    0.076,
+    0.0826,
+    0.047
+   ]
+  },
+  {
+   "part": "line: gas exchanger and bubble trap to perfusion bioreactor: 4 chambers run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.1942,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0195,
+    0.0826,
+    0.0515
+   ]
+  },
+  {
+   "part": "line: gas exchanger and bubble trap to perfusion bioreactor: 4 chambers run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0569,
+    0.0032
+   ],
+   "centre_m": [
+    -0.115,
+    0.0557,
+    0.0515
+   ]
+  },
+  {
+   "part": "line: gas exchanger and bubble trap to perfusion bioreactor: 4 chambers run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.115,
+    0.0276,
+    0.0515
+   ]
+  },
+  {
+   "part": "line: perfusion bioreactor: 4 chambers to glucose/lactate flow sensor run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.075,
+    0.0276,
+    0.0515
+   ]
+  },
+  {
+   "part": "line: perfusion bioreactor: 4 chambers to glucose/lactate flow sensor run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0603,
+    0.0032
+   ],
+   "centre_m": [
+    -0.075,
+    0.0574,
+    0.0515
+   ]
+  },
+  {
+   "part": "line: perfusion bioreactor: 4 chambers to glucose/lactate flow sensor run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0122
+   ],
+   "centre_m": [
+    -0.075,
+    0.086,
+    0.047
+   ]
+  },
+  {
+   "part": "line: perfusion bioreactor: 4 chambers to glucose/lactate flow sensor run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0732,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.04,
+    0.086,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: perfusion bioreactor: 4 chambers to glucose/lactate flow sensor run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1327,
+    0.0032
+   ],
+   "centre_m": [
+    -0.005,
+    0.0212,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: perfusion bioreactor: 4 chambers to glucose/lactate flow sensor run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0202
+   ],
+   "centre_m": [
+    -0.005,
+    -0.0436,
+    0.034
+   ]
+  },
+  {
+   "part": "line: perfusion bioreactor: 4 chambers to glucose/lactate flow sensor run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    -0.005,
+    -0.0436,
+    0.0243
+   ]
+  },
+  {
+   "part": "line: glucose/lactate flow sensor to fluid pack run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.095,
+    -0.0436,
+    0.0243
+   ]
+  },
+  {
+   "part": "line: glucose/lactate flow sensor to fluid pack run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0202
+   ],
+   "centre_m": [
+    0.095,
+    -0.0436,
+    0.034
+   ]
+  },
+  {
+   "part": "line: glucose/lactate flow sensor to fluid pack run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1361,
+    0.0032
+   ],
+   "centre_m": [
+    0.095,
+    0.0229,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: glucose/lactate flow sensor to fluid pack run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0107
+   ],
+   "centre_m": [
+    0.095,
+    0.0894,
+    0.0463
+   ]
+  },
+  {
+   "part": "line: glucose/lactate flow sensor to fluid pack run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0519,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0706,
+    0.0894,
+    0.05
+   ]
+  },
+  {
+   "part": "line: glucose/lactate flow sensor to fluid pack run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0167,
+    0.0032
+   ],
+   "centre_m": [
+    0.0463,
+    0.0826,
+    0.05
+   ]
+  },
+  {
+   "part": "line: glucose/lactate flow sensor to fluid pack run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.0463,
+    0.0746,
+    0.05
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to perfusion bioreactor: 4 chambers run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    -0.125,
+    0.0741,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to perfusion bioreactor: 4 chambers run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.0203,
+    0.005
+   ],
+   "centre_m": [
+    -0.125,
+    0.0825,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to perfusion bioreactor: 4 chambers run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.225
+   ],
+   "centre_m": [
+    -0.125,
+    0.0902,
+    0.1255
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to perfusion bioreactor: 4 chambers run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.079,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.088,
+    0.0902,
+    0.2355
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to perfusion bioreactor: 4 chambers run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.1613,
+    0.005
+   ],
+   "centre_m": [
+    -0.051,
+    0.012,
+    0.2355
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to perfusion bioreactor: 4 chambers run 6",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    -0.051,
+    -0.0669,
+    0.2355
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    -0.125,
+    0.0741,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.0203,
+    0.005
+   ],
+   "centre_m": [
+    -0.125,
+    0.0825,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.032
+   ],
+   "centre_m": [
+    -0.125,
+    0.0902,
+    0.029
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.045,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.105,
+    0.0902,
+    0.0425
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.1713,
+    0.005
+   ],
+   "centre_m": [
+    -0.085,
+    0.007,
+    0.0425
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 6",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.03
+   ],
+   "centre_m": [
+    -0.085,
+    -0.0762,
+    0.03
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 7",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0065
+   ],
+   "centre_m": [
+    -0.085,
+    -0.0762,
+    0.0168
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0155
+   ],
+   "centre_m": [
+    -0.0295,
+    0.0194,
+    0.0373
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.1005,
+    0.005
+   ],
+   "centre_m": [
+    -0.0295,
+    -0.0284,
+    0.0425
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0856,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.0697,
+    -0.0762,
+    0.0425
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.3072
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0762,
+    0.1936
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.0085,
+    0.005
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0779,
+    0.3447
+   ]
+  }
+ ],
+ "notes": [
+  "One camera sees all four chambers from 75 mm (about 90 degrees diagonal); per-chamber close-ups would need a moving camera, which is not in the catalog's mass.",
+  "Reagent volumes the catalog does not state are split evenly from 75 % of the reservoir item's mass. The waste bag holds the spent medium and washes; fixatives and stabilisers stay in the wells and come home.",
+  "Fluid pack: 4 reagent bags in 4 layers (97 x 146 x 92 mm), every port on a front edge.",
+  "The waste bag lies under the reagent bags and fills the room they free: they hold 512 mL, it needs 338 mL.",
+  "The catalog gives 1.10 kg for structure and containment; as an aluminium box that is a 0.52 mm skin on 0.33 kg of posts and shelves.",
+  "The grapple fixture stands 26 mm proud of the front panel, into the bay opening; everything else is inside the bay envelope."
+ ]
+}

@@ -1,0 +1,3095 @@
+{
+ "name": "MOD-antibiotic-resistance",
+ "experiment": "Antibiotic resistance of pathogenic bacteria",
+ "bay": "L",
+ "envelope_m": [
+  0.313,
+  0.1913,
+  0.3652
+ ],
+ "interior_m": [
+  0.31,
+  0.1883,
+  0.3622
+ ],
+ "module_kg": 5.8,
+ "assigned_kg": 5.8,
+ "fits": true,
+ "height_used_m": 0.1571,
+ "height_free_m": 0.2052,
+ "fill": 0.151,
+ "inside_envelope": true,
+ "clashes": [],
+ "decks": [
+  {
+   "deck": "A",
+   "z_m": 0.0,
+   "h_m": 0.0849,
+   "holds": [
+    "controller and data storage",
+    "fluid pack"
+   ]
+  },
+  {
+   "deck": "B",
+   "z_m": 0.0869,
+   "h_m": 0.0702,
+   "holds": [
+    "cassette in the optical readout",
+    "sensor pack",
+    "dosimeter",
+    "peristaltic pump, 12-port rotary valve on a manifold"
+   ]
+  }
+ ],
+ "housing": {
+  "kg": 0.637,
+  "skin_mm_aluminium": 0.32,
+  "from": "Triple-containment shell, seals, pressure and humidity sensors"
+ },
+ "thermal": {
+  "kg": 0.7,
+  "thermoelectric_in_module": true,
+  "from": "25 W thermoelectric block and heat spreader"
+ },
+ "lines": 10,
+ "harness_runs": 3,
+ "com_m": [
+  0.0051,
+  -0.0135,
+  0.0966
+ ],
+ "inertia_kgm2": [
+  [
+   0.04807,
+   -0.00276,
+   0.00592
+  ],
+  [
+   -0.00276,
+   0.07287,
+   0.00765
+  ],
+  [
+   0.00592,
+   0.00765,
+   0.05474
+  ]
+ ],
+ "items": [
+  {
+   "item": "24-well sealed microfluidic cassette, filled with cells and medium",
+   "kg": 1.15,
+   "as": [
+    "cassette"
+   ]
+  },
+  {
+   "item": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.95,
+   "as": [
+    "bags"
+   ]
+  },
+  {
+   "item": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.8,
+   "as": [
+    "pumps"
+   ]
+  },
+  {
+   "item": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.75,
+   "as": [
+    "shell",
+    "sensors"
+   ]
+  },
+  {
+   "item": "25 W thermoelectric block and heat spreader",
+   "kg": 0.7,
+   "as": [
+    "thermal"
+   ]
+  },
+  {
+   "item": "Bay controller avionics and harness",
+   "kg": 0.55,
+   "as": [
+    "avionics",
+    "harness"
+   ]
+  },
+  {
+   "item": "Waste bag with chemical inactivation and absorbent secondary tray",
+   "kg": 0.45,
+   "as": [
+    "waste"
+   ]
+  },
+  {
+   "item": "Optical readout board: 24 LED/photodiode pairs at 570 and 600 nm",
+   "kg": 0.25,
+   "as": [
+    "readout"
+   ]
+  },
+  {
+   "item": "Active silicon dosimeter and passive TLD holder",
+   "kg": 0.2,
+   "as": [
+    "dosimeter"
+   ]
+  }
+ ],
+ "components": [
+  {
+   "name": "controller and data storage",
+   "deck": "A",
+   "kg": 0.44,
+   "box_m": [
+    -0.145,
+    -0.0342,
+    0.0015,
+    0.0014,
+    0.0714,
+    0.0295
+   ],
+   "from": [
+    "Bay controller avionics and harness"
+   ]
+  },
+  {
+   "name": "fluid pack",
+   "deck": "A",
+   "kg": 1.4,
+   "box_m": [
+    0.007,
+    -0.0502,
+    0.0015,
+    0.1306,
+    0.0709,
+    0.0794
+   ],
+   "from": [
+    "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+    "Waste bag with chemical inactivation and absorbent secondary tray"
+   ]
+  },
+  {
+   "name": "cassette in the optical readout",
+   "deck": "B",
+   "kg": 1.4,
+   "box_m": [
+    -0.145,
+    -0.0822,
+    0.0944,
+    0.0027,
+    0.0233,
+    0.1526
+   ],
+   "from": [
+    "Optical readout board: 24 LED/photodiode pairs at 570 and 600 nm",
+    "24-well sealed microfluidic cassette, filled with cells and medium"
+   ]
+  },
+  {
+   "name": "sensor pack",
+   "deck": "B",
+   "kg": 0.112,
+   "box_m": [
+    0.007,
+    -0.0822,
+    0.0884,
+    0.0842,
+    -0.027,
+    0.1164
+   ],
+   "from": [
+    "Triple-containment shell, seals, pressure and humidity sensors"
+   ]
+  },
+  {
+   "name": "dosimeter",
+   "deck": "B",
+   "kg": 0.2,
+   "box_m": [
+    0.089,
+    -0.0822,
+    0.0884,
+    0.143,
+    -0.0502,
+    0.1024
+   ],
+   "from": [
+    "Active silicon dosimeter and passive TLD holder"
+   ]
+  },
+  {
+   "name": "peristaltic pump, 12-port rotary valve on a manifold",
+   "deck": "B",
+   "kg": 0.8,
+   "box_m": [
+    0.007,
+    -0.0222,
+    0.0884,
+    0.139,
+    0.0373,
+    0.1284
+   ],
+   "from": [
+    "Peristaltic pump and 12-port valve manifold"
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "part": "controller enclosure (boards, data storage)",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Bay controller avionics and harness",
+   "kg": 0.396,
+   "bbox_m": [
+    0.1464,
+    0.0976,
+    0.028
+   ],
+   "centre_m": [
+    -0.0718,
+    0.0146,
+    0.0155
+   ]
+  },
+  {
+   "part": "connector 1",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Bay controller avionics and harness",
+   "kg": 0.022,
+   "bbox_m": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "centre_m": [
+    -0.125,
+    0.0674,
+    0.0155
+   ]
+  },
+  {
+   "part": "connector 2",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Bay controller avionics and harness",
+   "kg": 0.022,
+   "bbox_m": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "centre_m": [
+    -0.103,
+    0.0674,
+    0.0155
+   ]
+  },
+  {
+   "part": "medium (150 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.4767,
+   "bbox_m": [
+    0.0754,
+    0.1131,
+    0.022
+   ],
+   "centre_m": [
+    0.0447,
+    0.0064,
+    0.0225
+   ]
+  },
+  {
+   "part": "medium port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0415,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.0447,
+    0.0669,
+    0.0225
+   ]
+  },
+  {
+   "part": "RNA stabiliser (30 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0953,
+   "bbox_m": [
+    0.0382,
+    0.0574,
+    0.0171
+   ],
+   "centre_m": [
+    0.1055,
+    0.0342,
+    0.02
+   ]
+  },
+  {
+   "part": "RNA stabiliser port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0083,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.1055,
+    0.0669,
+    0.02
+   ]
+  },
+  {
+   "part": "alamarBlue (25 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0795,
+   "bbox_m": [
+    0.036,
+    0.054,
+    0.0161
+   ],
+   "centre_m": [
+    0.025,
+    0.0359,
+    0.0425
+   ]
+  },
+  {
+   "part": "alamarBlue port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0069,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.025,
+    0.0669,
+    0.0425
+   ]
+  },
+  {
+   "part": "glutaraldehyde (20 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0636,
+   "bbox_m": [
+    0.0334,
+    0.0501,
+    0.0149
+   ],
+   "centre_m": [
+    0.0637,
+    0.0379,
+    0.042
+   ]
+  },
+  {
+   "part": "glutaraldehyde port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0055,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.0637,
+    0.0669,
+    0.042
+   ]
+  },
+  {
+   "part": "lysis buffer (20 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0636,
+   "bbox_m": [
+    0.0334,
+    0.0501,
+    0.0149
+   ],
+   "centre_m": [
+    0.0237,
+    0.0379,
+    0.059
+   ]
+  },
+  {
+   "part": "lysis buffer port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0055,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.0237,
+    0.0669,
+    0.059
+   ]
+  },
+  {
+   "part": "gentamicin 1 (10 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0318,
+   "bbox_m": [
+    0.0265,
+    0.0398,
+    0.0118
+   ],
+   "centre_m": [
+    0.0577,
+    0.043,
+    0.0575
+   ]
+  },
+  {
+   "part": "gentamicin 1 port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0028,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.0577,
+    0.0669,
+    0.0575
+   ]
+  },
+  {
+   "part": "gentamicin 2 (10 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0318,
+   "bbox_m": [
+    0.0265,
+    0.0398,
+    0.0118
+   ],
+   "centre_m": [
+    0.0202,
+    0.043,
+    0.0734
+   ]
+  },
+  {
+   "part": "gentamicin 2 port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0028,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.0202,
+    0.0669,
+    0.0734
+   ]
+  },
+  {
+   "part": "gentamicin 3 (10 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0318,
+   "bbox_m": [
+    0.0265,
+    0.0398,
+    0.0118
+   ],
+   "centre_m": [
+    0.0508,
+    0.043,
+    0.0734
+   ]
+  },
+  {
+   "part": "gentamicin 3 port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Reagent reservoirs: medium 150 mL, 3 gentamicin stocks 10 mL each, alamarBlue 25 mL, RNA stabiliser 30 mL, glutaraldehyde 20 mL, lysis buffer 20 mL",
+   "kg": 0.0028,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.0508,
+    0.0669,
+    0.0734
+   ]
+  },
+  {
+   "part": "waste bag (empty at launch, 170 mL capacity), under the reagent bags",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Waste bag with chemical inactivation and absorbent secondary tray",
+   "kg": 0.243,
+   "bbox_m": [
+    0.1176,
+    0.1131,
+    0.005
+   ],
+   "centre_m": [
+    0.0658,
+    0.0064,
+    0.008
+   ]
+  },
+  {
+   "part": "waste bag port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Waste bag with chemical inactivation and absorbent secondary tray",
+   "kg": 0.027,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.1146,
+    0.0669,
+    0.008
+   ]
+  },
+  {
+   "part": "absorbent secondary tray",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Waste bag with chemical inactivation and absorbent secondary tray",
+   "kg": 0.18,
+   "bbox_m": [
+    0.1236,
+    0.1191,
+    0.01
+   ],
+   "centre_m": [
+    0.0688,
+    0.0094,
+    0.0065
+   ]
+  },
+  {
+   "part": "photodiode board, 24 photodiodes",
+   "role": "imaging",
+   "component": "cassette in the optical readout",
+   "from": "Optical readout board: 24 LED/photodiode pairs at 570 and 600 nm",
+   "kg": 0.105,
+   "bbox_m": [
+    0.1478,
+    0.1055,
+    0.0016
+   ],
+   "centre_m": [
+    -0.0711,
+    -0.0294,
+    0.0952
+   ]
+  },
+  {
+   "part": "photodiodes",
+   "role": "imaging",
+   "component": "cassette in the optical readout",
+   "from": "Optical readout board: 24 LED/photodiode pairs at 570 and 600 nm",
+   "kg": 0.0075,
+   "bbox_m": [
+    0.1005,
+    0.0619,
+    0.0015
+   ],
+   "centre_m": [
+    -0.0711,
+    -0.0294,
+    0.0967
+   ]
+  },
+  {
+   "part": "LED board, 24 LEDs at 570 and 600 nm",
+   "role": "imaging",
+   "component": "cassette in the optical readout",
+   "from": "Optical readout board: 24 LED/photodiode pairs at 570 and 600 nm",
+   "kg": 0.105,
+   "bbox_m": [
+    0.1478,
+    0.1055,
+    0.0016
+   ],
+   "centre_m": [
+    -0.0711,
+    -0.0294,
+    0.1518
+   ]
+  },
+  {
+   "part": "LEDs",
+   "role": "imaging",
+   "component": "cassette in the optical readout",
+   "from": "Optical readout board: 24 LED/photodiode pairs at 570 and 600 nm",
+   "kg": 0.0075,
+   "bbox_m": [
+    0.1005,
+    0.0619,
+    0.002
+   ],
+   "centre_m": [
+    -0.0711,
+    -0.0294,
+    0.15
+   ]
+  },
+  {
+   "part": "board spacer 1",
+   "role": "imaging",
+   "component": "cassette in the optical readout",
+   "from": "Optical readout board: 24 LED/photodiode pairs at 570 and 600 nm",
+   "kg": 0.0063,
+   "bbox_m": [
+    0.0056,
+    0.0056,
+    0.0566
+   ],
+   "centre_m": [
+    -0.141,
+    -0.0782,
+    0.1227
+   ]
+  },
+  {
+   "part": "board spacer 2",
+   "role": "imaging",
+   "component": "cassette in the optical readout",
+   "from": "Optical readout board: 24 LED/photodiode pairs at 570 and 600 nm",
+   "kg": 0.0063,
+   "bbox_m": [
+    0.0056,
+    0.0056,
+    0.0566
+   ],
+   "centre_m": [
+    -0.141,
+    0.0193,
+    0.1227
+   ]
+  },
+  {
+   "part": "board spacer 3",
+   "role": "imaging",
+   "component": "cassette in the optical readout",
+   "from": "Optical readout board: 24 LED/photodiode pairs at 570 and 600 nm",
+   "kg": 0.0063,
+   "bbox_m": [
+    0.0056,
+    0.0056,
+    0.0566
+   ],
+   "centre_m": [
+    -0.0013,
+    -0.0782,
+    0.1227
+   ]
+  },
+  {
+   "part": "board spacer 4",
+   "role": "imaging",
+   "component": "cassette in the optical readout",
+   "from": "Optical readout board: 24 LED/photodiode pairs at 570 and 600 nm",
+   "kg": 0.0063,
+   "bbox_m": [
+    0.0056,
+    0.0056,
+    0.0566
+   ],
+   "centre_m": [
+    -0.0013,
+    0.0193,
+    0.1227
+   ]
+  },
+  {
+   "part": "cassette, 24 wells (SBS footprint, 19.3 mm pitch)",
+   "role": "sample",
+   "component": "cassette in the optical readout",
+   "from": "24-well sealed microfluidic cassette, filled with cells and medium",
+   "kg": 0.943,
+   "bbox_m": [
+    0.1278,
+    0.0855,
+    0.045
+   ],
+   "centre_m": [
+    -0.0711,
+    -0.0294,
+    0.1225
+   ]
+  },
+  {
+   "part": "culture in the wells",
+   "role": "sample",
+   "component": "cassette in the optical readout",
+   "from": "24-well sealed microfluidic cassette, filled with cells and medium",
+   "kg": 0.0345,
+   "bbox_m": [
+    0.1117,
+    0.0731,
+    0.0078
+   ],
+   "centre_m": [
+    -0.0711,
+    -0.0294,
+    0.1315
+   ]
+  },
+  {
+   "part": "cassette lid, sealed and gas-permeable",
+   "role": "sample",
+   "component": "cassette in the optical readout",
+   "from": "24-well sealed microfluidic cassette, filled with cells and medium",
+   "kg": 0.138,
+   "bbox_m": [
+    0.1278,
+    0.0855,
+    0.002
+   ],
+   "centre_m": [
+    -0.0711,
+    -0.0294,
+    0.146
+   ]
+  },
+  {
+   "part": "cassette fluid port 1",
+   "role": "sample",
+   "component": "cassette in the optical readout",
+   "from": "24-well sealed microfluidic cassette, filled with cells and medium",
+   "kg": 0.0172,
+   "bbox_m": [
+    0.0056,
+    0.007,
+    0.0056
+   ],
+   "centre_m": [
+    -0.1031,
+    0.0168,
+    0.1225
+   ]
+  },
+  {
+   "part": "cassette fluid port 2",
+   "role": "sample",
+   "component": "cassette in the optical readout",
+   "from": "24-well sealed microfluidic cassette, filled with cells and medium",
+   "kg": 0.0172,
+   "bbox_m": [
+    0.0056,
+    0.007,
+    0.0056
+   ],
+   "centre_m": [
+    -0.0392,
+    0.0168,
+    0.1225
+   ]
+  },
+  {
+   "part": "sensor pack",
+   "role": "sensor",
+   "component": "sensor pack",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.1012,
+   "bbox_m": [
+    0.0772,
+    0.0552,
+    0.022
+   ],
+   "centre_m": [
+    0.0456,
+    -0.0546,
+    0.0994
+   ]
+  },
+  {
+   "part": "sensor pack: head 1",
+   "role": "sensor",
+   "component": "sensor pack",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0056,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.006
+   ],
+   "centre_m": [
+    0.0327,
+    -0.0546,
+    0.1134
+   ]
+  },
+  {
+   "part": "sensor pack: head 2",
+   "role": "sensor",
+   "component": "sensor pack",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0056,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.006
+   ],
+   "centre_m": [
+    0.0585,
+    -0.0546,
+    0.1134
+   ]
+  },
+  {
+   "part": "active silicon dosimeter",
+   "role": "sensor",
+   "component": "dosimeter",
+   "from": "Active silicon dosimeter and passive TLD holder",
+   "kg": 0.14,
+   "bbox_m": [
+    0.04,
+    0.032,
+    0.012
+   ],
+   "centre_m": [
+    0.109,
+    -0.0662,
+    0.0944
+   ]
+  },
+  {
+   "part": "passive TLD holder",
+   "role": "sensor",
+   "component": "dosimeter",
+   "from": "Active silicon dosimeter and passive TLD holder",
+   "kg": 0.06,
+   "bbox_m": [
+    0.012,
+    0.012,
+    0.014
+   ],
+   "centre_m": [
+    0.137,
+    -0.0662,
+    0.0954
+   ]
+  },
+  {
+   "part": "fluid manifold",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.24,
+   "bbox_m": [
+    0.132,
+    0.05,
+    0.012
+   ],
+   "centre_m": [
+    0.073,
+    0.0028,
+    0.0944
+   ]
+  },
+  {
+   "part": "12-port rotary valve",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.12,
+   "bbox_m": [
+    0.04,
+    0.04,
+    0.02
+   ],
+   "centre_m": [
+    0.04,
+    0.0028,
+    0.1104
+   ]
+  },
+  {
+   "part": "rotary valve port 1",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.003,
+    0.003
+   ],
+   "centre_m": [
+    0.0625,
+    0.0028,
+    0.1104
+   ]
+  },
+  {
+   "part": "rotary valve port 2",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0058,
+    0.0051,
+    0.003
+   ],
+   "centre_m": [
+    0.0595,
+    0.0141,
+    0.1104
+   ]
+  },
+  {
+   "part": "rotary valve port 3",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0051,
+    0.0058,
+    0.003
+   ],
+   "centre_m": [
+    0.0512,
+    0.0223,
+    0.1104
+   ]
+  },
+  {
+   "part": "rotary valve port 4",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.003,
+    0.005,
+    0.003
+   ],
+   "centre_m": [
+    0.04,
+    0.0253,
+    0.1104
+   ]
+  },
+  {
+   "part": "rotary valve port 5",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0051,
+    0.0058,
+    0.003
+   ],
+   "centre_m": [
+    0.0287,
+    0.0223,
+    0.1104
+   ]
+  },
+  {
+   "part": "rotary valve port 6",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0058,
+    0.0051,
+    0.003
+   ],
+   "centre_m": [
+    0.0205,
+    0.0141,
+    0.1104
+   ]
+  },
+  {
+   "part": "rotary valve port 7",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.003,
+    0.003
+   ],
+   "centre_m": [
+    0.0175,
+    0.0028,
+    0.1104
+   ]
+  },
+  {
+   "part": "rotary valve port 8",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0058,
+    0.0051,
+    0.003
+   ],
+   "centre_m": [
+    0.0205,
+    -0.0084,
+    0.1104
+   ]
+  },
+  {
+   "part": "rotary valve port 9",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0051,
+    0.0058,
+    0.003
+   ],
+   "centre_m": [
+    0.0287,
+    -0.0166,
+    0.1104
+   ]
+  },
+  {
+   "part": "rotary valve port 10",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.003,
+    0.005,
+    0.003
+   ],
+   "centre_m": [
+    0.04,
+    -0.0197,
+    0.1104
+   ]
+  },
+  {
+   "part": "rotary valve port 11",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0051,
+    0.0058,
+    0.003
+   ],
+   "centre_m": [
+    0.0512,
+    -0.0166,
+    0.1104
+   ]
+  },
+  {
+   "part": "rotary valve port 12",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0058,
+    0.0051,
+    0.003
+   ],
+   "centre_m": [
+    0.0595,
+    -0.0084,
+    0.1104
+   ]
+  },
+  {
+   "part": "peristaltic pump housing",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.32,
+   "bbox_m": [
+    0.06,
+    0.045,
+    0.04
+   ],
+   "centre_m": [
+    0.095,
+    0.0028,
+    0.1084
+   ]
+  },
+  {
+   "part": "peristaltic roller head",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.12,
+   "bbox_m": [
+    0.036,
+    0.012,
+    0.036
+   ],
+   "centre_m": [
+    0.095,
+    0.0313,
+    0.1104
+   ]
+  },
+  {
+   "part": "manifold inlet",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.1034
+   ]
+  },
+  {
+   "part": "manifold outlet",
+   "role": "pump",
+   "component": "peristaltic pump, 12-port rotary valve on a manifold",
+   "from": "Peristaltic pump and 12-port valve manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    0.133,
+    0.0028,
+    0.1034
+   ]
+  },
+  {
+   "part": "bottom panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0515,
+   "bbox_m": [
+    0.313,
+    0.1913,
+    0.0015
+   ],
+   "centre_m": [
+    0.0,
+    0.0,
+    0.0008
+   ]
+  },
+  {
+   "part": "top panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0515,
+   "bbox_m": [
+    0.313,
+    0.1913,
+    0.0015
+   ],
+   "centre_m": [
+    0.0,
+    0.0,
+    0.3645
+   ]
+  },
+  {
+   "part": "side panel L",
+   "role": "housing",
+   "component": "housing",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.06,
+   "bbox_m": [
+    0.0015,
+    0.1913,
+    0.3622
+   ],
+   "centre_m": [
+    -0.1558,
+    0.0,
+    0.1826
+   ]
+  },
+  {
+   "part": "side panel R",
+   "role": "housing",
+   "component": "housing",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.06,
+   "bbox_m": [
+    0.0015,
+    0.1913,
+    0.3622
+   ],
+   "centre_m": [
+    0.1558,
+    0.0,
+    0.1826
+   ]
+  },
+  {
+   "part": "back panel (bay interface)",
+   "role": "housing",
+   "component": "housing",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0982,
+   "bbox_m": [
+    0.31,
+    0.0015,
+    0.3622
+   ],
+   "centre_m": [
+    0.0,
+    -0.0949,
+    0.1826
+   ]
+  },
+  {
+   "part": "front panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0982,
+   "bbox_m": [
+    0.31,
+    0.0015,
+    0.3622
+   ],
+   "centre_m": [
+    0.0,
+    0.0949,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 1",
+   "role": "housing",
+   "component": "housing",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0167,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    -0.151,
+    -0.0802,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 2",
+   "role": "housing",
+   "component": "housing",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0167,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    -0.151,
+    0.0702,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 3",
+   "role": "housing",
+   "component": "housing",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0167,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    0.151,
+    -0.0802,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 4",
+   "role": "housing",
+   "component": "housing",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0167,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    0.151,
+    0.0702,
+    0.1826
+   ]
+  },
+  {
+   "part": "shelf 1",
+   "role": "housing",
+   "component": "housing",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.1243,
+   "bbox_m": [
+    0.31,
+    0.1583,
+    0.002
+   ],
+   "centre_m": [
+    0.0,
+    -0.005,
+    0.0874
+   ]
+  },
+  {
+   "part": "cold wall (to the bay's thermoelectric block)",
+   "role": "thermal",
+   "component": "housing",
+   "from": "25 W thermoelectric block and heat spreader",
+   "kg": 0.42,
+   "bbox_m": [
+    0.29,
+    0.004,
+    0.3522
+   ],
+   "centre_m": [
+    0.0,
+    -0.0922,
+    0.1826
+   ]
+  },
+  {
+   "part": "thermoelectric tile 1",
+   "role": "thermal",
+   "component": "housing",
+   "from": "25 W thermoelectric block and heat spreader",
+   "kg": 0.0437,
+   "bbox_m": [
+    0.03,
+    0.003,
+    0.03
+   ],
+   "centre_m": [
+    -0.06,
+    -0.0887,
+    0.1205
+   ]
+  },
+  {
+   "part": "thermoelectric tile 2",
+   "role": "thermal",
+   "component": "housing",
+   "from": "25 W thermoelectric block and heat spreader",
+   "kg": 0.0437,
+   "bbox_m": [
+    0.03,
+    0.003,
+    0.03
+   ],
+   "centre_m": [
+    -0.02,
+    -0.0887,
+    0.1205
+   ]
+  },
+  {
+   "part": "thermoelectric tile 3",
+   "role": "thermal",
+   "component": "housing",
+   "from": "25 W thermoelectric block and heat spreader",
+   "kg": 0.0437,
+   "bbox_m": [
+    0.03,
+    0.003,
+    0.03
+   ],
+   "centre_m": [
+    0.02,
+    -0.0887,
+    0.1205
+   ]
+  },
+  {
+   "part": "thermoelectric tile 4",
+   "role": "thermal",
+   "component": "housing",
+   "from": "25 W thermoelectric block and heat spreader",
+   "kg": 0.0437,
+   "bbox_m": [
+    0.03,
+    0.003,
+    0.03
+   ],
+   "centre_m": [
+    0.06,
+    -0.0887,
+    0.1205
+   ]
+  },
+  {
+   "part": "heat spreader",
+   "role": "thermal",
+   "component": "housing",
+   "from": "25 W thermoelectric block and heat spreader",
+   "kg": 0.105,
+   "bbox_m": [
+    0.16,
+    0.003,
+    0.1
+   ],
+   "centre_m": [
+    0.0,
+    -0.0857,
+    0.1205
+   ]
+  },
+  {
+   "part": "blind-mate connector: power, data, video",
+   "role": "interface",
+   "component": "interface",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0134,
+   "bbox_m": [
+    0.05,
+    0.01,
+    0.022
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0892,
+    0.3447
+   ]
+  },
+  {
+   "part": "grapple fixture base (Dexter-L)",
+   "role": "interface",
+   "component": "interface",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0134,
+   "bbox_m": [
+    0.07,
+    0.004,
+    0.07
+   ],
+   "centre_m": [
+    0.0,
+    0.0977,
+    0.2614
+   ]
+  },
+  {
+   "part": "grapple fixture pin",
+   "role": "interface",
+   "component": "interface",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0,
+   "bbox_m": [
+    0.016,
+    0.022,
+    0.016
+   ],
+   "centre_m": [
+    0.0,
+    0.1107,
+    0.2614
+   ]
+  },
+  {
+   "part": "status LEDs",
+   "role": "interface",
+   "component": "interface",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0,
+   "bbox_m": [
+    0.018,
+    0.002,
+    0.006
+   ],
+   "centre_m": [
+    -0.1205,
+    0.0967,
+    0.0438
+   ]
+  },
+  {
+   "part": "label plate",
+   "role": "interface",
+   "component": "interface",
+   "from": "Triple-containment shell, seals, pressure and humidity sensors",
+   "kg": 0.0,
+   "bbox_m": [
+    0.09,
+    0.001,
+    0.025
+   ],
+   "centre_m": [
+    0.0915,
+    0.0962,
+    0.049
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.0447,
+    0.0737,
+    0.0225
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0074,
+    0.0032
+   ],
+   "centre_m": [
+    0.0447,
+    0.077,
+    0.0225
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1363
+   ],
+   "centre_m": [
+    0.0447,
+    0.0792,
+    0.089
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0349,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0288,
+    0.0792,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0795,
+    0.0032
+   ],
+   "centre_m": [
+    0.013,
+    0.041,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0484
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.133
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.1092
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.1055,
+    0.0737,
+    0.02
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0108,
+    0.0032
+   ],
+   "centre_m": [
+    0.1055,
+    0.0787,
+    0.02
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1387
+   ],
+   "centre_m": [
+    0.1055,
+    0.0826,
+    0.0878
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0957,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0592,
+    0.0826,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0829,
+    0.0032
+   ],
+   "centre_m": [
+    0.013,
+    0.0427,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0484
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.133
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.1092
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.025,
+    0.0737,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0142,
+    0.0032
+   ],
+   "centre_m": [
+    0.025,
+    0.0804,
+    0.0425
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1162
+   ],
+   "centre_m": [
+    0.025,
+    0.086,
+    0.0991
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0152,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.019,
+    0.086,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0863,
+    0.0032
+   ],
+   "centre_m": [
+    0.013,
+    0.0444,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0484
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.133
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.1092
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.0637,
+    0.0737,
+    0.042
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0176,
+    0.0032
+   ],
+   "centre_m": [
+    0.0637,
+    0.0821,
+    0.042
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1168
+   ],
+   "centre_m": [
+    0.0637,
+    0.0894,
+    0.0988
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0539,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0383,
+    0.0894,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0897,
+    0.0032
+   ],
+   "centre_m": [
+    0.013,
+    0.0461,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0484
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.133
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.1092
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.0237,
+    0.0737,
+    0.059
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0074,
+    0.0032
+   ],
+   "centre_m": [
+    0.0237,
+    0.077,
+    0.059
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0997
+   ],
+   "centre_m": [
+    0.0237,
+    0.0792,
+    0.1073
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0139,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0183,
+    0.0792,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0795,
+    0.0032
+   ],
+   "centre_m": [
+    0.013,
+    0.041,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0484
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.133
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.1092
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.0577,
+    0.0737,
+    0.0575
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0108,
+    0.0032
+   ],
+   "centre_m": [
+    0.0577,
+    0.0787,
+    0.0575
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1013
+   ],
+   "centre_m": [
+    0.0577,
+    0.0826,
+    0.1065
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0479,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0353,
+    0.0826,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0829,
+    0.0032
+   ],
+   "centre_m": [
+    0.013,
+    0.0427,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0484
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.133
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.1092
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.0202,
+    0.0737,
+    0.0734
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0142,
+    0.0032
+   ],
+   "centre_m": [
+    0.0202,
+    0.0804,
+    0.0734
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0853
+   ],
+   "centre_m": [
+    0.0202,
+    0.086,
+    0.1145
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0105,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0166,
+    0.086,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0863,
+    0.0032
+   ],
+   "centre_m": [
+    0.013,
+    0.0444,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0484
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.133
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.1092
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.0508,
+    0.0737,
+    0.0734
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0176,
+    0.0032
+   ],
+   "centre_m": [
+    0.0508,
+    0.0821,
+    0.0734
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0853
+   ],
+   "centre_m": [
+    0.0508,
+    0.0894,
+    0.1145
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.041,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0319,
+    0.0894,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0897,
+    0.0032
+   ],
+   "centre_m": [
+    0.013,
+    0.0461,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0484
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.133
+   ]
+  },
+  {
+   "part": "line: fluid pack to peristaltic pump run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.013,
+    0.0028,
+    0.1092
+   ]
+  },
+  {
+   "part": "line: peristaltic pump to cassette in the optical readout run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.133,
+    0.0028,
+    0.1092
+   ]
+  },
+  {
+   "part": "line: peristaltic pump to cassette in the optical readout run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0484
+   ],
+   "centre_m": [
+    0.133,
+    0.0028,
+    0.133
+   ]
+  },
+  {
+   "part": "line: peristaltic pump to cassette in the optical readout run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0795,
+    0.0032
+   ],
+   "centre_m": [
+    0.133,
+    0.041,
+    0.1556
+   ]
+  },
+  {
+   "part": "line: peristaltic pump to cassette in the optical readout run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0363
+   ],
+   "centre_m": [
+    0.133,
+    0.0792,
+    0.139
+   ]
+  },
+  {
+   "part": "line: peristaltic pump to cassette in the optical readout run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.2393,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0149,
+    0.0792,
+    0.1225
+   ]
+  },
+  {
+   "part": "line: peristaltic pump to cassette in the optical readout run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.058,
+    0.0032
+   ],
+   "centre_m": [
+    -0.1031,
+    0.0517,
+    0.1225
+   ]
+  },
+  {
+   "part": "line: peristaltic pump to cassette in the optical readout run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.1031,
+    0.0231,
+    0.1225
+   ]
+  },
+  {
+   "part": "line: cassette in the optical readout to fluid pack run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0392,
+    0.0231,
+    0.1225
+   ]
+  },
+  {
+   "part": "line: cassette in the optical readout to fluid pack run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0614,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0392,
+    0.0534,
+    0.1225
+   ]
+  },
+  {
+   "part": "line: cassette in the optical readout to fluid pack run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1177
+   ],
+   "centre_m": [
+    -0.0392,
+    0.0826,
+    0.0652
+   ]
+  },
+  {
+   "part": "line: cassette in the optical readout to fluid pack run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.157,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0377,
+    0.0826,
+    0.008
+   ]
+  },
+  {
+   "part": "line: cassette in the optical readout to fluid pack run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0108,
+    0.0032
+   ],
+   "centre_m": [
+    0.1146,
+    0.0787,
+    0.008
+   ]
+  },
+  {
+   "part": "line: cassette in the optical readout to fluid pack run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.1146,
+    0.0737,
+    0.008
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to cassette in the optical readout run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0008,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    -0.125,
+    0.0747,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to cassette in the optical readout run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0018,
+   "bbox_m": [
+    0.005,
+    0.0197,
+    0.005
+   ],
+   "centre_m": [
+    -0.125,
+    0.0828,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to cassette in the optical readout run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0071,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0839
+   ],
+   "centre_m": [
+    -0.125,
+    0.0902,
+    0.0549
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to cassette in the optical readout run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0014,
+   "bbox_m": [
+    0.015,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.13,
+    0.0902,
+    0.0944
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to cassette in the optical readout run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0058,
+   "bbox_m": [
+    0.005,
+    0.0678,
+    0.005
+   ],
+   "centre_m": [
+    -0.135,
+    0.0587,
+    0.0944
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to cassette in the optical readout run 6",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0008,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    -0.135,
+    0.0266,
+    0.0944
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to peristaltic pump run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0008,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    -0.125,
+    0.0747,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to peristaltic pump run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0018,
+   "bbox_m": [
+    0.005,
+    0.0197,
+    0.005
+   ],
+   "centre_m": [
+    -0.125,
+    0.0828,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to peristaltic pump run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0123,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.1451
+   ],
+   "centre_m": [
+    -0.125,
+    0.0902,
+    0.0855
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to peristaltic pump run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0172,
+   "bbox_m": [
+    0.203,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.026,
+    0.0902,
+    0.1556
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to peristaltic pump run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0095,
+   "bbox_m": [
+    0.005,
+    0.1113,
+    0.005
+   ],
+   "centre_m": [
+    0.073,
+    0.037,
+    0.1556
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to peristaltic pump run 6",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0048,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0562
+   ],
+   "centre_m": [
+    0.073,
+    -0.0162,
+    0.13
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to peristaltic pump run 7",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0008,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0065
+   ],
+   "centre_m": [
+    0.073,
+    -0.0162,
+    0.1036
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0048,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0564
+   ],
+   "centre_m": [
+    -0.0136,
+    0.0146,
+    0.0577
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0081,
+   "bbox_m": [
+    0.005,
+    0.0958,
+    0.005
+   ],
+   "centre_m": [
+    -0.0136,
+    -0.0308,
+    0.0834
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0086,
+   "bbox_m": [
+    0.1014,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.0618,
+    -0.0762,
+    0.0834
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0226,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.2664
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0762,
+    0.214
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0009,
+   "bbox_m": [
+    0.005,
+    0.0085,
+    0.005
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0779,
+    0.3447
+   ]
+  }
+ ],
+ "notes": [
+  "Each well sits between its own LED and photodiode, as in EcAMSat's optical card: no microscope, no moving parts.",
+  "Reagent volumes the catalog does not state are split evenly from 75 % of the reservoir item's mass. The waste bag holds the spent medium and washes; fixatives and stabilisers stay in the wells and come home.",
+  "Fluid pack: 8 reagent bags in 4 layers (118 x 113 x 69 mm), every port on a front edge.",
+  "The waste bag lies under the reagent bags and fills the room they free: they hold 275 mL, it needs 170 mL.",
+  "The catalog gives 0.64 kg for structure and containment; as an aluminium box that is a 0.32 mm skin on 0.19 kg of posts and shelves. Thin: the bay rails have to carry the launch loads, or the module needs more structure mass.",
+  "The grapple fixture stands 26 mm proud of the front panel, into the bay opening; everything else is inside the bay envelope."
+ ]
+}

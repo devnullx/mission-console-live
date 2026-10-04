@@ -1,0 +1,2076 @@
+{
+ "name": "MOD-protein-crystals",
+ "experiment": "Protein crystallization for drug formulation",
+ "bay": "L",
+ "envelope_m": [
+  0.313,
+  0.1913,
+  0.3652
+ ],
+ "interior_m": [
+  0.31,
+  0.1883,
+  0.3622
+ ],
+ "module_kg": 5.4,
+ "assigned_kg": 5.4,
+ "fits": true,
+ "height_used_m": 0.227,
+ "height_free_m": 0.1352,
+ "fill": 0.36,
+ "inside_envelope": true,
+ "clashes": [],
+ "decks": [
+  {
+   "deck": "A",
+   "z_m": 0.0,
+   "h_m": 0.034,
+   "holds": [
+    "fluid pack",
+    "controller and data storage",
+    "counter-diffusion capillary rack"
+   ]
+  },
+  {
+   "deck": "B",
+   "z_m": 0.036,
+   "h_m": 0.191,
+   "holds": [
+    "imaging stack: inverted microscope, XY stage, sample",
+    "2 micro-pumps, 4 valves on a manifold",
+    "sensor pack"
+   ]
+  }
+ ],
+ "housing": {
+  "kg": 0.6,
+  "skin_mm_aluminium": 0.3,
+  "from": "Primary containment housing and seals"
+ },
+ "thermal": {
+  "kg": 0.5,
+  "thermoelectric_in_module": true,
+  "from": "Thermal interface plate and insulation to the bay thermoelectric block"
+ },
+ "lines": 3,
+ "harness_runs": 3,
+ "com_m": [
+  0.0008,
+  -0.0197,
+  0.1002
+ ],
+ "inertia_kgm2": [
+  [
+   0.04688,
+   0.00239,
+   0.00539
+  ],
+  [
+   0.00239,
+   0.06989,
+   0.00199
+  ],
+  [
+   0.00539,
+   0.00199,
+   0.04935
+  ]
+ ],
+ "items": [
+  {
+   "item": "24-well crystallization cassette, filled (16 batch wells plus 8 counter-diffusion capillary positions)",
+   "kg": 0.8,
+   "as": [
+    "cassette"
+   ]
+  },
+  {
+   "item": "Counter-diffusion capillary rack with gel plugs",
+   "kg": 0.3,
+   "as": [
+    "capillary_rack"
+   ]
+  },
+  {
+   "item": "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold",
+   "kg": 1.1,
+   "as": [
+    "bags",
+    "pumps"
+   ]
+  },
+  {
+   "item": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 1.8,
+   "as": [
+    "microscope"
+   ]
+  },
+  {
+   "item": "Thermal interface plate and insulation to the bay thermoelectric block",
+   "kg": 0.5,
+   "as": [
+    "thermal"
+   ]
+  },
+  {
+   "item": "Primary containment housing and seals",
+   "kg": 0.6,
+   "as": [
+    "shell"
+   ]
+  },
+  {
+   "item": "Module controller, sensors and harness",
+   "kg": 0.3,
+   "as": [
+    "avionics",
+    "harness",
+    "sensors"
+   ]
+  }
+ ],
+ "components": [
+  {
+   "name": "fluid pack",
+   "deck": "A",
+   "kg": 0.605,
+   "box_m": [
+    -0.145,
+    -0.0762,
+    0.0015,
+    0.0444,
+    0.0709,
+    0.0235
+   ],
+   "from": [
+    "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold"
+   ]
+  },
+  {
+   "name": "controller and data storage",
+   "deck": "A",
+   "kg": 0.18,
+   "box_m": [
+    0.049,
+    -0.0002,
+    0.0015,
+    0.1426,
+    0.0703,
+    0.0295
+   ],
+   "from": [
+    "Module controller, sensors and harness"
+   ]
+  },
+  {
+   "name": "counter-diffusion capillary rack",
+   "deck": "A",
+   "kg": 0.3,
+   "box_m": [
+    0.049,
+    -0.0822,
+    0.0015,
+    0.139,
+    -0.0522,
+    0.0141
+   ],
+   "from": [
+    "Counter-diffusion capillary rack with gel plugs"
+   ]
+  },
+  {
+   "name": "imaging stack: inverted microscope, XY stage, sample",
+   "deck": "B",
+   "kg": 2.6,
+   "box_m": [
+    -0.145,
+    -0.0822,
+    0.0375,
+    0.0872,
+    0.0692,
+    0.2225
+   ],
+   "from": [
+    "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)"
+   ]
+  },
+  {
+   "name": "2 micro-pumps, 4 valves on a manifold",
+   "deck": "B",
+   "kg": 0.495,
+   "box_m": [
+    0.093,
+    -0.0822,
+    0.0375,
+    0.143,
+    0.0118,
+    0.0755
+   ],
+   "from": [
+    "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold"
+   ]
+  },
+  {
+   "name": "sensor pack",
+   "deck": "B",
+   "kg": 0.06,
+   "box_m": [
+    0.093,
+    0.0158,
+    0.0375,
+    0.1494,
+    0.0561,
+    0.0655
+   ],
+   "from": [
+    "Module controller, sensors and harness"
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "part": "protein (227 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold",
+   "kg": 0.2783,
+   "bbox_m": [
+    0.0927,
+    0.1391,
+    0.022
+   ],
+   "centre_m": [
+    -0.0987,
+    -0.0066,
+    0.0125
+   ]
+  },
+  {
+   "part": "protein port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold",
+   "kg": 0.0242,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    -0.0987,
+    0.0669,
+    0.0125
+   ]
+  },
+  {
+   "part": "precipitant (227 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold",
+   "kg": 0.2783,
+   "bbox_m": [
+    0.0927,
+    0.1391,
+    0.022
+   ],
+   "centre_m": [
+    -0.002,
+    -0.0066,
+    0.0125
+   ]
+  },
+  {
+   "part": "precipitant port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold",
+   "kg": 0.0242,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    -0.002,
+    0.0669,
+    0.0125
+   ]
+  },
+  {
+   "part": "controller enclosure (boards, data storage)",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Module controller, sensors and harness",
+   "kg": 0.162,
+   "bbox_m": [
+    0.0936,
+    0.0624,
+    0.028
+   ],
+   "centre_m": [
+    0.0958,
+    0.0311,
+    0.0155
+   ]
+  },
+  {
+   "part": "connector 1",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Module controller, sensors and harness",
+   "kg": 0.009,
+   "bbox_m": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "centre_m": [
+    0.069,
+    0.0663,
+    0.0155
+   ]
+  },
+  {
+   "part": "connector 2",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Module controller, sensors and harness",
+   "kg": 0.009,
+   "bbox_m": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "centre_m": [
+    0.091,
+    0.0663,
+    0.0155
+   ]
+  },
+  {
+   "part": "capillary rack with gel plugs",
+   "role": "sample",
+   "component": "counter-diffusion capillary rack",
+   "from": "Counter-diffusion capillary rack with gel plugs",
+   "kg": 0.21,
+   "bbox_m": [
+    0.09,
+    0.03,
+    0.01
+   ],
+   "centre_m": [
+    0.094,
+    -0.0672,
+    0.0065
+   ]
+  },
+  {
+   "part": "capillary 1",
+   "role": "sample",
+   "component": "counter-diffusion capillary rack",
+   "from": "Counter-diffusion capillary rack with gel plugs",
+   "kg": 0.0112,
+   "bbox_m": [
+    0.08,
+    0.0026,
+    0.0026
+   ],
+   "centre_m": [
+    0.094,
+    -0.0783,
+    0.0128
+   ]
+  },
+  {
+   "part": "capillary 2",
+   "role": "sample",
+   "component": "counter-diffusion capillary rack",
+   "from": "Counter-diffusion capillary rack with gel plugs",
+   "kg": 0.0112,
+   "bbox_m": [
+    0.08,
+    0.0026,
+    0.0026
+   ],
+   "centre_m": [
+    0.094,
+    -0.0751,
+    0.0128
+   ]
+  },
+  {
+   "part": "capillary 3",
+   "role": "sample",
+   "component": "counter-diffusion capillary rack",
+   "from": "Counter-diffusion capillary rack with gel plugs",
+   "kg": 0.0112,
+   "bbox_m": [
+    0.08,
+    0.0026,
+    0.0026
+   ],
+   "centre_m": [
+    0.094,
+    -0.0719,
+    0.0128
+   ]
+  },
+  {
+   "part": "capillary 4",
+   "role": "sample",
+   "component": "counter-diffusion capillary rack",
+   "from": "Counter-diffusion capillary rack with gel plugs",
+   "kg": 0.0112,
+   "bbox_m": [
+    0.08,
+    0.0026,
+    0.0026
+   ],
+   "centre_m": [
+    0.094,
+    -0.0687,
+    0.0128
+   ]
+  },
+  {
+   "part": "capillary 5",
+   "role": "sample",
+   "component": "counter-diffusion capillary rack",
+   "from": "Counter-diffusion capillary rack with gel plugs",
+   "kg": 0.0112,
+   "bbox_m": [
+    0.08,
+    0.0026,
+    0.0026
+   ],
+   "centre_m": [
+    0.094,
+    -0.0655,
+    0.0128
+   ]
+  },
+  {
+   "part": "capillary 6",
+   "role": "sample",
+   "component": "counter-diffusion capillary rack",
+   "from": "Counter-diffusion capillary rack with gel plugs",
+   "kg": 0.0112,
+   "bbox_m": [
+    0.08,
+    0.0026,
+    0.0026
+   ],
+   "centre_m": [
+    0.094,
+    -0.0623,
+    0.0128
+   ]
+  },
+  {
+   "part": "capillary 7",
+   "role": "sample",
+   "component": "counter-diffusion capillary rack",
+   "from": "Counter-diffusion capillary rack with gel plugs",
+   "kg": 0.0112,
+   "bbox_m": [
+    0.08,
+    0.0026,
+    0.0026
+   ],
+   "centre_m": [
+    0.094,
+    -0.0591,
+    0.0128
+   ]
+  },
+  {
+   "part": "capillary 8",
+   "role": "sample",
+   "component": "counter-diffusion capillary rack",
+   "from": "Counter-diffusion capillary rack with gel plugs",
+   "kg": 0.0112,
+   "bbox_m": [
+    0.08,
+    0.0026,
+    0.0026
+   ],
+   "centre_m": [
+    0.094,
+    -0.0559,
+    0.0128
+   ]
+  },
+  {
+   "part": "microscope base: optics, filter cubes, camera",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 0.9306,
+   "bbox_m": [
+    0.17,
+    0.12,
+    0.07
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.0725
+   ]
+  },
+  {
+   "part": "objective",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 0.0594,
+   "bbox_m": [
+    0.022,
+    0.022,
+    0.016
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.1155
+   ]
+  },
+  {
+   "part": "stage post 1",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 0.0,
+   "bbox_m": [
+    0.01,
+    0.01,
+    0.012
+   ],
+   "centre_m": [
+    -0.1039,
+    -0.0565,
+    0.1135
+   ]
+  },
+  {
+   "part": "stage post 2",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 0.0,
+   "bbox_m": [
+    0.01,
+    0.01,
+    0.012
+   ],
+   "centre_m": [
+    -0.1039,
+    0.0435,
+    0.1135
+   ]
+  },
+  {
+   "part": "stage post 3",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 0.0,
+   "bbox_m": [
+    0.01,
+    0.01,
+    0.012
+   ],
+   "centre_m": [
+    0.0461,
+    -0.0565,
+    0.1135
+   ]
+  },
+  {
+   "part": "stage post 4",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 0.0,
+   "bbox_m": [
+    0.01,
+    0.01,
+    0.012
+   ],
+   "centre_m": [
+    0.0461,
+    0.0435,
+    0.1135
+   ]
+  },
+  {
+   "part": "XY stage frame (travel 96.5 x 57.9 mm: every well over the objective)",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 0.243,
+   "bbox_m": [
+    0.2323,
+    0.1514,
+    0.008
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.1235
+   ]
+  },
+  {
+   "part": "stage carriage",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 0.108,
+   "bbox_m": [
+    0.1398,
+    0.0975,
+    0.005
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.13
+   ]
+  },
+  {
+   "part": "X stepper",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 0.0945,
+   "bbox_m": [
+    0.028,
+    0.02,
+    0.02
+   ],
+   "centre_m": [
+    -0.128,
+    -0.0065,
+    0.1095
+   ]
+  },
+  {
+   "part": "Y stepper",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 0.0945,
+   "bbox_m": [
+    0.02,
+    0.016,
+    0.02
+   ],
+   "centre_m": [
+    -0.0653,
+    -0.0742,
+    0.1095
+   ]
+  },
+  {
+   "part": "illumination column",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 0.081,
+   "bbox_m": [
+    0.016,
+    0.016,
+    0.095
+   ],
+   "centre_m": [
+    0.0752,
+    -0.0702,
+    0.175
+   ]
+  },
+  {
+   "part": "illumination arm",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 0.054,
+   "bbox_m": [
+    0.1121,
+    0.016,
+    0.012
+   ],
+   "centre_m": [
+    0.0232,
+    -0.0702,
+    0.2165
+   ]
+  },
+  {
+   "part": "arm to head",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 0.0,
+   "bbox_m": [
+    0.016,
+    0.0717,
+    0.012
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0423,
+    0.2165
+   ]
+  },
+  {
+   "part": "LED head, transmitted light",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope with XY stage (brightfield plus 2 fluorescence channels)",
+   "kg": 0.135,
+   "bbox_m": [
+    0.028,
+    0.028,
+    0.022
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.1995
+   ]
+  },
+  {
+   "part": "cassette, 24 wells (SBS footprint, 19.3 mm pitch)",
+   "role": "sample",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "24-well crystallization cassette, filled (16 batch wells plus 8 counter-diffusion capillary positions)",
+   "kg": 0.656,
+   "bbox_m": [
+    0.1278,
+    0.0855,
+    0.045
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.152
+   ]
+  },
+  {
+   "part": "culture in the wells",
+   "role": "sample",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "24-well crystallization cassette, filled (16 batch wells plus 8 counter-diffusion capillary positions)",
+   "kg": 0.024,
+   "bbox_m": [
+    0.1117,
+    0.0731,
+    0.0078
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.161
+   ]
+  },
+  {
+   "part": "cassette lid, sealed and gas-permeable",
+   "role": "sample",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "24-well crystallization cassette, filled (16 batch wells plus 8 counter-diffusion capillary positions)",
+   "kg": 0.096,
+   "bbox_m": [
+    0.1278,
+    0.0855,
+    0.002
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.1755
+   ]
+  },
+  {
+   "part": "cassette fluid port 1",
+   "role": "sample",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "24-well crystallization cassette, filled (16 batch wells plus 8 counter-diffusion capillary positions)",
+   "kg": 0.012,
+   "bbox_m": [
+    0.0056,
+    0.007,
+    0.0056
+   ],
+   "centre_m": [
+    -0.0608,
+    0.0398,
+    0.152
+   ]
+  },
+  {
+   "part": "cassette fluid port 2",
+   "role": "sample",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "24-well crystallization cassette, filled (16 batch wells plus 8 counter-diffusion capillary positions)",
+   "kg": 0.012,
+   "bbox_m": [
+    0.0056,
+    0.007,
+    0.0056
+   ],
+   "centre_m": [
+    0.003,
+    0.0398,
+    0.152
+   ]
+  },
+  {
+   "part": "fluid manifold",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold",
+   "kg": 0.1485,
+   "bbox_m": [
+    0.05,
+    0.094,
+    0.012
+   ],
+   "centre_m": [
+    0.118,
+    -0.0352,
+    0.0435
+   ]
+  },
+  {
+   "part": "micro-pump 1",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold",
+   "kg": 0.1238,
+   "bbox_m": [
+    0.02,
+    0.02,
+    0.026
+   ],
+   "centre_m": [
+    0.118,
+    -0.0612,
+    0.0625
+   ]
+  },
+  {
+   "part": "micro-pump 2",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold",
+   "kg": 0.1238,
+   "bbox_m": [
+    0.02,
+    0.02,
+    0.026
+   ],
+   "centre_m": [
+    0.118,
+    -0.0352,
+    0.0625
+   ]
+  },
+  {
+   "part": "valve 1",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold",
+   "kg": 0.0248,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    0.13,
+    -0.0157,
+    0.0575
+   ]
+  },
+  {
+   "part": "valve 2",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold",
+   "kg": 0.0248,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    0.106,
+    -0.0157,
+    0.0575
+   ]
+  },
+  {
+   "part": "valve 3",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold",
+   "kg": 0.0248,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    0.13,
+    -0.0027,
+    0.0575
+   ]
+  },
+  {
+   "part": "valve 4",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold",
+   "kg": 0.0248,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    0.106,
+    -0.0027,
+    0.0575
+   ]
+  },
+  {
+   "part": "manifold inlet",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    0.118,
+    -0.0762,
+    0.0525
+   ]
+  },
+  {
+   "part": "manifold outlet",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Fluidics: protein and precipitant reservoirs, micro-pumps, valves and manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    0.118,
+    0.0058,
+    0.0525
+   ]
+  },
+  {
+   "part": "sensor pack",
+   "role": "sensor",
+   "component": "sensor pack",
+   "from": "Module controller, sensors and harness",
+   "kg": 0.054,
+   "bbox_m": [
+    0.0564,
+    0.0403,
+    0.022
+   ],
+   "centre_m": [
+    0.1212,
+    0.036,
+    0.0485
+   ]
+  },
+  {
+   "part": "sensor pack: head 1",
+   "role": "sensor",
+   "component": "sensor pack",
+   "from": "Module controller, sensors and harness",
+   "kg": 0.003,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.006
+   ],
+   "centre_m": [
+    0.1118,
+    0.036,
+    0.0625
+   ]
+  },
+  {
+   "part": "sensor pack: head 2",
+   "role": "sensor",
+   "component": "sensor pack",
+   "from": "Module controller, sensors and harness",
+   "kg": 0.003,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.006
+   ],
+   "centre_m": [
+    0.1306,
+    0.036,
+    0.0625
+   ]
+  },
+  {
+   "part": "bottom panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0484,
+   "bbox_m": [
+    0.313,
+    0.1913,
+    0.0015
+   ],
+   "centre_m": [
+    0.0,
+    0.0,
+    0.0008
+   ]
+  },
+  {
+   "part": "top panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0484,
+   "bbox_m": [
+    0.313,
+    0.1913,
+    0.0015
+   ],
+   "centre_m": [
+    0.0,
+    0.0,
+    0.3645
+   ]
+  },
+  {
+   "part": "side panel L",
+   "role": "housing",
+   "component": "housing",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0565,
+   "bbox_m": [
+    0.0015,
+    0.1913,
+    0.3622
+   ],
+   "centre_m": [
+    -0.1558,
+    0.0,
+    0.1826
+   ]
+  },
+  {
+   "part": "side panel R",
+   "role": "housing",
+   "component": "housing",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0565,
+   "bbox_m": [
+    0.0015,
+    0.1913,
+    0.3622
+   ],
+   "centre_m": [
+    0.1558,
+    0.0,
+    0.1826
+   ]
+  },
+  {
+   "part": "back panel (bay interface)",
+   "role": "housing",
+   "component": "housing",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0925,
+   "bbox_m": [
+    0.31,
+    0.0015,
+    0.3622
+   ],
+   "centre_m": [
+    0.0,
+    -0.0949,
+    0.1826
+   ]
+  },
+  {
+   "part": "front panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0925,
+   "bbox_m": [
+    0.31,
+    0.0015,
+    0.3622
+   ],
+   "centre_m": [
+    0.0,
+    0.0949,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 1",
+   "role": "housing",
+   "component": "housing",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0158,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    -0.151,
+    -0.0802,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 2",
+   "role": "housing",
+   "component": "housing",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0158,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    -0.151,
+    0.0702,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 3",
+   "role": "housing",
+   "component": "housing",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0158,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    0.151,
+    -0.0802,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 4",
+   "role": "housing",
+   "component": "housing",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0158,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    0.151,
+    0.0702,
+    0.1826
+   ]
+  },
+  {
+   "part": "shelf 1",
+   "role": "housing",
+   "component": "housing",
+   "from": "Primary containment housing and seals",
+   "kg": 0.117,
+   "bbox_m": [
+    0.31,
+    0.1583,
+    0.002
+   ],
+   "centre_m": [
+    0.0,
+    -0.005,
+    0.0365
+   ]
+  },
+  {
+   "part": "cold wall (to the bay's thermoelectric block)",
+   "role": "thermal",
+   "component": "housing",
+   "from": "Thermal interface plate and insulation to the bay thermoelectric block",
+   "kg": 0.3,
+   "bbox_m": [
+    0.29,
+    0.004,
+    0.3522
+   ],
+   "centre_m": [
+    0.0,
+    -0.0922,
+    0.1826
+   ]
+  },
+  {
+   "part": "thermoelectric tile 1",
+   "role": "thermal",
+   "component": "housing",
+   "from": "Thermal interface plate and insulation to the bay thermoelectric block",
+   "kg": 0.0312,
+   "bbox_m": [
+    0.03,
+    0.003,
+    0.03
+   ],
+   "centre_m": [
+    -0.06,
+    -0.0887,
+    0.13
+   ]
+  },
+  {
+   "part": "thermoelectric tile 2",
+   "role": "thermal",
+   "component": "housing",
+   "from": "Thermal interface plate and insulation to the bay thermoelectric block",
+   "kg": 0.0312,
+   "bbox_m": [
+    0.03,
+    0.003,
+    0.03
+   ],
+   "centre_m": [
+    -0.02,
+    -0.0887,
+    0.13
+   ]
+  },
+  {
+   "part": "thermoelectric tile 3",
+   "role": "thermal",
+   "component": "housing",
+   "from": "Thermal interface plate and insulation to the bay thermoelectric block",
+   "kg": 0.0312,
+   "bbox_m": [
+    0.03,
+    0.003,
+    0.03
+   ],
+   "centre_m": [
+    0.02,
+    -0.0887,
+    0.13
+   ]
+  },
+  {
+   "part": "thermoelectric tile 4",
+   "role": "thermal",
+   "component": "housing",
+   "from": "Thermal interface plate and insulation to the bay thermoelectric block",
+   "kg": 0.0312,
+   "bbox_m": [
+    0.03,
+    0.003,
+    0.03
+   ],
+   "centre_m": [
+    0.06,
+    -0.0887,
+    0.13
+   ]
+  },
+  {
+   "part": "heat spreader",
+   "role": "thermal",
+   "component": "housing",
+   "from": "Thermal interface plate and insulation to the bay thermoelectric block",
+   "kg": 0.075,
+   "bbox_m": [
+    0.16,
+    0.003,
+    0.1
+   ],
+   "centre_m": [
+    0.0,
+    -0.0857,
+    0.13
+   ]
+  },
+  {
+   "part": "blind-mate connector: power, data, video",
+   "role": "interface",
+   "component": "interface",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0126,
+   "bbox_m": [
+    0.05,
+    0.01,
+    0.022
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0892,
+    0.3447
+   ]
+  },
+  {
+   "part": "grapple fixture base (Dexter-L)",
+   "role": "interface",
+   "component": "interface",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0126,
+   "bbox_m": [
+    0.07,
+    0.004,
+    0.07
+   ],
+   "centre_m": [
+    0.0,
+    0.0977,
+    0.2614
+   ]
+  },
+  {
+   "part": "grapple fixture pin",
+   "role": "interface",
+   "component": "interface",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0,
+   "bbox_m": [
+    0.016,
+    0.022,
+    0.016
+   ],
+   "centre_m": [
+    0.0,
+    0.1107,
+    0.2614
+   ]
+  },
+  {
+   "part": "status LEDs",
+   "role": "interface",
+   "component": "interface",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0,
+   "bbox_m": [
+    0.018,
+    0.002,
+    0.006
+   ],
+   "centre_m": [
+    -0.1205,
+    0.0967,
+    0.0438
+   ]
+  },
+  {
+   "part": "label plate",
+   "role": "interface",
+   "component": "interface",
+   "from": "Primary containment housing and seals",
+   "kg": 0.0,
+   "bbox_m": [
+    0.09,
+    0.001,
+    0.025
+   ],
+   "centre_m": [
+    0.0915,
+    0.0962,
+    0.049
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0987,
+    0.0737,
+    0.0125
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0075,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0987,
+    0.077,
+    0.0125
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.2162
+   ],
+   "centre_m": [
+    -0.0987,
+    0.0792,
+    0.119
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.2198,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0097,
+    0.0792,
+    0.2255
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1585,
+    0.0032
+   ],
+   "centre_m": [
+    0.118,
+    0.0015,
+    0.2255
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1692
+   ],
+   "centre_m": [
+    0.118,
+    -0.0762,
+    0.1425
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.118,
+    -0.0762,
+    0.0583
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.002,
+    0.0737,
+    0.0125
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0109,
+    0.0032
+   ],
+   "centre_m": [
+    -0.002,
+    0.0787,
+    0.0125
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.2162
+   ],
+   "centre_m": [
+    -0.002,
+    0.0826,
+    0.119
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.1231,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.058,
+    0.0826,
+    0.2255
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1619,
+    0.0032
+   ],
+   "centre_m": [
+    0.118,
+    0.0032,
+    0.2255
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1692
+   ],
+   "centre_m": [
+    0.118,
+    -0.0762,
+    0.1425
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.118,
+    -0.0762,
+    0.0583
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to imaging stack: inverted microscope run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.118,
+    0.0058,
+    0.0583
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to imaging stack: inverted microscope run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1692
+   ],
+   "centre_m": [
+    0.118,
+    0.0058,
+    0.1425
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to imaging stack: inverted microscope run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0833,
+    0.0032
+   ],
+   "centre_m": [
+    0.118,
+    0.0459,
+    0.2255
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to imaging stack: inverted microscope run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0767
+   ],
+   "centre_m": [
+    0.118,
+    0.086,
+    0.1888
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to imaging stack: inverted microscope run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.182,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0286,
+    0.086,
+    0.152
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to imaging stack: inverted microscope run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0419,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0608,
+    0.0666,
+    0.152
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to imaging stack: inverted microscope run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0608,
+    0.0461,
+    0.152
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to imaging stack: inverted microscope run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0004,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    0.069,
+    0.0735,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to imaging stack: inverted microscope run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0008,
+   "bbox_m": [
+    0.005,
+    0.0209,
+    0.005
+   ],
+   "centre_m": [
+    0.069,
+    0.0822,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to imaging stack: inverted microscope run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0023,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.062
+   ],
+   "centre_m": [
+    0.069,
+    0.0902,
+    0.044
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to imaging stack: inverted microscope run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0061,
+   "bbox_m": [
+    0.1679,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.0125,
+    0.0902,
+    0.0725
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to imaging stack: inverted microscope run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0014,
+   "bbox_m": [
+    0.005,
+    0.0376,
+    0.005
+   ],
+   "centre_m": [
+    -0.0939,
+    0.0738,
+    0.0725
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to imaging stack: inverted microscope run 6",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0004,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    -0.0939,
+    0.0568,
+    0.0725
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0004,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    0.069,
+    0.0735,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0008,
+   "bbox_m": [
+    0.005,
+    0.0209,
+    0.005
+   ],
+   "centre_m": [
+    0.069,
+    0.0822,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0079,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.215
+   ],
+   "centre_m": [
+    0.069,
+    0.0902,
+    0.1205
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0027,
+   "bbox_m": [
+    0.073,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    0.103,
+    0.0902,
+    0.2255
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0048,
+   "bbox_m": [
+    0.005,
+    0.1303,
+    0.005
+   ],
+   "centre_m": [
+    0.137,
+    0.0275,
+    0.2255
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 6",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0065,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.177
+   ],
+   "centre_m": [
+    0.137,
+    -0.0352,
+    0.1395
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 7",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0004,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0065
+   ],
+   "centre_m": [
+    0.137,
+    -0.0352,
+    0.0528
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0003,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0055
+   ],
+   "centre_m": [
+    0.1276,
+    0.0311,
+    0.0323
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0041,
+   "bbox_m": [
+    0.005,
+    0.1122,
+    0.005
+   ],
+   "centre_m": [
+    0.1276,
+    -0.0225,
+    0.0325
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0089,
+   "bbox_m": [
+    0.2426,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    0.0088,
+    -0.0762,
+    0.0325
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0116,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.3172
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0762,
+    0.1886
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0004,
+   "bbox_m": [
+    0.005,
+    0.0085,
+    0.005
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0779,
+    0.3447
+   ]
+  }
+ ],
+ "notes": [
+  "The XY stage travels 96.5 x 57.9 mm, so every one of the 24 wells reaches the objective; with the stage the imaging stack is 232 x 151 mm, which sets the module's depth budget.",
+  "Reagent volumes the catalog does not state are split evenly from 75 % of the reservoir item's mass.",
+  "Fluid pack: 2 reagent bags in 1 layer (189 x 139 x 23 mm), every port on a front edge.",
+  "The catalog gives 0.60 kg for structure and containment; as an aluminium box that is a 0.30 mm skin on 0.18 kg of posts and shelves. Thin: the bay rails have to carry the launch loads, or the module needs more structure mass.",
+  "The grapple fixture stands 26 mm proud of the front panel, into the bay opening; everything else is inside the bay envelope."
+ ]
+}

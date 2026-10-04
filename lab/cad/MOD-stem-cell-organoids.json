@@ -1,0 +1,2382 @@
+{
+ "name": "MOD-stem-cell-organoids",
+ "experiment": "Stem-cell organoids",
+ "bay": "L",
+ "envelope_m": [
+  0.313,
+  0.1913,
+  0.3652
+ ],
+ "interior_m": [
+  0.31,
+  0.1883,
+  0.3622
+ ],
+ "module_kg": 5.3,
+ "assigned_kg": 5.3,
+ "fits": true,
+ "height_used_m": 0.2403,
+ "height_free_m": 0.1219,
+ "fill": 0.364,
+ "inside_envelope": true,
+ "clashes": [],
+ "decks": [
+  {
+   "deck": "A",
+   "z_m": 0.0,
+   "h_m": 0.058,
+   "holds": [
+    "fluid pack",
+    "controller and data storage",
+    "2 micro-pumps on a manifold",
+    "4 valves on a manifold"
+   ]
+  },
+  {
+   "deck": "B",
+   "z_m": 0.06,
+   "h_m": 0.1803,
+   "holds": [
+    "imaging stack: inverted microscope, XY stage, sample"
+   ]
+  }
+ ],
+ "housing": {
+  "kg": 0.9,
+  "skin_mm_aluminium": 0.34,
+  "from": "Containment liners, absorbent pads and seals; Mounting frame"
+ },
+ "thermal": {
+  "kg": 0,
+  "thermoelectric_in_module": false,
+  "from": "bay thermoelectric block; cold wall from the housing mass"
+ },
+ "lines": 7,
+ "harness_runs": 3,
+ "com_m": [
+  -0.0136,
+  -0.0107,
+  0.1022
+ ],
+ "inertia_kgm2": [
+  [
+   0.04671,
+   0.0024,
+   0.00384
+  ],
+  [
+   0.0024,
+   0.06704,
+   0.00049
+  ],
+  [
+   0.00384,
+   0.00049,
+   0.04428
+  ]
+ ],
+ "items": [
+  {
+   "item": "24-well sealed culture cassette with organoids and about 24 mL medium",
+   "kg": 0.6,
+   "as": [
+    "cassette"
+   ]
+  },
+  {
+   "item": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 1.1,
+   "as": [
+    "bags",
+    "pumps"
+   ]
+  },
+  {
+   "item": "Micro-pumps and manifold",
+   "kg": 0.4,
+   "as": [
+    "pumps"
+   ]
+  },
+  {
+   "item": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 2.0,
+   "as": [
+    "microscope"
+   ]
+  },
+  {
+   "item": "Containment liners, absorbent pads and seals",
+   "kg": 0.5,
+   "as": [
+    "shell"
+   ]
+  },
+  {
+   "item": "Controller board and harness",
+   "kg": 0.3,
+   "as": [
+    "avionics",
+    "harness"
+   ]
+  },
+  {
+   "item": "Mounting frame",
+   "kg": 0.4,
+   "as": [
+    "frame"
+   ]
+  }
+ ],
+ "components": [
+  {
+   "name": "fluid pack",
+   "deck": "A",
+   "kg": 0.935,
+   "box_m": [
+    -0.145,
+    -0.0602,
+    0.0015,
+    0.022,
+    0.0701,
+    0.0525
+   ],
+   "from": [
+    "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves"
+   ]
+  },
+  {
+   "name": "controller and data storage",
+   "deck": "A",
+   "kg": 0.24,
+   "box_m": [
+    0.027,
+    -0.0102,
+    0.0015,
+    0.1351,
+    0.0699,
+    0.0295
+   ],
+   "from": [
+    "Controller board and harness"
+   ]
+  },
+  {
+   "name": "2 micro-pumps on a manifold",
+   "deck": "A",
+   "kg": 0.4,
+   "box_m": [
+    0.027,
+    -0.0822,
+    0.0015,
+    0.095,
+    -0.0322,
+    0.0395
+   ],
+   "from": [
+    "Micro-pumps and manifold"
+   ]
+  },
+  {
+   "name": "4 valves on a manifold",
+   "deck": "A",
+   "kg": 0.165,
+   "box_m": [
+    0.099,
+    -0.0822,
+    0.0015,
+    0.141,
+    -0.0322,
+    0.0295
+   ],
+   "from": [
+    "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves"
+   ]
+  },
+  {
+   "name": "imaging stack: inverted microscope, XY stage, sample",
+   "deck": "B",
+   "kg": 2.6,
+   "box_m": [
+    -0.145,
+    -0.0822,
+    0.0615,
+    0.0872,
+    0.0692,
+    0.2358
+   ],
+   "from": [
+    "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage"
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "part": "fresh medium (175 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.1935,
+   "bbox_m": [
+    0.0815,
+    0.1222,
+    0.022
+   ],
+   "centre_m": [
+    -0.1043,
+    0.001,
+    0.0185
+   ]
+  },
+  {
+   "part": "fresh medium port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.0168,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    -0.1043,
+    0.0661,
+    0.0185
+   ]
+  },
+  {
+   "part": "4% PFA (175 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.1935,
+   "bbox_m": [
+    0.0815,
+    0.1222,
+    0.022
+   ],
+   "centre_m": [
+    -0.0188,
+    0.001,
+    0.0185
+   ]
+  },
+  {
+   "part": "4% PFA port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.0168,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    -0.0188,
+    0.0661,
+    0.0185
+   ]
+  },
+  {
+   "part": "PBS storage buffer (175 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.1935,
+   "bbox_m": [
+    0.0815,
+    0.1222,
+    0.022
+   ],
+   "centre_m": [
+    -0.1043,
+    0.001,
+    0.0415
+   ]
+  },
+  {
+   "part": "PBS storage buffer port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.0168,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    -0.1043,
+    0.0661,
+    0.0415
+   ]
+  },
+  {
+   "part": "RNA stabilizer (175 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.1935,
+   "bbox_m": [
+    0.0815,
+    0.1222,
+    0.022
+   ],
+   "centre_m": [
+    -0.0188,
+    0.001,
+    0.0415
+   ]
+  },
+  {
+   "part": "RNA stabilizer port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.0168,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    -0.0188,
+    0.0661,
+    0.0415
+   ]
+  },
+  {
+   "part": "waste bag (empty at launch, 351 mL capacity), under the reagent bags",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.0842,
+   "bbox_m": [
+    0.167,
+    0.1222,
+    0.005
+   ],
+   "centre_m": [
+    -0.0615,
+    0.001,
+    0.004
+   ]
+  },
+  {
+   "part": "waste bag port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.0094,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.012,
+    0.0661,
+    0.004
+   ]
+  },
+  {
+   "part": "controller enclosure (boards, data storage)",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Controller board and harness",
+   "kg": 0.216,
+   "bbox_m": [
+    0.1081,
+    0.0721,
+    0.028
+   ],
+   "centre_m": [
+    0.081,
+    0.0259,
+    0.0155
+   ]
+  },
+  {
+   "part": "connector 1",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Controller board and harness",
+   "kg": 0.012,
+   "bbox_m": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "centre_m": [
+    0.047,
+    0.0659,
+    0.0155
+   ]
+  },
+  {
+   "part": "connector 2",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Controller board and harness",
+   "kg": 0.012,
+   "bbox_m": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "centre_m": [
+    0.069,
+    0.0659,
+    0.0155
+   ]
+  },
+  {
+   "part": "fluid manifold",
+   "role": "pump",
+   "component": "2 micro-pumps on a manifold",
+   "from": "Micro-pumps and manifold",
+   "kg": 0.15,
+   "bbox_m": [
+    0.068,
+    0.05,
+    0.012
+   ],
+   "centre_m": [
+    0.061,
+    -0.0572,
+    0.0075
+   ]
+  },
+  {
+   "part": "micro-pump 1",
+   "role": "pump",
+   "component": "2 micro-pumps on a manifold",
+   "from": "Micro-pumps and manifold",
+   "kg": 0.125,
+   "bbox_m": [
+    0.02,
+    0.02,
+    0.026
+   ],
+   "centre_m": [
+    0.048,
+    -0.0572,
+    0.0265
+   ]
+  },
+  {
+   "part": "micro-pump 2",
+   "role": "pump",
+   "component": "2 micro-pumps on a manifold",
+   "from": "Micro-pumps and manifold",
+   "kg": 0.125,
+   "bbox_m": [
+    0.02,
+    0.02,
+    0.026
+   ],
+   "centre_m": [
+    0.074,
+    -0.0572,
+    0.0265
+   ]
+  },
+  {
+   "part": "manifold inlet",
+   "role": "pump",
+   "component": "2 micro-pumps on a manifold",
+   "from": "Micro-pumps and manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    0.033,
+    -0.0572,
+    0.0165
+   ]
+  },
+  {
+   "part": "manifold outlet",
+   "role": "pump",
+   "component": "2 micro-pumps on a manifold",
+   "from": "Micro-pumps and manifold",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    0.089,
+    -0.0572,
+    0.0165
+   ]
+  },
+  {
+   "part": "fluid manifold",
+   "role": "pump",
+   "component": "4 valves on a manifold",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.132,
+   "bbox_m": [
+    0.042,
+    0.05,
+    0.012
+   ],
+   "centre_m": [
+    0.12,
+    -0.0572,
+    0.0075
+   ]
+  },
+  {
+   "part": "valve 1",
+   "role": "pump",
+   "component": "4 valves on a manifold",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.0083,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    0.1135,
+    -0.0692,
+    0.0215
+   ]
+  },
+  {
+   "part": "valve 2",
+   "role": "pump",
+   "component": "4 valves on a manifold",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.0083,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    0.1135,
+    -0.0452,
+    0.0215
+   ]
+  },
+  {
+   "part": "valve 3",
+   "role": "pump",
+   "component": "4 valves on a manifold",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.0083,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    0.1265,
+    -0.0692,
+    0.0215
+   ]
+  },
+  {
+   "part": "valve 4",
+   "role": "pump",
+   "component": "4 valves on a manifold",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.0083,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    0.1265,
+    -0.0452,
+    0.0215
+   ]
+  },
+  {
+   "part": "manifold inlet",
+   "role": "pump",
+   "component": "4 valves on a manifold",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    0.105,
+    -0.0572,
+    0.0165
+   ]
+  },
+  {
+   "part": "manifold outlet",
+   "role": "pump",
+   "component": "4 valves on a manifold",
+   "from": "Fluidics reagent pack: fresh medium, 4% PFA, PBS storage buffer, RNA stabilizer and waste bags, with valves",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    0.135,
+    -0.0572,
+    0.0165
+   ]
+  },
+  {
+   "part": "microscope base: optics, filter cubes, camera",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 1.034,
+   "bbox_m": [
+    0.17,
+    0.12,
+    0.07
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.0965
+   ]
+  },
+  {
+   "part": "objective",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 0.066,
+   "bbox_m": [
+    0.022,
+    0.022,
+    0.016
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.1395
+   ]
+  },
+  {
+   "part": "stage post 1",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 0.0,
+   "bbox_m": [
+    0.01,
+    0.01,
+    0.012
+   ],
+   "centre_m": [
+    -0.1039,
+    -0.0565,
+    0.1375
+   ]
+  },
+  {
+   "part": "stage post 2",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 0.0,
+   "bbox_m": [
+    0.01,
+    0.01,
+    0.012
+   ],
+   "centre_m": [
+    -0.1039,
+    0.0435,
+    0.1375
+   ]
+  },
+  {
+   "part": "stage post 3",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 0.0,
+   "bbox_m": [
+    0.01,
+    0.01,
+    0.012
+   ],
+   "centre_m": [
+    0.0461,
+    -0.0565,
+    0.1375
+   ]
+  },
+  {
+   "part": "stage post 4",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 0.0,
+   "bbox_m": [
+    0.01,
+    0.01,
+    0.012
+   ],
+   "centre_m": [
+    0.0461,
+    0.0435,
+    0.1375
+   ]
+  },
+  {
+   "part": "XY stage frame (travel 96.5 x 57.9 mm: every well over the objective)",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 0.27,
+   "bbox_m": [
+    0.2323,
+    0.1514,
+    0.008
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.1475
+   ]
+  },
+  {
+   "part": "stage carriage",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 0.12,
+   "bbox_m": [
+    0.1398,
+    0.0975,
+    0.005
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.154
+   ]
+  },
+  {
+   "part": "X stepper",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 0.105,
+   "bbox_m": [
+    0.028,
+    0.02,
+    0.02
+   ],
+   "centre_m": [
+    -0.128,
+    -0.0065,
+    0.1335
+   ]
+  },
+  {
+   "part": "Y stepper",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 0.105,
+   "bbox_m": [
+    0.02,
+    0.016,
+    0.02
+   ],
+   "centre_m": [
+    -0.0653,
+    -0.0742,
+    0.1335
+   ]
+  },
+  {
+   "part": "illumination column",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 0.09,
+   "bbox_m": [
+    0.016,
+    0.016,
+    0.0843
+   ],
+   "centre_m": [
+    0.0752,
+    -0.0702,
+    0.1937
+   ]
+  },
+  {
+   "part": "illumination arm",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 0.06,
+   "bbox_m": [
+    0.1121,
+    0.016,
+    0.012
+   ],
+   "centre_m": [
+    0.0232,
+    -0.0702,
+    0.2298
+   ]
+  },
+  {
+   "part": "arm to head",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 0.0,
+   "bbox_m": [
+    0.016,
+    0.0717,
+    0.012
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0423,
+    0.2298
+   ]
+  },
+  {
+   "part": "LED head, transmitted light",
+   "role": "imaging",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "LumaScope-class inverted microscope (brightfield + 2 fluorescence channels) with XY stage",
+   "kg": 0.15,
+   "bbox_m": [
+    0.028,
+    0.028,
+    0.022
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.2128
+   ]
+  },
+  {
+   "part": "cassette, 24 wells (SBS footprint, 19.3 mm pitch)",
+   "role": "sample",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "24-well sealed culture cassette with organoids and about 24 mL medium",
+   "kg": 0.492,
+   "bbox_m": [
+    0.1278,
+    0.0855,
+    0.0343
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.1707
+   ]
+  },
+  {
+   "part": "culture in the wells",
+   "role": "sample",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "24-well sealed culture cassette with organoids and about 24 mL medium",
+   "kg": 0.018,
+   "bbox_m": [
+    0.1117,
+    0.0731,
+    0.0078
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.1744
+   ]
+  },
+  {
+   "part": "cassette lid, sealed and gas-permeable",
+   "role": "sample",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "24-well sealed culture cassette with organoids and about 24 mL medium",
+   "kg": 0.072,
+   "bbox_m": [
+    0.1278,
+    0.0855,
+    0.002
+   ],
+   "centre_m": [
+    -0.0289,
+    -0.0065,
+    0.1888
+   ]
+  },
+  {
+   "part": "cassette fluid port 1",
+   "role": "sample",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "24-well sealed culture cassette with organoids and about 24 mL medium",
+   "kg": 0.009,
+   "bbox_m": [
+    0.0056,
+    0.007,
+    0.0056
+   ],
+   "centre_m": [
+    -0.0608,
+    0.0398,
+    0.1707
+   ]
+  },
+  {
+   "part": "cassette fluid port 2",
+   "role": "sample",
+   "component": "imaging stack: inverted microscope, XY stage, sample",
+   "from": "24-well sealed culture cassette with organoids and about 24 mL medium",
+   "kg": 0.009,
+   "bbox_m": [
+    0.0056,
+    0.007,
+    0.0056
+   ],
+   "centre_m": [
+    0.003,
+    0.0398,
+    0.1707
+   ]
+  },
+  {
+   "part": "bottom panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.0546,
+   "bbox_m": [
+    0.313,
+    0.1913,
+    0.0015
+   ],
+   "centre_m": [
+    0.0,
+    0.0,
+    0.0008
+   ]
+  },
+  {
+   "part": "top panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.0546,
+   "bbox_m": [
+    0.313,
+    0.1913,
+    0.0015
+   ],
+   "centre_m": [
+    0.0,
+    0.0,
+    0.3645
+   ]
+  },
+  {
+   "part": "side panel L",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.0637,
+   "bbox_m": [
+    0.0015,
+    0.1913,
+    0.3622
+   ],
+   "centre_m": [
+    -0.1558,
+    0.0,
+    0.1826
+   ]
+  },
+  {
+   "part": "side panel R",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.0637,
+   "bbox_m": [
+    0.0015,
+    0.1913,
+    0.3622
+   ],
+   "centre_m": [
+    0.1558,
+    0.0,
+    0.1826
+   ]
+  },
+  {
+   "part": "back panel (bay interface)",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.1042,
+   "bbox_m": [
+    0.31,
+    0.0015,
+    0.3622
+   ],
+   "centre_m": [
+    0.0,
+    -0.0949,
+    0.1826
+   ]
+  },
+  {
+   "part": "front panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.1042,
+   "bbox_m": [
+    0.31,
+    0.0015,
+    0.3622
+   ],
+   "centre_m": [
+    0.0,
+    0.0949,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 1",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.035,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    -0.151,
+    -0.0802,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 2",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.035,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    -0.151,
+    0.0702,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 3",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.035,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    0.151,
+    -0.0802,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 4",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.035,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    0.151,
+    0.0702,
+    0.1826
+   ]
+  },
+  {
+   "part": "shelf 1",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.26,
+   "bbox_m": [
+    0.31,
+    0.1583,
+    0.002
+   ],
+   "centre_m": [
+    0.0,
+    -0.005,
+    0.0605
+   ]
+  },
+  {
+   "part": "cold wall (to the bay's thermoelectric block)",
+   "role": "thermal",
+   "component": "housing",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.025,
+   "bbox_m": [
+    0.29,
+    0.004,
+    0.3522
+   ],
+   "centre_m": [
+    0.0,
+    -0.0922,
+    0.1826
+   ]
+  },
+  {
+   "part": "blind-mate connector: power, data, video",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.015,
+   "bbox_m": [
+    0.05,
+    0.01,
+    0.022
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0892,
+    0.3447
+   ]
+  },
+  {
+   "part": "grapple fixture base (Dexter-L)",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.015,
+   "bbox_m": [
+    0.07,
+    0.004,
+    0.07
+   ],
+   "centre_m": [
+    0.0,
+    0.0977,
+    0.2614
+   ]
+  },
+  {
+   "part": "grapple fixture pin",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.0,
+   "bbox_m": [
+    0.016,
+    0.022,
+    0.016
+   ],
+   "centre_m": [
+    0.0,
+    0.1107,
+    0.2614
+   ]
+  },
+  {
+   "part": "status LEDs",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.0,
+   "bbox_m": [
+    0.018,
+    0.002,
+    0.006
+   ],
+   "centre_m": [
+    -0.1205,
+    0.0967,
+    0.0438
+   ]
+  },
+  {
+   "part": "label plate",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment liners, absorbent pads and seals; Mounting frame",
+   "kg": 0.0,
+   "bbox_m": [
+    0.09,
+    0.001,
+    0.025
+   ],
+   "centre_m": [
+    0.0915,
+    0.0962,
+    0.049
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.1043,
+    0.0729,
+    0.0185
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0083,
+    0.0032
+   ],
+   "centre_m": [
+    -0.1043,
+    0.0766,
+    0.0185
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0412
+   ],
+   "centre_m": [
+    -0.1043,
+    0.0792,
+    0.0375
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.2125,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0004,
+    0.0792,
+    0.0565
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1395,
+    0.0032
+   ],
+   "centre_m": [
+    0.105,
+    0.011,
+    0.0565
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0362
+   ],
+   "centre_m": [
+    0.105,
+    -0.0572,
+    0.04
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.105,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0188,
+    0.0729,
+    0.0185
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0117,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0188,
+    0.0783,
+    0.0185
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0412
+   ],
+   "centre_m": [
+    -0.0188,
+    0.0826,
+    0.0375
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.127,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0431,
+    0.0826,
+    0.0565
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1429,
+    0.0032
+   ],
+   "centre_m": [
+    0.105,
+    0.0127,
+    0.0565
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0362
+   ],
+   "centre_m": [
+    0.105,
+    -0.0572,
+    0.04
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.105,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.1043,
+    0.0729,
+    0.0415
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0151,
+    0.0032
+   ],
+   "centre_m": [
+    -0.1043,
+    0.08,
+    0.0415
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0182
+   ],
+   "centre_m": [
+    -0.1043,
+    0.086,
+    0.049
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.2125,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0004,
+    0.086,
+    0.0565
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1463,
+    0.0032
+   ],
+   "centre_m": [
+    0.105,
+    0.0144,
+    0.0565
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0362
+   ],
+   "centre_m": [
+    0.105,
+    -0.0572,
+    0.04
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.105,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0188,
+    0.0729,
+    0.0415
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0185,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0188,
+    0.0817,
+    0.0415
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0182
+   ],
+   "centre_m": [
+    -0.0188,
+    0.0894,
+    0.049
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.127,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0431,
+    0.0894,
+    0.0565
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1497,
+    0.0032
+   ],
+   "centre_m": [
+    0.105,
+    0.0161,
+    0.0565
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0362
+   ],
+   "centre_m": [
+    0.105,
+    -0.0572,
+    0.04
+   ]
+  },
+  {
+   "part": "line: fluid pack to 4 valves on a manifold run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.105,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: 4 valves on a manifold to 2 micro-pumps on a manifold run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.135,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: 4 valves on a manifold to 2 micro-pumps on a manifold run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0362
+   ],
+   "centre_m": [
+    0.135,
+    -0.0572,
+    0.04
+   ]
+  },
+  {
+   "part": "line: 4 valves on a manifold to 2 micro-pumps on a manifold run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1395,
+    0.0032
+   ],
+   "centre_m": [
+    0.135,
+    0.011,
+    0.0565
+   ]
+  },
+  {
+   "part": "line: 4 valves on a manifold to 2 micro-pumps on a manifold run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.1052,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.084,
+    0.0792,
+    0.0565
+   ]
+  },
+  {
+   "part": "line: 4 valves on a manifold to 2 micro-pumps on a manifold run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1395,
+    0.0032
+   ],
+   "centre_m": [
+    0.033,
+    0.011,
+    0.0565
+   ]
+  },
+  {
+   "part": "line: 4 valves on a manifold to 2 micro-pumps on a manifold run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0362
+   ],
+   "centre_m": [
+    0.033,
+    -0.0572,
+    0.04
+   ]
+  },
+  {
+   "part": "line: 4 valves on a manifold to 2 micro-pumps on a manifold run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.033,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps on a manifold to imaging stack: inverted microscope run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.089,
+    -0.0572,
+    0.0223
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps on a manifold to imaging stack: inverted microscope run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0362
+   ],
+   "centre_m": [
+    0.089,
+    -0.0572,
+    0.04
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps on a manifold to imaging stack: inverted microscope run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1429,
+    0.0032
+   ],
+   "centre_m": [
+    0.089,
+    0.0127,
+    0.0565
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps on a manifold to imaging stack: inverted microscope run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1174
+   ],
+   "centre_m": [
+    0.089,
+    0.0826,
+    0.1136
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps on a manifold to imaging stack: inverted microscope run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.153,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0141,
+    0.0826,
+    0.1707
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps on a manifold to imaging stack: inverted microscope run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0385,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0608,
+    0.0649,
+    0.1707
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps on a manifold to imaging stack: inverted microscope run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0608,
+    0.0461,
+    0.1707
+   ]
+  },
+  {
+   "part": "line: imaging stack: inverted microscope to fluid pack run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.003,
+    0.0461,
+    0.1707
+   ]
+  },
+  {
+   "part": "line: imaging stack: inverted microscope to fluid pack run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0419,
+    0.0032
+   ],
+   "centre_m": [
+    0.003,
+    0.0666,
+    0.1707
+   ]
+  },
+  {
+   "part": "line: imaging stack: inverted microscope to fluid pack run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1699
+   ],
+   "centre_m": [
+    0.003,
+    0.086,
+    0.0873
+   ]
+  },
+  {
+   "part": "line: imaging stack: inverted microscope to fluid pack run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0121,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0075,
+    0.086,
+    0.004
+   ]
+  },
+  {
+   "part": "line: imaging stack: inverted microscope to fluid pack run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0151,
+    0.0032
+   ],
+   "centre_m": [
+    0.012,
+    0.08,
+    0.004
+   ]
+  },
+  {
+   "part": "line: imaging stack: inverted microscope to fluid pack run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.012,
+    0.0729,
+    0.004
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to imaging stack: inverted microscope run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0004,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    0.047,
+    0.0732,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to imaging stack: inverted microscope run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.001,
+   "bbox_m": [
+    0.005,
+    0.0212,
+    0.005
+   ],
+   "centre_m": [
+    0.047,
+    0.082,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to imaging stack: inverted microscope run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0039,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.086
+   ],
+   "centre_m": [
+    0.047,
+    0.0902,
+    0.056
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to imaging stack: inverted microscope run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0067,
+   "bbox_m": [
+    0.1459,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.0235,
+    0.0902,
+    0.0965
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to imaging stack: inverted microscope run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0017,
+   "bbox_m": [
+    0.005,
+    0.0376,
+    0.005
+   ],
+   "centre_m": [
+    -0.0939,
+    0.0738,
+    0.0965
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to imaging stack: inverted microscope run 6",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0004,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    -0.0939,
+    0.0568,
+    0.0965
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps on a manifold run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0004,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    0.047,
+    0.0732,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps on a manifold run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.001,
+   "bbox_m": [
+    0.005,
+    0.0212,
+    0.005
+   ],
+   "centre_m": [
+    0.047,
+    0.082,
+    0.0155
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps on a manifold run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0021,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.046
+   ],
+   "centre_m": [
+    0.047,
+    0.0902,
+    0.036
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps on a manifold run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0009,
+   "bbox_m": [
+    0.019,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    0.054,
+    0.0902,
+    0.0565
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps on a manifold run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0078,
+   "bbox_m": [
+    0.005,
+    0.1713,
+    0.005
+   ],
+   "centre_m": [
+    0.061,
+    0.007,
+    0.0565
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps on a manifold run 6",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.002,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.044
+   ],
+   "centre_m": [
+    0.061,
+    -0.0762,
+    0.037
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps on a manifold run 7",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0004,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0065
+   ],
+   "centre_m": [
+    0.061,
+    -0.0762,
+    0.0168
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0014,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0295
+   ],
+   "centre_m": [
+    0.1201,
+    0.0259,
+    0.0442
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0049,
+   "bbox_m": [
+    0.005,
+    0.107,
+    0.005
+   ],
+   "centre_m": [
+    0.1201,
+    -0.0251,
+    0.0565
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0107,
+   "bbox_m": [
+    0.2351,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    0.005,
+    -0.0762,
+    0.0565
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0134,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.2932
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0762,
+    0.2006
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0005,
+   "bbox_m": [
+    0.005,
+    0.0085,
+    0.005
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0779,
+    0.3447
+   ]
+  }
+ ],
+ "notes": [
+  "The XY stage travels 96.5 x 57.9 mm, so every one of the 24 wells reaches the objective; with the stage the imaging stack is 232 x 151 mm, which sets the module's depth budget.",
+  "Reagent volumes the catalog does not state are split evenly from 75 % of the reservoir item's mass. The waste bag holds the spent medium and washes; fixatives and stabilisers stay in the wells and come home.",
+  "Fluid pack: 4 reagent bags in 2 layers (167 x 122 x 46 mm), every port on a front edge.",
+  "The waste bag lies under the reagent bags and fills the room they free: they hold 701 mL, it needs 351 mL.",
+  "The catalog gives 0.90 kg for structure and containment; as an aluminium box that is a 0.34 mm skin on 0.40 kg of posts and shelves. Thin: the bay rails have to carry the launch loads, or the module needs more structure mass.",
+  "The grapple fixture stands 26 mm proud of the front panel, into the bay opening; everything else is inside the bay envelope."
+ ]
+}

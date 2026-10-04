@@ -1,0 +1,954 @@
+{
+ "name": "MOD-alloy-solidification",
+ "experiment": "Alloy solidification",
+ "bay": "L",
+ "envelope_m": [
+  0.313,
+  0.1913,
+  0.3652
+ ],
+ "interior_m": [
+  0.31,
+  0.1883,
+  0.3622
+ ],
+ "module_kg": 5.7,
+ "assigned_kg": 5.7,
+ "fits": true,
+ "height_used_m": 0.26,
+ "height_free_m": 0.1022,
+ "fill": 0.362,
+ "inside_envelope": true,
+ "clashes": [],
+ "decks": [
+  {
+   "deck": "B",
+   "z_m": 0.0,
+   "h_m": 0.224,
+   "holds": [
+    "gradient furnace: crucible, hot and cold blocks, pull stage, camera"
+   ]
+  },
+  {
+   "deck": "C",
+   "z_m": 0.226,
+   "h_m": 0.034,
+   "holds": [
+    "controller and data storage"
+   ]
+  }
+ ],
+ "housing": {
+  "kg": 1.522,
+  "skin_mm_aluminium": 0.49,
+  "from": "Containment interface plate, seals and harness"
+ },
+ "thermal": {
+  "kg": 0,
+  "thermoelectric_in_module": false,
+  "from": "bay thermoelectric block; cold wall from the housing mass"
+ },
+ "lines": 0,
+ "harness_runs": 2,
+ "com_m": [
+  -0.0125,
+  -0.0059,
+  0.1223
+ ],
+ "inertia_kgm2": [
+  [
+   0.06871,
+   0.00395,
+   -0.0015
+  ],
+  [
+   0.00395,
+   0.09487,
+   -0.00041
+  ],
+  [
+   -0.0015,
+   -0.00041,
+   0.04841
+  ]
+ ],
+ "items": [
+  {
+   "item": "Sealed glass crucible with SCN-camphor sample and wall thermocouples",
+   "kg": 0.15,
+   "as": [
+    "crucible"
+   ]
+  },
+  {
+   "item": "Hot-zone heater block and cold-zone copper block tied to the bay thermoelectric block",
+   "kg": 0.9,
+   "as": [
+    "blocks"
+   ]
+  },
+  {
+   "item": "Linear translation stage with stepper motor and encoder",
+   "kg": 1.2,
+   "as": [
+    "linear_stage"
+   ]
+  },
+  {
+   "item": "Imaging: CMOS camera, long-working-distance optics, LED transmitted light",
+   "kg": 0.8,
+   "as": [
+    "furnace_camera"
+   ]
+  },
+  {
+   "item": "Insulation (aerogel and multilayer) and structural frame",
+   "kg": 1.2,
+   "as": [
+    "insulation"
+   ]
+  },
+  {
+   "item": "Electronics: heater driver, motor driver, thermocouple readout, controller and storage",
+   "kg": 0.6,
+   "as": [
+    "avionics"
+   ]
+  },
+  {
+   "item": "Containment interface plate, seals and harness",
+   "kg": 0.85,
+   "as": [
+    "shell",
+    "harness"
+   ]
+  }
+ ],
+ "components": [
+  {
+   "name": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "deck": "B",
+   "kg": 3.45,
+   "box_m": [
+    -0.145,
+    -0.0822,
+    0.0015,
+    0.125,
+    0.0378,
+    0.2195
+   ],
+   "from": [
+    "Sealed glass crucible with SCN-camphor sample and wall thermocouples",
+    "Hot-zone heater block and cold-zone copper block tied to the bay thermoelectric block",
+    "Linear translation stage with stepper motor and encoder",
+    "Imaging: CMOS camera, long-working-distance optics, LED transmitted light",
+    "Insulation (aerogel and multilayer) and structural frame"
+   ]
+  },
+  {
+   "name": "controller and data storage",
+   "deck": "C",
+   "kg": 0.6,
+   "box_m": [
+    -0.145,
+    -0.0502,
+    0.2275,
+    0.0259,
+    0.0718,
+    0.2555
+   ],
+   "from": [
+    "Electronics: heater driver, motor driver, thermocouple readout, controller and storage"
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "part": "furnace base plate",
+   "role": "experiment",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Insulation (aerogel and multilayer) and structural frame",
+   "kg": 0.35,
+   "bbox_m": [
+    0.27,
+    0.12,
+    0.004
+   ],
+   "centre_m": [
+    -0.01,
+    -0.0222,
+    0.0035
+   ]
+  },
+  {
+   "part": "aerogel and MLI jacket round the hot block",
+   "role": "experiment",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Insulation (aerogel and multilayer) and structural frame",
+   "kg": 0.05,
+   "bbox_m": [
+    0.065,
+    0.075,
+    0.075
+   ],
+   "centre_m": [
+    0.07,
+    -0.0222,
+    0.0665
+   ]
+  },
+  {
+   "part": "cold-zone copper block",
+   "role": "experiment",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Hot-zone heater block and cold-zone copper block tied to the bay thermoelectric block",
+   "kg": 0.351,
+   "bbox_m": [
+    0.045,
+    0.045,
+    0.045
+   ],
+   "centre_m": [
+    0.005,
+    -0.0222,
+    0.0665
+   ]
+  },
+  {
+   "part": "hot-zone heater block",
+   "role": "experiment",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Hot-zone heater block and cold-zone copper block tied to the bay thermoelectric block",
+   "kg": 0.45,
+   "bbox_m": [
+    0.045,
+    0.045,
+    0.045
+   ],
+   "centre_m": [
+    0.06,
+    -0.0222,
+    0.0665
+   ]
+  },
+  {
+   "part": "copper strap: cold block to the cold wall",
+   "role": "experiment",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Hot-zone heater block and cold-zone copper block tied to the bay thermoelectric block",
+   "kg": 0.099,
+   "bbox_m": [
+    0.02,
+    0.0375,
+    0.008
+   ],
+   "centre_m": [
+    0.005,
+    -0.0634,
+    0.0665
+   ]
+  },
+  {
+   "part": "glass crucible with wall thermocouples",
+   "role": "sample",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Sealed glass crucible with SCN-camphor sample and wall thermocouples",
+   "kg": 0.12,
+   "bbox_m": [
+    0.14,
+    0.014,
+    0.014
+   ],
+   "centre_m": [
+    0.025,
+    -0.0222,
+    0.0665
+   ]
+  },
+  {
+   "part": "SCN-camphor sample",
+   "role": "sample",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Sealed glass crucible with SCN-camphor sample and wall thermocouples",
+   "kg": 0.03,
+   "bbox_m": [
+    0.12,
+    0.01,
+    0.01
+   ],
+   "centre_m": [
+    0.025,
+    -0.0222,
+    0.0665
+   ]
+  },
+  {
+   "part": "NEMA 17 stepper with encoder",
+   "role": "experiment",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Linear translation stage with stepper motor and encoder",
+   "kg": 0.36,
+   "bbox_m": [
+    0.042,
+    0.042,
+    0.04
+   ],
+   "centre_m": [
+    -0.124,
+    0.0168,
+    0.0255
+   ]
+  },
+  {
+   "part": "lead screw",
+   "role": "experiment",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Linear translation stage with stepper motor and encoder",
+   "kg": 0.096,
+   "bbox_m": [
+    0.14,
+    0.008,
+    0.008
+   ],
+   "centre_m": [
+    -0.033,
+    0.0168,
+    0.0255
+   ]
+  },
+  {
+   "part": "linear rail",
+   "role": "experiment",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Linear translation stage with stepper motor and encoder",
+   "kg": 0.408,
+   "bbox_m": [
+    0.15,
+    0.03,
+    0.012
+   ],
+   "centre_m": [
+    -0.025,
+    0.0168,
+    0.0115
+   ]
+  },
+  {
+   "part": "carriage",
+   "role": "experiment",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Linear translation stage with stepper motor and encoder",
+   "kg": 0.192,
+   "bbox_m": [
+    0.04,
+    0.036,
+    0.024
+   ],
+   "centre_m": [
+    -0.065,
+    0.0168,
+    0.0295
+   ]
+  },
+  {
+   "part": "pull arm and crucible clamp",
+   "role": "experiment",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Linear translation stage with stepper motor and encoder",
+   "kg": 0.144,
+   "bbox_m": [
+    0.04,
+    0.036,
+    0.037
+   ],
+   "centre_m": [
+    -0.059,
+    -0.0122,
+    0.054
+   ]
+  },
+  {
+   "part": "long-working-distance lens",
+   "role": "experiment",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Imaging: CMOS camera, long-working-distance optics, LED transmitted light",
+   "kg": 0.304,
+   "bbox_m": [
+    0.028,
+    0.028,
+    0.07
+   ],
+   "centre_m": [
+    0.0325,
+    -0.0222,
+    0.1425
+   ]
+  },
+  {
+   "part": "CMOS camera",
+   "role": "imaging",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Imaging: CMOS camera, long-working-distance optics, LED transmitted light",
+   "kg": 0.4,
+   "bbox_m": [
+    0.042,
+    0.042,
+    0.042
+   ],
+   "centre_m": [
+    0.0325,
+    -0.0222,
+    0.1985
+   ]
+  },
+  {
+   "part": "LED, transmitted light from below the gap",
+   "role": "experiment",
+   "component": "gradient furnace: crucible, hot and cold blocks, pull stage, camera",
+   "from": "Imaging: CMOS camera, long-working-distance optics, LED transmitted light",
+   "kg": 0.096,
+   "bbox_m": [
+    0.012,
+    0.012,
+    0.01
+   ],
+   "centre_m": [
+    0.0325,
+    -0.0222,
+    0.0105
+   ]
+  },
+  {
+   "part": "controller enclosure (boards, data storage)",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Electronics: heater driver, motor driver, thermocouple readout, controller and storage",
+   "kg": 0.54,
+   "bbox_m": [
+    0.1709,
+    0.114,
+    0.028
+   ],
+   "centre_m": [
+    -0.0596,
+    0.0068,
+    0.2415
+   ]
+  },
+  {
+   "part": "connector 1",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Electronics: heater driver, motor driver, thermocouple readout, controller and storage",
+   "kg": 0.03,
+   "bbox_m": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "centre_m": [
+    -0.125,
+    0.0678,
+    0.2415
+   ]
+  },
+  {
+   "part": "connector 2",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Electronics: heater driver, motor driver, thermocouple readout, controller and storage",
+   "kg": 0.03,
+   "bbox_m": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "centre_m": [
+    -0.103,
+    0.0678,
+    0.2415
+   ]
+  },
+  {
+   "part": "bottom panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.0789,
+   "bbox_m": [
+    0.313,
+    0.1913,
+    0.0015
+   ],
+   "centre_m": [
+    0.0,
+    0.0,
+    0.0008
+   ]
+  },
+  {
+   "part": "top panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.0789,
+   "bbox_m": [
+    0.313,
+    0.1913,
+    0.0015
+   ],
+   "centre_m": [
+    0.0,
+    0.0,
+    0.3645
+   ]
+  },
+  {
+   "part": "side panel L",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.092,
+   "bbox_m": [
+    0.0015,
+    0.1913,
+    0.3622
+   ],
+   "centre_m": [
+    -0.1558,
+    0.0,
+    0.1826
+   ]
+  },
+  {
+   "part": "side panel R",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.092,
+   "bbox_m": [
+    0.0015,
+    0.1913,
+    0.3622
+   ],
+   "centre_m": [
+    0.1558,
+    0.0,
+    0.1826
+   ]
+  },
+  {
+   "part": "back panel (bay interface)",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.1506,
+   "bbox_m": [
+    0.31,
+    0.0015,
+    0.3622
+   ],
+   "centre_m": [
+    0.0,
+    -0.0949,
+    0.1826
+   ]
+  },
+  {
+   "part": "front panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.1506,
+   "bbox_m": [
+    0.31,
+    0.0015,
+    0.3622
+   ],
+   "centre_m": [
+    0.0,
+    0.0949,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 1",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.07,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    -0.151,
+    -0.0802,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 2",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.07,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    -0.151,
+    0.0702,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 3",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.07,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    0.151,
+    -0.0802,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 4",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.07,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    0.151,
+    0.0702,
+    0.1826
+   ]
+  },
+  {
+   "part": "shelf 1",
+   "role": "housing",
+   "component": "housing",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.52,
+   "bbox_m": [
+    0.31,
+    0.1583,
+    0.002
+   ],
+   "centre_m": [
+    0.0,
+    -0.005,
+    0.2265
+   ]
+  },
+  {
+   "part": "cold wall (to the bay's thermoelectric block)",
+   "role": "thermal",
+   "component": "housing",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.0361,
+   "bbox_m": [
+    0.29,
+    0.004,
+    0.214
+   ],
+   "centre_m": [
+    0.0,
+    -0.0922,
+    0.1135
+   ]
+  },
+  {
+   "part": "blind-mate connector: power, data, video",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.0217,
+   "bbox_m": [
+    0.05,
+    0.01,
+    0.022
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0892,
+    0.2425
+   ]
+  },
+  {
+   "part": "grapple fixture base (Dexter-L)",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.0217,
+   "bbox_m": [
+    0.07,
+    0.004,
+    0.07
+   ],
+   "centre_m": [
+    0.0,
+    0.0977,
+    0.2614
+   ]
+  },
+  {
+   "part": "grapple fixture pin",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.016,
+    0.022,
+    0.016
+   ],
+   "centre_m": [
+    0.0,
+    0.1107,
+    0.2614
+   ]
+  },
+  {
+   "part": "status LEDs",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.018,
+    0.002,
+    0.006
+   ],
+   "centre_m": [
+    -0.1205,
+    0.0967,
+    0.0438
+   ]
+  },
+  {
+   "part": "label plate",
+   "role": "interface",
+   "component": "interface",
+   "from": "Containment interface plate, seals and harness",
+   "kg": 0.0,
+   "bbox_m": [
+    0.09,
+    0.001,
+    0.025
+   ],
+   "centre_m": [
+    0.0915,
+    0.0962,
+    0.049
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to gradient furnace: crucible run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0021,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    -0.125,
+    0.0751,
+    0.2415
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to gradient furnace: crucible run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0045,
+   "bbox_m": [
+    0.005,
+    0.0193,
+    0.005
+   ],
+   "centre_m": [
+    -0.125,
+    0.083,
+    0.2415
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to gradient furnace: crucible run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0486,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.221
+   ],
+   "centre_m": [
+    -0.125,
+    0.0902,
+    0.1335
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to gradient furnace: crucible run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.002,
+   "bbox_m": [
+    0.006,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.1245,
+    0.0902,
+    0.0255
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to gradient furnace: crucible run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0118,
+   "bbox_m": [
+    0.005,
+    0.0533,
+    0.005
+   ],
+   "centre_m": [
+    -0.124,
+    0.066,
+    0.0255
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to gradient furnace: crucible run 6",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0021,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    -0.124,
+    0.0411,
+    0.0255
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.002,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0055
+   ],
+   "centre_m": [
+    0.0109,
+    0.0068,
+    0.2583
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0194,
+   "bbox_m": [
+    0.005,
+    0.088,
+    0.005
+   ],
+   "centre_m": [
+    0.0109,
+    -0.0347,
+    0.2585
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0277,
+   "bbox_m": [
+    0.1259,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.0496,
+    -0.0762,
+    0.2585
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0049,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.021
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0762,
+    0.2505
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0024,
+   "bbox_m": [
+    0.005,
+    0.0085,
+    0.005
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0779,
+    0.2425
+   ]
+  }
+ ],
+ "notes": [
+  "The crucible moves, the blocks stay: the pull stage draws the sample from the hot block through the 10 mm gap into the cold block, and the camera watches the solidification front in the gap. The cold block dumps its heat into the cold wall through a copper strap.",
+  "The catalog gives 1.52 kg for structure and containment; as an aluminium box that is a 0.49 mm skin on 0.80 kg of posts and shelves. Thin: the bay rails have to carry the launch loads, or the module needs more structure mass.",
+  "The grapple fixture stands 26 mm proud of the front panel, into the bay opening; everything else is inside the bay envelope."
+ ]
+}

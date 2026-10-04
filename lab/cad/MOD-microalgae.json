@@ -1,0 +1,2557 @@
+{
+ "name": "MOD-microalgae",
+ "experiment": "Microalgae and cyanobacteria for oxygen and food",
+ "bay": "L",
+ "envelope_m": [
+  0.313,
+  0.1913,
+  0.3652
+ ],
+ "interior_m": [
+  0.31,
+  0.1883,
+  0.3622
+ ],
+ "module_kg": 5.4,
+ "assigned_kg": 5.4,
+ "fits": true,
+ "height_used_m": 0.175,
+ "height_free_m": 0.1872,
+ "fill": 0.18,
+ "inside_envelope": true,
+ "clashes": [],
+ "decks": [
+  {
+   "deck": "A",
+   "z_m": 0.0,
+   "h_m": 0.029,
+   "holds": [
+    "fluid pack"
+   ]
+  },
+  {
+   "deck": "B",
+   "z_m": 0.031,
+   "h_m": 0.144,
+   "holds": [
+    "4 flat-panel photobioreactors with LED panels",
+    "controller and data storage",
+    "optical sensor reader",
+    "2 micro-pumps, 4 valves on a manifold"
+   ]
+  }
+ ],
+ "housing": {
+  "kg": 1.2,
+  "skin_mm_aluminium": 0.6,
+  "from": "Frame, housing and thermal interface plate"
+ },
+ "thermal": {
+  "kg": 0.3,
+  "thermoelectric_in_module": false,
+  "from": "Frame, housing and thermal interface plate"
+ },
+ "lines": 5,
+ "harness_runs": 3,
+ "com_m": [
+  -0.0138,
+  -0.0181,
+  0.0956
+ ],
+ "inertia_kgm2": [
+  [
+   0.05896,
+   8e-05,
+   0.00409
+  ],
+  [
+   8e-05,
+   0.08725,
+   0.00214
+  ],
+  [
+   0.00409,
+   0.00214,
+   0.05968
+  ]
+ ],
+ "items": [
+  {
+   "item": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.8,
+   "as": [
+    "pbr"
+   ]
+  },
+  {
+   "item": "LED panels with PAR photodiode and drivers",
+   "kg": 0.5,
+   "as": [
+    "led_panel"
+   ]
+  },
+  {
+   "item": "Optical density emitters and detectors",
+   "kg": 0.2,
+   "as": [
+    "od"
+   ]
+  },
+  {
+   "item": "Optical O2 sensor spots and reader",
+   "kg": 0.35,
+   "as": [
+    "reader"
+   ]
+  },
+  {
+   "item": "Headspace pressure transducers",
+   "kg": 0.15,
+   "as": [
+    "transducers"
+   ]
+  },
+  {
+   "item": "Recirculation micro-pumps and valves",
+   "kg": 0.4,
+   "as": [
+    "pumps"
+   ]
+  },
+  {
+   "item": "Filled reservoirs: fresh medium and fixative, plus fixative wells",
+   "kg": 0.9,
+   "as": [
+    "bags"
+   ]
+  },
+  {
+   "item": "Module controller and data logger",
+   "kg": 0.3,
+   "as": [
+    "avionics"
+   ]
+  },
+  {
+   "item": "Frame, housing and thermal interface plate",
+   "kg": 1.5,
+   "as": [
+    "shell",
+    "thermal"
+   ]
+  },
+  {
+   "item": "Harness and connectors",
+   "kg": 0.3,
+   "as": [
+    "harness"
+   ]
+  }
+ ],
+ "components": [
+  {
+   "name": "fluid pack",
+   "deck": "A",
+   "kg": 0.9,
+   "box_m": [
+    -0.145,
+    -0.0762,
+    0.0015,
+    0.1399,
+    0.0703,
+    0.0235
+   ],
+   "from": [
+    "Filled reservoirs: fresh medium and fixative, plus fixative wells"
+   ]
+  },
+  {
+   "name": "4 flat-panel photobioreactors with LED panels",
+   "deck": "B",
+   "kg": 1.65,
+   "box_m": [
+    -0.149,
+    -0.0822,
+    0.0325,
+    -0.013,
+    0.0378,
+    0.1685
+   ],
+   "from": [
+    "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+    "LED panels with PAR photodiode and drivers",
+    "Optical density emitters and detectors",
+    "Headspace pressure transducers"
+   ]
+  },
+  {
+   "name": "controller and data storage",
+   "deck": "B",
+   "kg": 0.3,
+   "box_m": [
+    -0.009,
+    -0.0182,
+    0.0325,
+    0.1119,
+    0.0704,
+    0.0605
+   ],
+   "from": [
+    "Module controller and data logger"
+   ]
+  },
+  {
+   "name": "optical sensor reader",
+   "deck": "B",
+   "kg": 0.35,
+   "box_m": [
+    -0.009,
+    -0.0822,
+    0.0325,
+    0.051,
+    -0.0472,
+    0.0635
+   ],
+   "from": [
+    "Optical O2 sensor spots and reader"
+   ]
+  },
+  {
+   "name": "2 micro-pumps, 4 valves on a manifold",
+   "deck": "B",
+   "kg": 0.4,
+   "box_m": [
+    0.055,
+    -0.0742,
+    0.0325,
+    0.149,
+    -0.0242,
+    0.0705
+   ],
+   "from": [
+    "Recirculation micro-pumps and valves"
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "part": "fresh medium (225 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Filled reservoirs: fresh medium and fixative, plus fixative wells",
+   "kg": 0.276,
+   "bbox_m": [
+    0.0923,
+    0.1385,
+    0.022
+   ],
+   "centre_m": [
+    -0.0989,
+    -0.0069,
+    0.0125
+   ]
+  },
+  {
+   "part": "fresh medium port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Filled reservoirs: fresh medium and fixative, plus fixative wells",
+   "kg": 0.024,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    -0.0989,
+    0.0663,
+    0.0125
+   ]
+  },
+  {
+   "part": "fixative (225 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Filled reservoirs: fresh medium and fixative, plus fixative wells",
+   "kg": 0.276,
+   "bbox_m": [
+    0.0923,
+    0.1385,
+    0.022
+   ],
+   "centre_m": [
+    -0.0025,
+    -0.0069,
+    0.0125
+   ]
+  },
+  {
+   "part": "fixative port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Filled reservoirs: fresh medium and fixative, plus fixative wells",
+   "kg": 0.024,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    -0.0025,
+    0.0663,
+    0.0125
+   ]
+  },
+  {
+   "part": "fixative wells (225 mL)",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Filled reservoirs: fresh medium and fixative, plus fixative wells",
+   "kg": 0.276,
+   "bbox_m": [
+    0.0923,
+    0.1385,
+    0.022
+   ],
+   "centre_m": [
+    0.0938,
+    -0.0069,
+    0.0125
+   ]
+  },
+  {
+   "part": "fixative wells port",
+   "role": "fluid",
+   "component": "fluid pack",
+   "from": "Filled reservoirs: fresh medium and fixative, plus fixative wells",
+   "kg": 0.024,
+   "bbox_m": [
+    0.005,
+    0.008,
+    0.005
+   ],
+   "centre_m": [
+    0.0938,
+    0.0663,
+    0.0125
+   ]
+  },
+  {
+   "part": "PBR base rail front",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.0,
+   "bbox_m": [
+    0.132,
+    0.01,
+    0.004
+   ],
+   "centre_m": [
+    -0.079,
+    0.0228,
+    0.0345
+   ]
+  },
+  {
+   "part": "PBR base rail back",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.0,
+   "bbox_m": [
+    0.132,
+    0.01,
+    0.004
+   ],
+   "centre_m": [
+    -0.079,
+    -0.0672,
+    0.0345
+   ]
+  },
+  {
+   "part": "photobioreactor 1 frame and fittings",
+   "role": "sample",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.09,
+   "bbox_m": [
+    0.014,
+    0.12,
+    0.12
+   ],
+   "centre_m": [
+    -0.138,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "photobioreactor 1 algae culture",
+   "role": "sample",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.1,
+   "bbox_m": [
+    0.01,
+    0.1,
+    0.1
+   ],
+   "centre_m": [
+    -0.138,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "photobioreactor 1 PTFE membrane",
+   "role": "sample",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.01,
+   "bbox_m": [
+    0.001,
+    0.1,
+    0.1
+   ],
+   "centre_m": [
+    -0.144,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "LED panel 1",
+   "role": "imaging",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "LED panels with PAR photodiode and drivers",
+   "kg": 0.1062,
+   "bbox_m": [
+    0.005,
+    0.11,
+    0.11
+   ],
+   "centre_m": [
+    -0.1245,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "LEDs 1",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "LED panels with PAR photodiode and drivers",
+   "kg": 0.0063,
+   "bbox_m": [
+    0.002,
+    0.08,
+    0.08
+   ],
+   "centre_m": [
+    -0.128,
+    -0.0247,
+    0.095
+   ]
+  },
+  {
+   "part": "PAR photodiode 1",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "LED panels with PAR photodiode and drivers",
+   "kg": 0.0125,
+   "bbox_m": [
+    0.002,
+    0.008,
+    0.008
+   ],
+   "centre_m": [
+    -0.128,
+    0.0218,
+    0.1365
+   ]
+  },
+  {
+   "part": "OD emitter 1",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Optical density emitters and detectors",
+   "kg": 0.025,
+   "bbox_m": [
+    0.004,
+    0.006,
+    0.006
+   ],
+   "centre_m": [
+    -0.129,
+    0.0078,
+    0.0625
+   ]
+  },
+  {
+   "part": "OD detector 1",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Optical density emitters and detectors",
+   "kg": 0.025,
+   "bbox_m": [
+    0.004,
+    0.006,
+    0.006
+   ],
+   "centre_m": [
+    -0.147,
+    0.0078,
+    0.0625
+   ]
+  },
+  {
+   "part": "headspace pressure transducer 1",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Headspace pressure transducers",
+   "kg": 0.0375,
+   "bbox_m": [
+    0.01,
+    0.01,
+    0.012
+   ],
+   "centre_m": [
+    -0.138,
+    -0.0522,
+    0.1625
+   ]
+  },
+  {
+   "part": "PBR 1 port",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    -0.138,
+    0.0228,
+    0.1595
+   ]
+  },
+  {
+   "part": "jumper line 1 to 2",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.0,
+   "bbox_m": [
+    0.033,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.1215,
+    0.0228,
+    0.1605
+   ]
+  },
+  {
+   "part": "photobioreactor 2 frame and fittings",
+   "role": "sample",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.09,
+   "bbox_m": [
+    0.014,
+    0.12,
+    0.12
+   ],
+   "centre_m": [
+    -0.105,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "photobioreactor 2 algae culture",
+   "role": "sample",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.1,
+   "bbox_m": [
+    0.01,
+    0.1,
+    0.1
+   ],
+   "centre_m": [
+    -0.105,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "photobioreactor 2 PTFE membrane",
+   "role": "sample",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.01,
+   "bbox_m": [
+    0.001,
+    0.1,
+    0.1
+   ],
+   "centre_m": [
+    -0.111,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "LED panel 2",
+   "role": "imaging",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "LED panels with PAR photodiode and drivers",
+   "kg": 0.1062,
+   "bbox_m": [
+    0.005,
+    0.11,
+    0.11
+   ],
+   "centre_m": [
+    -0.0915,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "LEDs 2",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "LED panels with PAR photodiode and drivers",
+   "kg": 0.0063,
+   "bbox_m": [
+    0.002,
+    0.08,
+    0.08
+   ],
+   "centre_m": [
+    -0.095,
+    -0.0247,
+    0.095
+   ]
+  },
+  {
+   "part": "PAR photodiode 2",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "LED panels with PAR photodiode and drivers",
+   "kg": 0.0125,
+   "bbox_m": [
+    0.002,
+    0.008,
+    0.008
+   ],
+   "centre_m": [
+    -0.095,
+    0.0218,
+    0.1365
+   ]
+  },
+  {
+   "part": "OD emitter 2",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Optical density emitters and detectors",
+   "kg": 0.025,
+   "bbox_m": [
+    0.004,
+    0.006,
+    0.006
+   ],
+   "centre_m": [
+    -0.096,
+    0.0078,
+    0.0625
+   ]
+  },
+  {
+   "part": "OD detector 2",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Optical density emitters and detectors",
+   "kg": 0.025,
+   "bbox_m": [
+    0.004,
+    0.006,
+    0.006
+   ],
+   "centre_m": [
+    -0.114,
+    0.0078,
+    0.0625
+   ]
+  },
+  {
+   "part": "headspace pressure transducer 2",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Headspace pressure transducers",
+   "kg": 0.0375,
+   "bbox_m": [
+    0.01,
+    0.01,
+    0.012
+   ],
+   "centre_m": [
+    -0.105,
+    -0.0522,
+    0.1625
+   ]
+  },
+  {
+   "part": "PBR 2 port",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    -0.105,
+    0.0228,
+    0.1595
+   ]
+  },
+  {
+   "part": "jumper line 2 to 3",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.0,
+   "bbox_m": [
+    0.033,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0885,
+    0.0228,
+    0.1605
+   ]
+  },
+  {
+   "part": "photobioreactor 3 frame and fittings",
+   "role": "sample",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.09,
+   "bbox_m": [
+    0.014,
+    0.12,
+    0.12
+   ],
+   "centre_m": [
+    -0.072,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "photobioreactor 3 algae culture",
+   "role": "sample",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.1,
+   "bbox_m": [
+    0.01,
+    0.1,
+    0.1
+   ],
+   "centre_m": [
+    -0.072,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "photobioreactor 3 PTFE membrane",
+   "role": "sample",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.01,
+   "bbox_m": [
+    0.001,
+    0.1,
+    0.1
+   ],
+   "centre_m": [
+    -0.078,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "LED panel 3",
+   "role": "imaging",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "LED panels with PAR photodiode and drivers",
+   "kg": 0.1062,
+   "bbox_m": [
+    0.005,
+    0.11,
+    0.11
+   ],
+   "centre_m": [
+    -0.0585,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "LEDs 3",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "LED panels with PAR photodiode and drivers",
+   "kg": 0.0063,
+   "bbox_m": [
+    0.002,
+    0.08,
+    0.08
+   ],
+   "centre_m": [
+    -0.062,
+    -0.0247,
+    0.095
+   ]
+  },
+  {
+   "part": "PAR photodiode 3",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "LED panels with PAR photodiode and drivers",
+   "kg": 0.0125,
+   "bbox_m": [
+    0.002,
+    0.008,
+    0.008
+   ],
+   "centre_m": [
+    -0.062,
+    0.0218,
+    0.1365
+   ]
+  },
+  {
+   "part": "OD emitter 3",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Optical density emitters and detectors",
+   "kg": 0.025,
+   "bbox_m": [
+    0.004,
+    0.006,
+    0.006
+   ],
+   "centre_m": [
+    -0.063,
+    0.0078,
+    0.0625
+   ]
+  },
+  {
+   "part": "OD detector 3",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Optical density emitters and detectors",
+   "kg": 0.025,
+   "bbox_m": [
+    0.004,
+    0.006,
+    0.006
+   ],
+   "centre_m": [
+    -0.081,
+    0.0078,
+    0.0625
+   ]
+  },
+  {
+   "part": "headspace pressure transducer 3",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Headspace pressure transducers",
+   "kg": 0.0375,
+   "bbox_m": [
+    0.01,
+    0.01,
+    0.012
+   ],
+   "centre_m": [
+    -0.072,
+    -0.0522,
+    0.1625
+   ]
+  },
+  {
+   "part": "PBR 3 port",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    -0.072,
+    0.0228,
+    0.1595
+   ]
+  },
+  {
+   "part": "jumper line 3 to 4",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.0,
+   "bbox_m": [
+    0.033,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0555,
+    0.0228,
+    0.1605
+   ]
+  },
+  {
+   "part": "photobioreactor 4 frame and fittings",
+   "role": "sample",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.09,
+   "bbox_m": [
+    0.014,
+    0.12,
+    0.12
+   ],
+   "centre_m": [
+    -0.039,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "photobioreactor 4 algae culture",
+   "role": "sample",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.1,
+   "bbox_m": [
+    0.01,
+    0.1,
+    0.1
+   ],
+   "centre_m": [
+    -0.039,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "photobioreactor 4 PTFE membrane",
+   "role": "sample",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.01,
+   "bbox_m": [
+    0.001,
+    0.1,
+    0.1
+   ],
+   "centre_m": [
+    -0.045,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "LED panel 4",
+   "role": "imaging",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "LED panels with PAR photodiode and drivers",
+   "kg": 0.1062,
+   "bbox_m": [
+    0.005,
+    0.11,
+    0.11
+   ],
+   "centre_m": [
+    -0.0255,
+    -0.0222,
+    0.0965
+   ]
+  },
+  {
+   "part": "LEDs 4",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "LED panels with PAR photodiode and drivers",
+   "kg": 0.0063,
+   "bbox_m": [
+    0.002,
+    0.08,
+    0.08
+   ],
+   "centre_m": [
+    -0.029,
+    -0.0247,
+    0.095
+   ]
+  },
+  {
+   "part": "PAR photodiode 4",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "LED panels with PAR photodiode and drivers",
+   "kg": 0.0125,
+   "bbox_m": [
+    0.002,
+    0.008,
+    0.008
+   ],
+   "centre_m": [
+    -0.029,
+    0.0218,
+    0.1365
+   ]
+  },
+  {
+   "part": "OD emitter 4",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Optical density emitters and detectors",
+   "kg": 0.025,
+   "bbox_m": [
+    0.004,
+    0.006,
+    0.006
+   ],
+   "centre_m": [
+    -0.03,
+    0.0078,
+    0.0625
+   ]
+  },
+  {
+   "part": "OD detector 4",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Optical density emitters and detectors",
+   "kg": 0.025,
+   "bbox_m": [
+    0.004,
+    0.006,
+    0.006
+   ],
+   "centre_m": [
+    -0.048,
+    0.0078,
+    0.0625
+   ]
+  },
+  {
+   "part": "headspace pressure transducer 4",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Headspace pressure transducers",
+   "kg": 0.0375,
+   "bbox_m": [
+    0.01,
+    0.01,
+    0.012
+   ],
+   "centre_m": [
+    -0.039,
+    -0.0522,
+    0.1625
+   ]
+  },
+  {
+   "part": "PBR 4 port",
+   "role": "experiment",
+   "component": "4 flat-panel photobioreactors with LED panels",
+   "from": "Four flat-panel membrane photobioreactors with PTFE membranes and fittings",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    -0.039,
+    0.0228,
+    0.1595
+   ]
+  },
+  {
+   "part": "controller enclosure (boards, data storage)",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Module controller and data logger",
+   "kg": 0.27,
+   "bbox_m": [
+    0.1209,
+    0.0806,
+    0.028
+   ],
+   "centre_m": [
+    0.0514,
+    0.0221,
+    0.0465
+   ]
+  },
+  {
+   "part": "connector 1",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Module controller and data logger",
+   "kg": 0.015,
+   "bbox_m": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "centre_m": [
+    0.011,
+    0.0664,
+    0.0465
+   ]
+  },
+  {
+   "part": "connector 2",
+   "role": "electronics",
+   "component": "controller and data storage",
+   "from": "Module controller and data logger",
+   "kg": 0.015,
+   "bbox_m": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "centre_m": [
+    0.033,
+    0.0664,
+    0.0465
+   ]
+  },
+  {
+   "part": "optical O2/pH reader",
+   "role": "sensor",
+   "component": "optical sensor reader",
+   "from": "Optical O2 sensor spots and reader",
+   "kg": 0.315,
+   "bbox_m": [
+    0.06,
+    0.035,
+    0.025
+   ],
+   "centre_m": [
+    0.021,
+    -0.0647,
+    0.045
+   ]
+  },
+  {
+   "part": "reader fibre 1",
+   "role": "sensor",
+   "component": "optical sensor reader",
+   "from": "Optical O2 sensor spots and reader",
+   "kg": 0.0175,
+   "bbox_m": [
+    0.003,
+    0.003,
+    0.006
+   ],
+   "centre_m": [
+    0.011,
+    -0.0647,
+    0.0605
+   ]
+  },
+  {
+   "part": "reader fibre 2",
+   "role": "sensor",
+   "component": "optical sensor reader",
+   "from": "Optical O2 sensor spots and reader",
+   "kg": 0.0175,
+   "bbox_m": [
+    0.003,
+    0.003,
+    0.006
+   ],
+   "centre_m": [
+    0.031,
+    -0.0647,
+    0.0605
+   ]
+  },
+  {
+   "part": "fluid manifold",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Recirculation micro-pumps and valves",
+   "kg": 0.12,
+   "bbox_m": [
+    0.094,
+    0.05,
+    0.012
+   ],
+   "centre_m": [
+    0.102,
+    -0.0492,
+    0.0385
+   ]
+  },
+  {
+   "part": "micro-pump 1",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Recirculation micro-pumps and valves",
+   "kg": 0.1,
+   "bbox_m": [
+    0.02,
+    0.02,
+    0.026
+   ],
+   "centre_m": [
+    0.076,
+    -0.0492,
+    0.0575
+   ]
+  },
+  {
+   "part": "micro-pump 2",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Recirculation micro-pumps and valves",
+   "kg": 0.1,
+   "bbox_m": [
+    0.02,
+    0.02,
+    0.026
+   ],
+   "centre_m": [
+    0.102,
+    -0.0492,
+    0.0575
+   ]
+  },
+  {
+   "part": "valve 1",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Recirculation micro-pumps and valves",
+   "kg": 0.02,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    0.1215,
+    -0.0612,
+    0.0525
+   ]
+  },
+  {
+   "part": "valve 2",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Recirculation micro-pumps and valves",
+   "kg": 0.02,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    0.1215,
+    -0.0372,
+    0.0525
+   ]
+  },
+  {
+   "part": "valve 3",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Recirculation micro-pumps and valves",
+   "kg": 0.02,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    0.1345,
+    -0.0612,
+    0.0525
+   ]
+  },
+  {
+   "part": "valve 4",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Recirculation micro-pumps and valves",
+   "kg": 0.02,
+   "bbox_m": [
+    0.009,
+    0.009,
+    0.016
+   ],
+   "centre_m": [
+    0.1345,
+    -0.0372,
+    0.0525
+   ]
+  },
+  {
+   "part": "manifold inlet",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Recirculation micro-pumps and valves",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    0.061,
+    -0.0492,
+    0.0475
+   ]
+  },
+  {
+   "part": "manifold outlet",
+   "role": "pump",
+   "component": "2 micro-pumps, 4 valves on a manifold",
+   "from": "Recirculation micro-pumps and valves",
+   "kg": 0.0,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.006
+   ],
+   "centre_m": [
+    0.143,
+    -0.0492,
+    0.0475
+   ]
+  },
+  {
+   "part": "bottom panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.0969,
+   "bbox_m": [
+    0.313,
+    0.1913,
+    0.0015
+   ],
+   "centre_m": [
+    0.0,
+    0.0,
+    0.0008
+   ]
+  },
+  {
+   "part": "top panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.0969,
+   "bbox_m": [
+    0.313,
+    0.1913,
+    0.0015
+   ],
+   "centre_m": [
+    0.0,
+    0.0,
+    0.3645
+   ]
+  },
+  {
+   "part": "side panel L",
+   "role": "housing",
+   "component": "housing",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.113,
+   "bbox_m": [
+    0.0015,
+    0.1913,
+    0.3622
+   ],
+   "centre_m": [
+    -0.1558,
+    0.0,
+    0.1826
+   ]
+  },
+  {
+   "part": "side panel R",
+   "role": "housing",
+   "component": "housing",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.113,
+   "bbox_m": [
+    0.0015,
+    0.1913,
+    0.3622
+   ],
+   "centre_m": [
+    0.1558,
+    0.0,
+    0.1826
+   ]
+  },
+  {
+   "part": "back panel (bay interface)",
+   "role": "housing",
+   "component": "housing",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.1849,
+   "bbox_m": [
+    0.31,
+    0.0015,
+    0.3622
+   ],
+   "centre_m": [
+    0.0,
+    -0.0949,
+    0.1826
+   ]
+  },
+  {
+   "part": "front panel",
+   "role": "housing",
+   "component": "housing",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.1849,
+   "bbox_m": [
+    0.31,
+    0.0015,
+    0.3622
+   ],
+   "centre_m": [
+    0.0,
+    0.0949,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 1",
+   "role": "housing",
+   "component": "housing",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.0315,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    -0.151,
+    -0.0802,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 2",
+   "role": "housing",
+   "component": "housing",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.0315,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    -0.151,
+    0.0702,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 3",
+   "role": "housing",
+   "component": "housing",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.0315,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    0.151,
+    -0.0802,
+    0.1826
+   ]
+  },
+  {
+   "part": "corner post 4",
+   "role": "housing",
+   "component": "housing",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.0315,
+   "bbox_m": [
+    0.008,
+    0.008,
+    0.3622
+   ],
+   "centre_m": [
+    0.151,
+    0.0702,
+    0.1826
+   ]
+  },
+  {
+   "part": "shelf 1",
+   "role": "housing",
+   "component": "housing",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.234,
+   "bbox_m": [
+    0.31,
+    0.1583,
+    0.002
+   ],
+   "centre_m": [
+    0.0,
+    -0.005,
+    0.0315
+   ]
+  },
+  {
+   "part": "cold wall (to the bay's thermoelectric block)",
+   "role": "thermal",
+   "component": "housing",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.3,
+   "bbox_m": [
+    0.29,
+    0.004,
+    0.3522
+   ],
+   "centre_m": [
+    0.0,
+    -0.0922,
+    0.1826
+   ]
+  },
+  {
+   "part": "blind-mate connector: power, data, video",
+   "role": "interface",
+   "component": "interface",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.0252,
+   "bbox_m": [
+    0.05,
+    0.01,
+    0.022
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0892,
+    0.3447
+   ]
+  },
+  {
+   "part": "grapple fixture base (Dexter-L)",
+   "role": "interface",
+   "component": "interface",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.0252,
+   "bbox_m": [
+    0.07,
+    0.004,
+    0.07
+   ],
+   "centre_m": [
+    0.0,
+    0.0977,
+    0.2614
+   ]
+  },
+  {
+   "part": "grapple fixture pin",
+   "role": "interface",
+   "component": "interface",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.0,
+   "bbox_m": [
+    0.016,
+    0.022,
+    0.016
+   ],
+   "centre_m": [
+    0.0,
+    0.1107,
+    0.2614
+   ]
+  },
+  {
+   "part": "status LEDs",
+   "role": "interface",
+   "component": "interface",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.0,
+   "bbox_m": [
+    0.018,
+    0.002,
+    0.006
+   ],
+   "centre_m": [
+    -0.1205,
+    0.0967,
+    0.0438
+   ]
+  },
+  {
+   "part": "label plate",
+   "role": "interface",
+   "component": "interface",
+   "from": "Frame, housing and thermal interface plate",
+   "kg": 0.0,
+   "bbox_m": [
+    0.09,
+    0.001,
+    0.025
+   ],
+   "centre_m": [
+    0.0915,
+    0.0962,
+    0.049
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0989,
+    0.0731,
+    0.0125
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.008,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0989,
+    0.0767,
+    0.0125
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1642
+   ],
+   "centre_m": [
+    -0.0989,
+    0.0792,
+    0.093
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.163,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0189,
+    0.0792,
+    0.1735
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1315,
+    0.0032
+   ],
+   "centre_m": [
+    0.061,
+    0.015,
+    0.1735
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1222
+   ],
+   "centre_m": [
+    0.061,
+    -0.0492,
+    0.114
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.061,
+    -0.0492,
+    0.0533
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0025,
+    0.0731,
+    0.0125
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0114,
+    0.0032
+   ],
+   "centre_m": [
+    -0.0025,
+    0.0784,
+    0.0125
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1642
+   ],
+   "centre_m": [
+    -0.0025,
+    0.0826,
+    0.093
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0667,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0292,
+    0.0826,
+    0.1735
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1349,
+    0.0032
+   ],
+   "centre_m": [
+    0.061,
+    0.0167,
+    0.1735
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1222
+   ],
+   "centre_m": [
+    0.061,
+    -0.0492,
+    0.114
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.061,
+    -0.0492,
+    0.0533
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0056,
+    0.0032
+   ],
+   "centre_m": [
+    0.0938,
+    0.0731,
+    0.0125
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0148,
+    0.0032
+   ],
+   "centre_m": [
+    0.0938,
+    0.0801,
+    0.0125
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1642
+   ],
+   "centre_m": [
+    0.0938,
+    0.086,
+    0.093
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.036,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0774,
+    0.086,
+    0.1735
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1383,
+    0.0032
+   ],
+   "centre_m": [
+    0.061,
+    0.0184,
+    0.1735
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1222
+   ],
+   "centre_m": [
+    0.061,
+    -0.0492,
+    0.114
+   ]
+  },
+  {
+   "part": "line: fluid pack to 2 micro-pumps run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.061,
+    -0.0492,
+    0.0533
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to 4 flat-panel photobioreactors with LED panels run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.143,
+    -0.0492,
+    0.0533
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to 4 flat-panel photobioreactors with LED panels run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1222
+   ],
+   "centre_m": [
+    0.143,
+    -0.0492,
+    0.114
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to 4 flat-panel photobioreactors with LED panels run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1417,
+    0.0032
+   ],
+   "centre_m": [
+    0.143,
+    0.0201,
+    0.1735
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to 4 flat-panel photobioreactors with LED panels run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.2842,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.0025,
+    0.0894,
+    0.1735
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to 4 flat-panel photobioreactors with LED panels run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0697,
+    0.0032
+   ],
+   "centre_m": [
+    -0.138,
+    0.0561,
+    0.1735
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to 4 flat-panel photobioreactors with LED panels run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0102
+   ],
+   "centre_m": [
+    -0.138,
+    0.0228,
+    0.17
+   ]
+  },
+  {
+   "part": "line: 2 micro-pumps to 4 flat-panel photobioreactors with LED panels run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    -0.138,
+    0.0228,
+    0.1653
+   ]
+  },
+  {
+   "part": "line: 4 flat-panel photobioreactors with LED panels to 2 micro-pumps run 1",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    -0.039,
+    0.0228,
+    0.1653
+   ]
+  },
+  {
+   "part": "line: 4 flat-panel photobioreactors with LED panels to 2 micro-pumps run 2",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0102
+   ],
+   "centre_m": [
+    -0.039,
+    0.0228,
+    0.17
+   ]
+  },
+  {
+   "part": "line: 4 flat-panel photobioreactors with LED panels to 2 micro-pumps run 3",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0595,
+    0.0032
+   ],
+   "centre_m": [
+    -0.039,
+    0.051,
+    0.1735
+   ]
+  },
+  {
+   "part": "line: 4 flat-panel photobioreactors with LED panels to 2 micro-pumps run 4",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.1032,
+    0.0032,
+    0.0032
+   ],
+   "centre_m": [
+    0.011,
+    0.0792,
+    0.1735
+   ]
+  },
+  {
+   "part": "line: 4 flat-panel photobioreactors with LED panels to 2 micro-pumps run 5",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.1315,
+    0.0032
+   ],
+   "centre_m": [
+    0.061,
+    0.015,
+    0.1735
+   ]
+  },
+  {
+   "part": "line: 4 flat-panel photobioreactors with LED panels to 2 micro-pumps run 6",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.1222
+   ],
+   "centre_m": [
+    0.061,
+    -0.0492,
+    0.114
+   ]
+  },
+  {
+   "part": "line: 4 flat-panel photobioreactors with LED panels to 2 micro-pumps run 7",
+   "role": "line",
+   "component": "line",
+   "from": "fluidics",
+   "kg": 0.0,
+   "bbox_m": [
+    0.0032,
+    0.0032,
+    0.0056
+   ],
+   "centre_m": [
+    0.061,
+    -0.0492,
+    0.0533
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 4 flat-panel photobioreactors with LED panels run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0021,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    0.011,
+    0.0737,
+    0.0465
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 4 flat-panel photobioreactors with LED panels run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0048,
+   "bbox_m": [
+    0.005,
+    0.0207,
+    0.005
+   ],
+   "centre_m": [
+    0.011,
+    0.0823,
+    0.0465
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 4 flat-panel photobioreactors with LED panels run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0113,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.051
+   ],
+   "centre_m": [
+    0.011,
+    0.0902,
+    0.0695
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 4 flat-panel photobioreactors with LED panels run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0087,
+   "bbox_m": [
+    0.039,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.006,
+    0.0902,
+    0.0925
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 4 flat-panel photobioreactors with LED panels run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0128,
+   "bbox_m": [
+    0.005,
+    0.0583,
+    0.005
+   ],
+   "centre_m": [
+    -0.023,
+    0.0635,
+    0.0925
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 4 flat-panel photobioreactors with LED panels run 6",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0021,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    -0.023,
+    0.0361,
+    0.0925
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0021,
+   "bbox_m": [
+    0.005,
+    0.0065,
+    0.005
+   ],
+   "centre_m": [
+    0.011,
+    0.0737,
+    0.0465
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0048,
+   "bbox_m": [
+    0.005,
+    0.0207,
+    0.005
+   ],
+   "centre_m": [
+    0.011,
+    0.0823,
+    0.0465
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0289,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.132
+   ],
+   "centre_m": [
+    0.011,
+    0.0902,
+    0.11
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.021,
+   "bbox_m": [
+    0.096,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    0.0565,
+    0.0902,
+    0.1735
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0357,
+   "bbox_m": [
+    0.005,
+    0.1633,
+    0.005
+   ],
+   "centre_m": [
+    0.102,
+    0.011,
+    0.1735
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 6",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0285,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.13
+   ],
+   "centre_m": [
+    0.102,
+    -0.0682,
+    0.111
+   ]
+  },
+  {
+   "part": "harness: controller and data storage to 2 micro-pumps run 7",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0021,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.0065
+   ],
+   "centre_m": [
+    0.102,
+    -0.0682,
+    0.0478
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 1",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0253,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.1155
+   ],
+   "centre_m": [
+    0.0969,
+    0.0221,
+    0.1183
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 2",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0226,
+   "bbox_m": [
+    0.005,
+    0.1033,
+    0.005
+   ],
+   "centre_m": [
+    0.0969,
+    -0.027,
+    0.1735
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 3",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0463,
+   "bbox_m": [
+    0.2119,
+    0.005,
+    0.005
+   ],
+   "centre_m": [
+    -0.0066,
+    -0.0762,
+    0.1735
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 4",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0385,
+   "bbox_m": [
+    0.005,
+    0.005,
+    0.1762
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0762,
+    0.2591
+   ]
+  },
+  {
+   "part": "harness: controller to the connector run 5",
+   "role": "harness",
+   "component": "harness",
+   "from": "harness",
+   "kg": 0.0024,
+   "bbox_m": [
+    0.005,
+    0.0085,
+    0.005
+   ],
+   "centre_m": [
+    -0.11,
+    -0.0779,
+    0.3447
+   ]
+  }
+ ],
+ "notes": [
+  "Each photobioreactor has its own LED panel on one face and an optical-density pair across it; the four are plumbed in series.",
+  "Reagent volumes the catalog does not state are split evenly from 75 % of the reservoir item's mass.",
+  "Fluid pack: 3 reagent bags in 1 layer (285 x 138 x 23 mm), every port on a front edge.",
+  "The catalog gives 1.20 kg for structure and containment; as an aluminium box that is a 0.60 mm skin on 0.36 kg of posts and shelves.",
+  "The grapple fixture stands 26 mm proud of the front panel, into the bay opening; everything else is inside the bay envelope."
+ ]
+}
