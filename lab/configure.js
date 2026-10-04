@@ -275,7 +275,7 @@
       <table class="tbl mission"><thead><tr><th>When</th><th>Mission time</th><th>Event</th><th></th></tr></thead><tbody>
       ${M.ev.map(([s, a, b]) => `<tr><td class="mono">${when(M.t0, s)}</td><td class="mono">${rel(s)}</td><td><b>${esc(a)}</b></td><td>${b}</td></tr>`).join('')}</tbody></table>
       <p class="small">${M.cube ? 'Your CubeSat reads the experiment in orbit and sends the results down every day; nothing comes back, so post-flight assays need a bay on LELP-1 or a sample-return satellite.' : own ? `Your satellite flies your protocol only. The deorbit and entry copy LELP-1's (same orbit and ballistic coefficient); the capsule's smaller nose sees about twice LELP-1's peak heat flux, and an unguided capsule lands tens of km from its aim point, so recovery takes hours. Deorbit burn about ${f0(sz().burn)} s on ${sz().nThr} × 22 N thrusters.` : `On LELP-1 the lab stays in orbit until the longest protocol on board is preserved (${f1(M.labDays)} days with this manifest), then returns. The twin's 21-minute handover assumes the ship waits at the predicted splash point.`} Launch, return and handover times come from a run of the mission twin.</p>
-      <div class="sim-cta"><a class="btn" href="simulate.html#${esc(hashOf())}">▶ Run the mission simulation</a>
+      <div class="sim-cta"><a class="btn" href="simulate.html#${esc(hashOf())}">▶ Run the mission simulation</a><a class="btn ghost" href="../portal.html#book=${encodeURIComponent(hashOf())}">Book this mission</a>
         <span class="small">Launch, orbit, your protocol day by day, the return and the handover, played end to end from the twin's models.</span></div>
       <p><button type="button" class="btn ghost" id="o-dl">Download your mission file (JSON)</button></p>`;
   }
@@ -289,7 +289,7 @@
       <dt>Protocol</dt><dd>${days()} days at ${temp()} °C</dd>
       <dt>Launch</dt><dd>${esc(S.launch)}</dd><dt>${M.cube ? 'Last reading' : 'Splashdown'}</dt><dd>${when(M.t0, M.cube ? M.end : M.splash).slice(0, 10)}</dd>
       <dt>Fit</dt><dd>${bad ? '<span class="chip bad">CHECK STEP 2</span>' : '<span class="chip good">FLYABLE</span>'}</dd></dl>
-      ${e ? `<p><a class="btn" href="simulate.html#${esc(hashOf())}">▶ Simulate this mission</a></p>` : ''}
+      ${e ? `<p><a class="btn" href="simulate.html#${esc(hashOf())}">▶ Simulate this mission</a> <a class="btn ghost" href="../portal.html#book=${encodeURIComponent(hashOf())}">Book this mission</a></p>` : ''}
       <p><button type="button" class="btn ghost" id="o-dl2">Download (JSON)</button></p>
       <p class="small">Share this configuration: the page address keeps it.</p>`;
   }

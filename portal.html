@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="build" content="c3c246f" data-built="2026-10-04T09:04:57Z">
+<title>Customer Portal · LELP-1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css?v=c3c246f">
+<link rel="stylesheet" href="static/portal.css?v=c3c246f">
+</head>
+<body class="portal">
+
+<header id="topbar">
+  <div class="brand">
+    <span class="brand-main">SPACE PHILIC</span>
+    <span class="brand-sub">CUSTOMER PORTAL · LELP-1</span>
+  </div>
+  <span class="chip warn pt-test" title="Accounts, payments and requests in this build stay in your browser. Nothing is charged or sent.">TEST ENVIRONMENT</span>
+  <div class="pt-who" id="pt-who" hidden><b id="pt-org"></b><span id="pt-orgtype"></span></div>
+  <div class="actions">
+    <a class="btn" href="lab/" title="LELP-1, the experiments it can fly, the configurator">LAB</a>
+    <a class="btn" href="index.html" title="The operator's view of the whole mission">MISSION CONSOLE</a>
+    <button type="button" class="btn" id="pt-signout" hidden>SIGN OUT</button>
+  </div>
+</header>
+
+<main class="pt-main">
+  <!-- signed out: onboarding -->
+  <section id="pt-auth" class="pt-auth" hidden>
+    <div class="pt-hero">
+      <p class="lbl">For universities, research institutes and companies</p>
+      <h1>Fly your experiment on LELP-1, and watch it from here</h1>
+      <p class="pt-lede">Book a bay, hand over your sample before launch, then follow your experiment in orbit: camera frames and readouts a few minutes after each contact, your data to download, and more imaging or time when you need it. Every request you send is signed and checked by Sentinel before it reaches your module.</p>
+      <ol class="pt-steps">
+        <li><b>Create an account</b><span>your organisation and what you want to fly</span></li>
+        <li><b>Book</b><span>configure the mission in the lab configurator</span></li>
+        <li><b>Hand over</b><span>late load of your sample into its module</span></li>
+        <li><b>Watch and download</b><span>camera, readouts, data, more on request</span></li>
+      </ol>
+      <p class="pt-note" id="pt-booking-note" hidden></p>
+    </div>
+    <div class="pt-card">
+      <div class="seg pt-tabs" role="tablist">
+        <button type="button" role="tab" data-tab="demo" class="on">Demo accounts</button>
+        <button type="button" role="tab" data-tab="new">Create an account</button>
+      </div>
+      <div id="pt-tab-demo" class="pt-tab">
+        <p class="h-sub">Sign in as one of the mission twin's customers.</p>
+        <div id="pt-demo-list" class="pt-demo-list"></div>
+      </div>
+      <form id="pt-tab-new" class="pt-tab pt-form" hidden autocomplete="off">
+        <label>Organisation<input name="org" required maxlength="80" placeholder="e.g. Department of Biotechnology, your university"></label>
+        <label>Type<select name="type"><option>University</option><option>Research institute</option><option>Private company</option><option>Government agency</option></select></label>
+        <label>Country<input name="country" maxlength="60"></label>
+        <label>Contact name<input name="contact" maxlength="80"></label>
+        <label>Work e-mail<input name="email" type="email" maxlength="120"></label>
+        <label>What do you want to fly?<select name="exp" id="pt-exp-pick"><option value="">Not decided yet</option></select></label>
+        <p class="h-sub">Test build: this account lives only in your browser. No password, no payment details, nothing is sent anywhere.</p>
+        <button type="submit" class="btn pt-primary">CREATE TEST ACCOUNT</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- signed in: dashboard -->
+  <section id="pt-app" class="pt-app" hidden>
+    <div class="pt-row pt-top">
+      <div class="panel pt-onb"><div class="panel-h"><h2>ONBOARDING</h2><span class="h-sub" id="pt-key"></span></div><div class="panel-b"><ol id="pt-checklist" class="pt-check"></ol></div></div>
+      <div class="panel pt-exps"><div class="panel-h"><h2>YOUR EXPERIMENTS</h2><a class="h-sub pt-book" href="lab/configure.html">+ Book another in the configurator</a></div><div class="panel-b" id="pt-exp-list"></div></div>
+    </div>
+
+    <div class="panel pt-live" id="pt-live" hidden>
+      <div class="panel-h"><h2 id="pt-live-h">LIVE</h2><span class="chip" id="pt-phase">—</span><span class="h-sub" id="pt-delay"></span></div>
+      <div class="pt-clockbar">
+        <button type="button" class="btn" id="pt-play">▶ PLAY</button>
+        <div class="seg" id="pt-speed"><button type="button" data-v="60" class="on">1 min/s</button><button type="button" data-v="600">10 min/s</button><button type="button" data-v="3600">1 h/s</button></div>
+        <input type="range" id="pt-scrub" min="0" max="1000" value="0" aria-label="Mission time">
+        <span class="mono" id="pt-met">T+</span>
+      </div>
+      <p class="pt-scen">Test data: these readouts and frames come from the mission twin's culture model, a hypothesis scenario, not measured results.</p>
+      <div class="pt-livegrid">
+        <div class="pt-cam">
+          <div class="pt-camh"><span class="lbl" id="pt-cam-title">Module camera</span>
+            <div class="seg" id="pt-chan"><button type="button" data-v="bf" class="on">Brightfield</button><button type="button" data-v="ros">ROS probe</button><button type="button" data-v="dead">Dead-cell dye</button></div></div>
+          <canvas id="pt-camc" width="640" height="400" aria-label="Simulated camera frame of the selected well"></canvas>
+          <div class="pt-wells" id="pt-wells"></div>
+          <p class="h-sub" id="pt-cam-note"></p>
+        </div>
+        <div class="pt-readouts">
+          <div class="pt-scroll"><table class="pt-tbl" id="pt-read"></table></div>
+          <div class="pt-tm" id="pt-tm"></div>
+          <h3>Protocol</h3><ol class="pt-proto" id="pt-proto"></ol>
+          <h3>Your module's log · Sentinel checks every command</h3><ol class="pt-log" id="pt-log"></ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-row">
+      <div class="panel"><div class="panel-h"><h2>DATA</h2><span class="h-sub">everything received up to the last contact</span></div><div class="panel-b" id="pt-data"></div></div>
+      <div class="panel"><div class="panel-h"><h2>BILLING</h2><span class="chip warn">TEST MODE</span></div><div class="panel-b" id="pt-bill"></div></div>
+      <div class="panel"><div class="panel-h"><h2>ASK FOR MORE</h2><span class="h-sub">signed requests, checked by Sentinel</span></div><div class="panel-b">
+        <form id="pt-req" class="pt-form pt-reqform">
+          <label>Request<select name="kind" id="pt-req-kind">
+            <option value="imaging">Extra imaging round</option><option value="camera">Live camera session at the next contact</option>
+            <option value="raw">Raw image archive after recovery</option><option value="extend">Extend my protocol</option>
+            <option value="setpoint">Change my culture temperature</option><option value="slot">Another experiment slot</option></select></label>
+          <label>Details<input name="note" maxlength="160" placeholder="e.g. one more round on day 4, all wells"></label>
+          <button type="submit" class="btn pt-primary">SIGN AND SEND</button>
+        </form>
+        <ol class="pt-reqs" id="pt-reqs"></ol></div></div>
+    </div>
+  </section>
+  <p class="pt-foot">Test build of the LELP-1 customer portal, driven by the mission twin. Real accounts, payments and live camera links come with the flight ground segment.</p>
+</main>
+
+<script src="static/hydrate.js?v=c3c246f"></script>
+<script src="static/replay.js?v=c3c246f"></script>
+<script src="static/portal.js?v=c3c246f"></script>
+</body>
+</html>

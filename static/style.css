@@ -343,7 +343,7 @@ body.cinema #center { grid-template-rows: minmax(0, 1fr); }
 @media (min-width: 1800px) { :root { --fs-micro: 11px; --fs-small: 12px; --fs-body: 13px; --fs-emph: 14px; --left: 380px; --right: 400px; --drawer: 232px; --chart-h: 148px; } .hero-num { font-size: 32px; } .flight { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 310px; } .ground { grid-template-columns: minmax(0, 1fr) 280px; } }
 @media (max-width: 1500px) {
   :root { --left: 316px; --right: 336px; --drawer: 196px; --chart-h: 120px; }
-  #topbar { gap: 10px; padding: 0 10px; } .stepper li { padding: 6px 6px; letter-spacing: .06em; } .clock { font-size: 21px; }
+  #topbar { gap: 10px; padding: 0 10px; } .stepper li { padding: 6px 5px; letter-spacing: .05em; } .stepper li::before { display: none; } .clock { font-size: 21px; } .clock .chip { min-width: 112px; }
   .flight { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 262px; gap: 10px; }
   .ground { grid-template-columns: minmax(0, 1fr) 216px; gap: 12px; } .tbl .opt2 { display: none; }
   .scorecard { grid-template-columns: repeat(2, auto); } .sc { padding: 3px 8px; } .sc b { font-size: var(--fs-small); }
@@ -351,7 +351,8 @@ body.cinema #center { grid-template-rows: minmax(0, 1fr); }
 @media (max-width: 1320px) {
   :root { --left: 292px; --right: 310px; }
   .brand-sub { display: none; } .stepper li::before { display: none; } .stepper li { padding: 5px 5px; letter-spacing: .05em; }
-  .actions .nav-globe { display: none; } .clock .chip { min-width: 112px; } .clock { font-size: 20px; }
+  .actions .nav-globe { display: none; } .clock .chip { min-width: 98px; } .clock { font-size: 20px; }
+  #topbar { gap: 8px; } .actions .btn { padding: 0 7px; } .actions .seg button { padding: 0 7px; }
   .panel-b { padding: 0 10px 10px; } .panel-h { padding: 9px 10px 7px; } .panel-fixed { padding: 0 10px 8px; } .kv { column-gap: 10px; } .kv span { letter-spacing: 0; font-size: 9.5px; } .gp-state { font-size: 12px; }
   .legend span:last-child { display: none; } .tbl .opt3 { display: none; }
   .flight { grid-template-columns: minmax(0, 1fr) 262px; } .flight figure:nth-of-type(2) { display: none; }
