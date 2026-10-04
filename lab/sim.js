@@ -235,9 +235,20 @@
       ph.push(['return', 'Return', ph[ph.length - 1][3], M.splash], ['recovery', 'Recovery and handover', M.splash, M.hand], ['lab', 'To your lab', M.hand, M.lab]);
     }
     const phases = ph.filter((x) => x[3] > x[2]).map(([id, name, s0, s1]) => ({ id, name, s0, s1 }));
-    const segs = [[-DAY, -60, 3], [-60, 500, 30], [500, T.t_orbit_s, 7], [T.t_orbit_s, sStart, own ? 7 : 6], [sStart, M.end, clamp(days * 2.4, 14, 40)]];
+    // the launch paced like the console's director (web/static/replay.js autoRate): close to real time through MECO, the
+    // separation and flip, the drag fins and the landing; fast over the coasts
+    const te = (code, dflt) => { const v = SD.launch_events.find((q) => q[2] === code); return v ? v[0] : dflt; };
+    const tMeco = te('MECO', 135), tFlip = te('BOOSTBACK_START', 141), tFins = te('FINS_DEPLOY', 306), tLand = te('LANDING_BURN', 475), tTouch = te('TOUCHDOWN', 495), tSes2 = te('SES2', T.t_orbit_s - 4);
+    const segs = [[-DAY, -60, 3], [-60, -3, 3], [-3, tMeco - 4, 9], [tMeco - 4, tFlip + 9, 7], [tFlip + 9, tFins - 12, 4], [tFins - 12, tFins + 9, 6],
+      [tFins + 9, tLand - 5, 5], [tLand - 5, tTouch + 12, 7], [tTouch + 12, tSes2 - 30, 4], [tSes2 - 30, T.t_orbit_s + 30, 4],
+      [T.t_orbit_s + 30, sStart, own ? 7 : 6], [sStart, M.end, clamp(days * 2.4, 14, 40)]];
     if (cube) segs.push([M.end, tEnd, 4]);
-    else segs.push([M.end, M.endLab, M.endLab > M.end + 60 ? 4 : 0], [M.endLab, M.deorbit, 5], [M.deorbit, M.entry - 300, 6], [M.entry - 300, M.splash, 22], [M.splash, M.hand, 5], [M.hand, M.lab, 4]);
+    else {
+      const rel = (code, dflt) => { const v = SD.ret_events.find((q) => q[1] === code); return M.deorbit + (v ? v[0] : dflt); };
+      const tEI = M.entry, tMain = rel('MAIN_CHUTE', 2728), tRec = Math.min(rel('RECOVERY', 4332), M.hand - 60);
+      segs.push([M.end, M.endLab, M.endLab > M.end + 60 ? 4 : 0], [M.endLab, M.deorbit, 5], [M.deorbit, tEI - 20, 6], [tEI - 20, tMain - 8, 12],
+        [tMain - 8, M.splash - 20, 8], [M.splash - 20, M.splash + 15, 6], [M.splash + 15, tRec + 30, 5], [tRec + 30, M.hand, 2], [M.hand, M.lab, 4]);
+    }
     const pace = segs.filter((x) => x[1] > x[0] && x[2] > 0);
     let acc = 0;
     pace.forEach((x) => { x.p0 = acc; acc += x[2]; x.p1 = acc; });

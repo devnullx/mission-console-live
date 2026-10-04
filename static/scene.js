@@ -8,6 +8,7 @@
    Swap meshes for CAD glTF later; keep the node names (rocket.*, lelp.modules[i], lelp.arm, capsule). */
 (function () {
   const TEX = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/';   // GitHub mirror, CORS ok
+  const BASE = window.SCENE_BASE || '';   // pages outside the site root (lab/simulate.html) set '../' so the models resolve
   const C = { gold: 0xb08a3e, goldActive: 0x3f9a5a, warn: 0xd09a2a, crit: 0xb03030, move: 0x2d7fe0,
               body: 0x23262b, trim: 0x474c55, cell: 0x14213d, flame: 0xffb060, flameCore: 0xfff3d0 };
   const lerp = (a, b, k) => a + (b - a) * k;
@@ -46,6 +47,21 @@
     const g = new THREE.BufferGeometry(), p = new Float32Array(count * 3); g.setAttribute('position', new THREE.BufferAttribute(p, 3));
     const pts = new THREE.Points(g, new THREE.PointsMaterial({ color: 0xffc896, size: 3.5, transparent: true, opacity: .55, depthWrite: false, blending: THREE.AdditiveBlending }));
     pts.userData = { life: new Float32Array(count), vel: new Float32Array(count * 3), i: 0 }; pts.frustumCulled = false; return pts;
+  }
+
+  function puffTexture() {    // soft round puff for exhaust clouds
+    const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+    const r = g.createRadialGradient(32, 32, 1, 32, 32, 31);
+    r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(.45, 'rgba(255,255,255,.5)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = r; g.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c);
+  }
+  function cloudPool(n) {     // billowing exhaust and steam at the pad: soft sprites that spread, grow, rise and fade
+    const grp = new THREE.Group(), tex = puffTexture(); grp.userData = { p: [], i: 0, acc: 0 };
+    for (let i = 0; i < n; i++) {
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, color: 0xe9e6e1, transparent: true, opacity: 0, depthWrite: false }));
+      sp.visible = false; grp.add(sp); grp.userData.p.push({ sp, life: 0, max: 1, v: new THREE.Vector3(), up: new THREE.Vector3(), s0: .1, s1: 1, live: false });
+    }
+    return grp;
   }
 
   // Inflatable heat shield (HIAD) in metres (sentinel/lelp/reentry.py): 70 deg sphere-cone, nose at y = 0 facing -y,
@@ -166,6 +182,10 @@
       this.vehScale = VS / 3.0; this.booster.scale.setScalar(this.vehScale); this.upper.scale.setScalar(this.vehScale);
       this.stackH = 42 * this.vehScale;    // booster height in km (procedural); CAD overrides
       this.plume = exhaust(300); g.add(this.plume);
+      this.cloud = cloudPool(110); g.add(this.cloud);
+      // engine light on the pad, the vehicle and the cloud (km; the vehicle groups are scaled, the light range is not)
+      this.bLight = new THREE.PointLight(0xffa24a, 0, 4, 2); this.bLight.position.y = -3; this.booster.add(this.bLight);
+      this.uLight = new THREE.PointLight(0xa8c8ff, 0, 3, 2); this.uLight.position.y = -4; this.upper.add(this.uLight);
       this.plume.material.size = 0.05; this.plume.material.sizeAttenuation = true; this.plume.material.opacity = .45;
       this.sepT = null;
       // local terrain around the pad (the 2 048 px Earth texture is ~20 km/pixel): a 60 km disc, land west, sea east (downrange is now SSW over water)
@@ -252,7 +272,7 @@
       let pos = floating ? sz.pos.clone().add(sz.up.clone().multiplyScalar(-0.009 + Math.sin(this.t * 1.7) * 0.0015)) : g.pos.clone();   // afloat on the aeroshell
       if (aboard) pos = this.ship.position.clone().add(sz.side.clone().multiplyScalar(0.56)).add(sz.up.clone().multiplyScalar(this.shipDeckKm + 0.012)).add(sz.fwd.clone().multiplyScalar(-0.12));   // on deck under the crane
       this.rcap.position.copy(pos); this.rcap.quaternion.setFromUnitVectors(V(0, 1, 0), aft);
-      const heat = Math.min(c.heat_kw_m2 / 900, 1), fl = 1 + Math.sin(this.t * 31) * .08;
+      const heat = Math.min(c.heat_kw_m2 / 600, 1), fl = 1 + Math.sin(this.t * 31) * .08;
       this.rPlasma.visible = this.rWake.visible = heat > .01;
       this.rPlasma.material.opacity = .9 * heat; this.rPlasma.scale.set(fl, .32 * fl, fl);
       this.rWake.material.opacity = .45 * heat; this.rWake.scale.set(1, .5 + .7 * heat, 1);
@@ -273,8 +293,9 @@
       } else if (floating) {  // low over the water: the lab afloat on its aeroshell, dye and canopy in front, the ship behind
         from = sz.pos.clone().add(sz.fwd.clone().multiplyScalar(-.7)).add(sz.side.clone().multiplyScalar(-.4)).add(sz.up.clone().multiplyScalar(.14));
         at = sz.pos.clone().add(sz.side.clone().multiplyScalar(.25)).add(sz.fwd.clone().multiplyScalar(.1)).add(sz.up.clone().multiplyScalar(.04));
-      } else if (c.phase === 'main') {   // 360 m canopy on a 560 m riser at this scale
-        from = pos.clone().add(g.side.clone().multiplyScalar(2.0)).add(g.fwd.clone().multiplyScalar(.6)).add(g.up.clone().multiplyScalar(.25));
+      } else if (c.phase === 'main') {   // 360 m canopy on a 560 m riser at this scale; from the side away from the ship, which
+        // waits 2.6 km off on the other side (a camera on the ship's side ends up inside its superstructure near the water)
+        from = pos.clone().add(g.side.clone().multiplyScalar(-2.0)).add(g.fwd.clone().multiplyScalar(.6)).add(g.up.clone().multiplyScalar(.25));
         at = pos.clone().add(g.up.clone().multiplyScalar(.38));
       } else {                // side-on through the entry, plasma ahead of the aeroshell and the wake trailing
         from = pos.clone().add(g.side.clone().multiplyScalar(.8)).add(aft.clone().multiplyScalar(.15)).add(g.up.clone().multiplyScalar(.1));
@@ -302,18 +323,18 @@
       };
       // booster: CAD body, 4 legs with their support struts and the 4 drag fins as separate nodes so they can deploy
       // (scripts/cad_parts.py, scripts/cad_drag.py)
-      loader.load('static/models/booster_body.glb?v=1', g => {
+      loader.load(BASE + 'static/models/booster_body.glb?v=1', g => {
         attach(this.booster, g, this.booster.children.filter(c => c !== this.bFlame));
         this.legs.forEach(l => l.visible = false); this.fins.forEach(f => f.visible = false); this.engines.visible = false;
         this.bFlame.position.y = -0.5;
         this.cadBoosterH = this.booster.userData.cadHeight; this.stackH = this.cadBoosterH * this.vehScale;
       }, undefined, () => {});
-      fetch('static/models/parts.json?v=2').then(r => r.json()).then(meta => {
+      fetch(BASE + 'static/models/parts.json?v=2').then(r => r.json()).then(meta => {
         this.cadLegs = []; this.cadStruts = [];
         const prep = (g) => g.scene.traverse(o => { if (o.isMesh) { if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); o.material = dark; o.material.side = THREE.DoubleSide; } });
         const tangent = (deg) => { const a = THREE.MathUtils.degToRad(deg); return V(-Math.sin(a), 0, Math.cos(a)).normalize(); };
         // legs: hinged 0.36 m above the exit plane, the foot swings out and down
-        loader.load('static/models/legs.glb?v=1', g => { prep(g);
+        loader.load(BASE + 'static/models/legs.glb?v=1', g => { prep(g);
           meta.legs.forEach(info => { const node = g.scene.getObjectByName(info.name); if (!node) return;
             const pivot = new THREE.Group(), h = info.hinge; pivot.position.set(h[0] * S, h[1] * S, h[2] * S);
             node.position.set(0, 0, 0); node.scale.setScalar(S); pivot.add(node); this.booster.add(pivot);
@@ -322,7 +343,7 @@
         // Support struts: the thin 2 m rods of the CAD ("fin" nodes of parts.json, same azimuth as each leg) are the
         // telescoping braces of the legs, not aerodynamic fins. The lower end is pinned to the body, the upper end to the
         // leg 3.15 m from its hinge; the strut swings out and extends as the leg comes down (Falcon-style).
-        loader.load('static/models/fins.glb?v=1', g => { prep(g);
+        loader.load(BASE + 'static/models/fins.glb?v=1', g => { prep(g);
           meta.fins.forEach((info, i) => { const node = g.scene.getObjectByName(info.name), leg = meta.legs[i]; if (!node || !leg) return;
             const h = info.hinge, len = info.length, pivot = new THREE.Group();
             pivot.position.set(h[0] * S, (h[1] - len) * S, h[2] * S);                     // body anchor = lower end of the rod
@@ -332,7 +353,7 @@
         // Drag mechanism (scripts/cad_drag.py): four 1.04 x 0.41 m panels hinged on the base ring between the legs. The
         // GLB holds them stowed, flat on the skin with the free edge towards the nose; they swing out about the tangential
         // hinge axis to the angle of the CAD (32 deg), driven by the twin's deployment fraction.
-        if (meta.drag) loader.load('static/models/drag.glb?v=1', g => {
+        if (meta.drag) loader.load(BASE + 'static/models/drag.glb?v=1', g => {
           // heat-tinted Inconel: the panels sit at the engine end, and a darker metal reads against the white skin
           const finMat = new THREE.MeshStandardMaterial({ color: 0x6a5a4a, roughness: .34, metalness: .85, side: THREE.DoubleSide });
           g.scene.traverse(o => { if (o.isMesh) { if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); o.material = o.name === 'drag_ring' || (o.parent && o.parent.name === 'drag_ring') ? dark : finMat; } });
@@ -345,7 +366,7 @@
         }, undefined, () => {});
       }).catch(() => {});
       this.legDeploy = 0; this.finDeploy = 0;
-      loader.load('static/models/upper.glb?v=3', g => { attach(this.upper, g, this.upper.children.filter(c => c !== this.uFlame)); }, undefined, () => {});
+      loader.load(BASE + 'static/models/upper.glb?v=3', g => { attach(this.upper, g, this.upper.children.filter(c => c !== this.uFlame)); }, undefined, () => {});
     }
     _emit(pos, dir, n, spread, speed) {
       const u = this.plume.userData, p = this.plume.geometry.attributes.position.array;
@@ -357,6 +378,26 @@
       for (let i = 0; i < u.life.length; i++) { if (u.life[i] <= 0) continue; u.life[i] -= dt * 1.6; p[i * 3] += u.vel[i * 3] * dt; p[i * 3 + 1] += u.vel[i * 3 + 1] * dt; p[i * 3 + 2] += u.vel[i * 3 + 2] * dt; if (u.life[i] <= 0) p[i * 3 + 1] = -1e7; }
       this.plume.geometry.attributes.position.needsUpdate = true;
     }
+    _puff(site) {                 // one puff from the flame trench: out along the trench, a little lift, growing as it slows
+      const u = this.cloud.userData, q = u.p[u.i = (u.i + 1) % u.p.length], side = Math.random() < .5 ? -1 : 1;
+      q.sp.position.copy(site.pos).add(site.up.clone().multiplyScalar(.04 + Math.random() * .05)).add(site.fwd.clone().multiplyScalar((Math.random() - .5) * .12));
+      q.v.copy(site.side).multiplyScalar(side * (.25 + Math.random() * .35)).add(site.fwd.clone().multiplyScalar((Math.random() - .5) * .22)).add(site.up.clone().multiplyScalar(.02 + Math.random() * .05));
+      q.up.copy(site.up); q.life = 0; q.max = 5 + Math.random() * 4; q.s0 = .12 + Math.random() * .1; q.s1 = .7 + Math.random() * .6; q.live = true; q.sp.visible = true;
+      q.sp.material.color.setHex(0xffd9b0);
+    }
+    _stepCloud(dt) {
+      for (const q of this.cloud.userData.p) {
+        if (!q.live) continue;
+        q.life += dt; const k = q.life / q.max;
+        if (k >= 1) { q.live = false; q.sp.visible = false; continue; }
+        q.sp.position.add(q.v.clone().multiplyScalar(dt)).add(q.up.clone().multiplyScalar(.012 * dt));     // drift and a slow rise
+        q.v.multiplyScalar(Math.max(0, 1 - .7 * dt));
+        const sz = q.s0 + (q.s1 - q.s0) * Math.sqrt(k); q.sp.scale.set(sz, sz, 1);
+        q.sp.material.opacity = .62 * (1 - k) * Math.min(1, k * 10);
+        if (k > .12) q.sp.material.color.setHex(0xdedbd6);                                                // flame-lit at first, then steam grey
+      }
+    }
+    _clearCloud() { for (const q of this.cloud.userData.p) { q.live = false; q.sp.visible = false; } this.cloud.userData.acc = 0; }
     _flameOn(f, on, throttle, flicker) {
       f.visible = on; if (!on) return;
       const s = (0.75 + 0.35 * throttle) * (1 + Math.sin(flicker * 37) * .06); f.scale.set(1, s, 1);
@@ -378,6 +419,16 @@
         // the upper stage rides on top of the booster
         this.upper.position.copy(g.pos).add(g.axis.clone().multiplyScalar(this.stackH)); this.upper.quaternion.copy(this.booster.quaternion);
         const on = body.throttle > 0; this._flameOn(this.bFlame, on, body.throttle, this.t); this.uFlame.visible = false;
+        // vehicles are drawn 40x on true-scale positions: near the pad the flame would reach into the ground, so it is cut at
+        // the pad and the exhaust spreads into the trench as a cloud instead
+        if (on) { const flen = this.bFlame.userData.len * this.vehScale; this.bFlame.scale.y = Math.max(.05, Math.min(this.bFlame.scale.y, (alt + .015) / flen)); }
+        this.bLight.intensity = on ? 2.2 * body.throttle * (1 + Math.sin(this.t * 41) * .08) : 0; this.uLight.intensity = 0;
+        if (!on && alt <= 0) this._clearCloud();
+        else if (on && alt < 1.6) {
+          const site = this._place(0, 0), u = this.cloud.userData;
+          u.acc += 45 * body.throttle * Math.max(0, 1 - alt / 1.6) * dt;
+          while (u.acc >= 1) { u.acc -= 1; this._puff(site); }
+        }
         if (on) this._emit(g.pos.clone().sub(g.axis.clone().multiplyScalar(.04)), g.axis.clone().negate(), alt < 3 ? 10 : 3, alt < 3 ? .03 : .01, alt < 3 ? .06 : .03);
         const d = Math.max(2.3, alt * .09);                         // whole stack in frame on the pad; chase distance grows with altitude so the curvature shows
         camFrom = g.pos.clone().add(g.side.clone().multiplyScalar(d * .8)).add(g.fwd.clone().multiplyScalar(-d * .45)).add(g.up.clone().multiplyScalar(d * .3));
@@ -388,14 +439,15 @@
         const sepAge = s.sepAge != null ? s.sepAge : (this.t - this.sepT) * 8;
         let gb = null, gu = null, uTilt = 1.5;
         if (s.upper) { uTilt = s.upper.att != null ? s.upper.att : lerp(0.8, 1.5, Math.min(sepAge / 8, 1));
-          gu = placeVeh(this.upper, s.upper, uTilt); this._flameOn(this.uFlame, s.upper.throttle > 0, s.upper.throttle, this.t); }
+          gu = placeVeh(this.upper, s.upper, uTilt); this._flameOn(this.uFlame, s.upper.throttle > 0, s.upper.throttle, this.t);
+          this.uLight.intensity = s.upper.throttle > 0 ? 1.6 : 0; }
         if (s.booster) {
           const b = s.booster, down = !!b.landed || b.phase === 'landed' || (b.alt_km <= 0.001 && b.speed_ms < 8);
           const landing = down || b.phase === 'landing_burn';
           const tilt = b.att != null ? b.att : (b.phase === 'coast' ? .5 : b.phase === 'boostback' ? -Math.PI / 2 : 0);
           gb = placeVeh(this.booster, b, tilt, landing ? DECK : 0);
           const burning = b.throttle > 0 && !down;
-          this._flameOn(this.bFlame, burning, b.throttle, this.t);
+          this._flameOn(this.bFlame, burning, b.throttle, this.t); this.bLight.intensity = burning ? 2.0 * b.throttle : 0;
           if (burning) this._emit(gb.pos.clone(), gb.axis.clone().negate(), 2, .01, .03);
           const legsOut = down ? 1 : b.phase === 'landing_burn' ? Math.min(Math.max((1.3 - b.alt_km) / 0.9, 0), 1) : 0;
           this._deploy(legsOut, b.fins != null ? b.fins : 0, .12);
@@ -425,6 +477,14 @@
           camFrom = g.pos.clone().add(g.side.clone().multiplyScalar(d * .8)).add(g.fwd.clone().multiplyScalar(-d * .5)).add(g.up.clone().multiplyScalar(d * .3));
           camAt = g.pos.clone().add(gb.axis.clone().multiplyScalar(this.stackH * .5 * Math.exp(-sepAge / 20)));
           if (gu) { const toUp = this.upper.position.clone().sub(camAt), du = toUp.length(); camAt.add(toUp.multiplyScalar(.35 * Math.exp(-du / 2.5))); }
+          // second-stage ignition: cut to the upper stage from behind its engine for a few seconds after separation,
+          // then back to the booster for the flip and the divert burn
+          const w2 = gu ? sstep((sepAge - 2) / 1.5) * (1 - sstep((sepAge - 9.5) / 1.5)) : 0;
+          if (w2 > 0) {
+            const U = gu.axis, up = this.upper.position;
+            camFrom.lerp(up.clone().add(gu.side.clone().multiplyScalar(.9)).add(U.clone().multiplyScalar(-1.25)).add(gu.up.clone().multiplyScalar(.2)), w2);
+            camAt.lerp(up.clone().add(U.clone().multiplyScalar(-.12)), w2);
+          }
           // drag fins: at 100 km the chase camera is kilometres away and the panels are a few pixels, so the director
           // dollies in on the engine end while they open (blend in from 5 s before, out from 6 s after the command)
           const w = s.finsAge != null ? sstep((s.finsAge + 5) / 3) * (1 - sstep((s.finsAge - 6) / 3)) : 0;
@@ -436,13 +496,16 @@
             camAt.lerp(base.clone().add(A.clone().multiplyScalar(.05)), w);
           }
         } else {
-          const d = Math.max(2.0, smp.alt_km * .12);
-          camFrom = g.pos.clone().add(g.side.clone().multiplyScalar(d * .8)).add(g.fwd.clone().multiplyScalar(-d * .5)).add(g.up.clone().multiplyScalar(d * .3));
-          camAt = g.pos.clone();
+          // the upper stage alone, on to orbit: a close chase keeps the 40x model in frame with the Earth's limb behind it,
+          // circling slowly over the long coast to apogee; the circularisation burn plays in the same shot
+          const a = this.t * .07, d = 2.6;
+          const dir = g.side.clone().multiplyScalar(Math.cos(a)).add(g.fwd.clone().multiplyScalar(-.35 - .5 * Math.sin(a))).add(g.up.clone().multiplyScalar(.32)).normalize();
+          camFrom = g.pos.clone().add(dir.multiplyScalar(d));
+          camAt = g.pos.clone().add((gu ? gu.axis : g.up).clone().multiplyScalar(.15));
         }
       }
       if (camFrom) { this.camPos.copy(camFrom); this.camTarget.copy(camAt); }   // rigid chase: replay runs 20-300x real time
-      this._stepPlume(dt);
+      this._stepPlume(dt); this._stepCloud(dt);
       this.camera.position.copy(this.camPos); this.camera.up.copy(this.camPos.clone().normalize()); this.camera.lookAt(this.camTarget);
       this.renderer.render(this.scene, this.camera);
     }
@@ -519,8 +582,8 @@
         const put = (url, parent, proc, sx, k, rotY) => ld.load(url, g => { const r = g.scene; r.scale.set(sx * U, k * U, k * U); if (rotY) r.rotation.y = rotY;
           r.traverse(o => { if (o.isMesh) { if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); o.material = armMat; o.material.side = THREE.DoubleSide; } });
           parent.add(r); if (proc) proc.visible = false; }, undefined, () => {});
-        put('static/models/arm_upper.glb?v=1', this.j3, this.armUpperProc, L1m / 0.241, 2.0, 0);
-        put('static/models/arm_fore.glb?v=1', this.j4, this.armForeProc, L2m / 0.457, 2.0, 0);
+        put(BASE + 'static/models/arm_upper.glb?v=1', this.j3, this.armUpperProc, L1m / 0.241, 2.0, 0);
+        put(BASE + 'static/models/arm_fore.glb?v=1', this.j4, this.armForeProc, L2m / 0.457, 2.0, 0);
       }
       // solar wings with cell texture
       const cells = solarTexture();
@@ -658,7 +721,7 @@
       this.renderer.render(this.scene, this.camera);
     }
     setPhase(p) { if (p === this.phase) return; this.phase = p; this.launch.visible = p === 'launch' || p === 'return'; this.ops.visible = p === 'ops';
-      const ret = p === 'return'; this.ret.visible = ret; [this.booster, this.upper, this.pad, this.barge, this.plume].forEach(o => { o.visible = !ret; });
+      const ret = p === 'return'; this.ret.visible = ret; [this.booster, this.upper, this.pad, this.barge, this.plume, this.cloud].forEach(o => { o.visible = !ret; });
       if (ret) return;
       if (p === 'ops') { this.camera.up.set(0, 1, 0); this.camPos.set(60, 20, 60); this.camTarget.set(0, 8, 0); this._camSnap = true; } else { const g = this._place(0, 0); this.camPos.copy(g.pos.clone().add(g.side.clone().multiplyScalar(1.4)).add(g.up.clone().multiplyScalar(.5))); this.camTarget.copy(g.pos); } }
     setSolar(d) { this._solarDeployed = d; }

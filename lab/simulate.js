@@ -124,11 +124,65 @@
     return `<div class="sim-hand"><ol>${rows.map(([s, a, b]) => `<li data-s="${s}"><span class="mono">${met(s)}</span><b>${esc(a)}</b><p>${esc(b)}</p></li>`).join('')}</ol>
       <div class="post"><h4>Your post-flight analysis</h4><ul>${e.post_flight.map((q) => `<li><b>${esc(q.name)}</b> ${esc(q.method)}</li>`).join('')}</ul></div></div>`;
   };
+  // ---------- 3-D: the console's launch and return shots (web/static/scene.js through replay.js) on this mission's clock ----------
+  // The launch is the twin's RUPAK flight as the console plays it; on LELP-1 the return is the twin's Return Module, moved to
+  // this mission's deorbit time. A dedicated satellite's capsule is not the Return Module, so its return stays a chart.
+  let Mx = null, scene3d = null, ready3d = false;
+  const W3 = $('#sim-3dw'), C3 = $('#sim-3dc');
+  const loadScript = (src) => new Promise((ok, no) => { const el = document.createElement('script'); el.src = src; el.onload = ok; el.onerror = no; document.head.appendChild(el); });
+  window.SCENE_BASE = '../';
+  const ret3d = !own && !cube;
+  (async () => {
+    try {
+      if (!window.THREE) throw new Error('three.js');
+      await loadScript(`../static/replay.js?v=${encodeURIComponent(D.build)}`);
+      await loadScript(`../static/scene.js?v=${encodeURIComponent(D.build)}`);
+      const Wt = SD.twin, row = (cols, r) => Object.fromEntries(cols.map((c, i) => [c, r[i]]));
+      const shift = ret3d ? M.deorbit - Wt.reentry_meta.t_deorbit : null;
+      const events = Wt.events.filter((q) => q[1] !== 'RETURN' || (shift != null && q[2] !== 'RETURN_PREP'))
+        .map(([t, seg, code, text, level]) => ({ t: seg === 'RETURN' ? t + shift : t, seg, code, text, level, data: {} }));
+      const reentry = shift == null ? [] : Wt.reentry.map((r) => { const o = row(Wt.reentry_cols, r); o.t += shift; return o; });
+      const rm = shift == null ? null : Object.fromEntries(Object.entries(Wt.reentry_meta).map(([k, v]) => [k, /^t_/.test(k) && typeof v === 'number' ? v + shift : v]));
+      Mx = Replay.prepare({ events, launch: Wt.launch.map((r) => row(Wt.launch_cols, r)), frames: [], reentry, reentry_meta: rm, experiments: {}, launch_meta: Wt.launch_meta, featured: null });
+      ready3d = true; force = true; shown = '';
+    } catch (err) { $('#d-note').textContent = '3-D view unavailable: ' + err.message; }
+  })();
+  const inLaunch3d = (s) => s >= -60 && s < T.t_orbit_s + 30;
+  const inReturn3d = (s) => ret3d && Mx && Mx.x.retShot && s >= Mx.x.retShot[0] && s < Mx.x.retShot[1];
+  function draw3d(st, dt) {
+    if (!Mx) return;
+    if (!scene3d) {
+      try { scene3d = new Scene3D(C3); scene3d.setLandingZone(Mx.x.lz); } catch (err) { $('#d-note').textContent = '3-D view needs WebGL.'; ready3d = false; return; }
+    }
+    if (C3.clientWidth && (C3.width !== Math.round(C3.clientWidth * Math.min(devicePixelRatio, 2)))) scene3d._resize();
+    const s = st.s;
+    if (!inLaunch3d(s) && inReturn3d(s)) {
+      const cap = Replay.reentryAt(Mx, s);
+      scene3d.setPhase('return'); scene3d.updateReturn(cap, dt);
+      $('#d-hud').innerHTML = `<span>${esc(Replay.reentryReadout(cap))}</span>`;
+      $('#d-note').textContent = 'LELP-1 Return Module from the twin\'s return model: heat shield, plasma, main canopy, splashdown, recovery ship (drawn 40x, positions true scale)';
+      return;
+    }
+    const t = Math.max(Replay.T0, Math.min(s, T.t_orbit_s + 30));
+    const L = Replay.launchState(Mx, t);
+    scene3d.setPhase('launch');
+    scene3d.updateLaunch(t > Mx.x.tTouch + 20 ? { upper: L.upper, sepAtt: L.sepAtt, sepAge: L.sepAge } : L, !!L.upper, dt);
+    const b = L.booster, u = L.upper || L.stack;
+    $('#d-hud').innerHTML = `<span><b>${f1(u.alt_km)}</b> km</span><span><b>${u.speed_ms >= 1000 ? f2(u.speed_ms / 1000) + '</b> km/s' : f0(u.speed_ms) + '</b> m/s'}</span>`
+      + `<span><b>${f1(u.g_load || 0)}</b> g</span>${u.q_kpa ? `<span><b>${f1(u.q_kpa)}</b> kPa</span>` : ''}`
+      + (b && t < Mx.x.tTouch + 20 ? `<span class="bo">booster ${b.phase === 'landed' ? 'on the barge' : `<b>${f1(b.alt_km)}</b> km, <b>${f0(b.speed_ms)}</b> m/s`}</span>` : '');
+    $('#d-note').textContent = own ? 'RUPAK from the launch twin, team CAD (drawn 40x, positions true scale); your satellite rides on the upper stage'
+      : 'RUPAK from the launch twin with the team CAD: booster back to the barge on its legs, drag fins open at 100 km (drawn 40x, positions true scale)';
+  }
+
   let view = 'auto', shown = '';
   const VIEW = $('#sim-view');
   function setView(v) {
     if (v === shown) return;
     shown = v;
+    const is3d = v === '3d';
+    W3.hidden = !is3d; VIEW.hidden = is3d;
+    if (is3d) { $('#sim-viewnote').textContent = 'The console\'s 3-D shot on this mission\'s clock'; trackKey = ''; return; }
     VIEW.innerHTML = v === 'ascent' ? ascSvg : v === 'entry' ? entSvg : v === 'hand' ? handSvg() : mapSvg;
     $('#sim-viewnote').textContent = v === 'ascent' ? 'RUPAK launch twin: stack, upper stage and the booster flying back to the barge'
       : v === 'entry' ? `Return model of the twin${own ? ' (your capsule copies LELP-1’s profile: same orbit and ballistic coefficient)' : ''}`
@@ -136,7 +190,8 @@
     trackKey = '';
   }
   $$('#sim-tabs button').forEach((b) => { b.onclick = () => { view = b.dataset.v; $$('#sim-tabs button').forEach((q) => q.classList.toggle('on', q === b)); force = true; }; });
-  const autoView = (s) => (s >= -60 && s < 520 ? 'ascent' : !cube && s >= M.entry - 150 && s < M.splash ? 'entry' : !cube && s >= M.splash ? 'hand' : 'map');
+  const autoView = (s) => (inLaunch3d(s) ? (ready3d ? '3d' : s < 520 ? 'ascent' : 'map')
+    : inReturn3d(s) && ready3d ? '3d' : !cube && s >= M.entry - 150 && s < M.splash ? 'entry' : !cube && s >= M.splash ? 'hand' : 'map');
 
   // ground-track pieces split where they cross the map edge
   const path = (pts) => { let d = '', px = null; for (const [lo, la] of pts) { const X = x(lo), Y = y(la); d += (px == null || Math.abs(X - px) > 180 ? 'M' : 'L') + X.toFixed(1) + ',' + Y.toFixed(1); px = X; } return d; };
@@ -346,21 +401,23 @@
     $('#sim-met').textContent = met(s); $('#sim-utc').textContent = utc(st.utc);
     const pc = $('#sim-phase'); pc.textContent = st.phase.name.toUpperCase();
     $('#sim-cursor').style.left = `${(SIM.toPlay(s) / L * 100).toFixed(2)}%`;
-    setView(view === 'auto' ? autoView(s) : view === 'entry' && cube ? 'map' : view);
-    if (shown === 'map') drawMap(st); else if (shown === 'ascent') drawAscent(st); else if (shown === 'entry') drawEntry(st);
+    setView(view === 'auto' ? autoView(s) : view === 'entry' && cube ? 'map' : view === '3d' && !ready3d ? 'map' : view);
+    if (shown === '3d') draw3d(st, frameDt); else if (shown === 'map') drawMap(st); else if (shown === 'ascent') drawAscent(st); else if (shown === 'entry') drawEntry(st);
     else if (shown === 'hand') $$('.sim-hand li').forEach((li) => li.classList.toggle('on', +li.dataset.s <= s));
     telemetry(st); log(st); caption(st); proto(st); cad(st);
     for (const id of ['c-t', 'c-d', 'c-x']) { const c = $(`#${id}-cur`); if (c) { c.setAttribute('x1', cx(s)); c.setAttribute('x2', cx(s)); } }
     $('#c-t-v').textContent = `${f1(st.temp)} °C`; $('#c-d-v').textContent = `${f2(st.dose)} mGy`; $('#c-x-v').textContent = `${f1(st.down)} MB`;
   }
+  let frameDt = 1 / 60;
   function frame(now) {
+    frameDt = lastT == null ? 1 / 60 : Math.min(0.1, (now - lastT) / 1000);
     if (playing) {
-      const dt = lastT == null ? 0 : Math.min(0.1, (now - lastT) / 1000);
+      const dt = frameDt;
       s = speed === 'auto' ? SIM.toMission(SIM.toPlay(s) + dt) : s + dt * speed;
       if (s >= SIM.tEnd - 1e-6) { s = SIM.tEnd; setPlaying(false); $('#sim-report').hidden = false; }
     }
     lastT = now;
-    if (playing || force || shownS !== s) { force = false; shownS = s; render(); }
+    if (playing || force || shownS !== s || (shown === '3d' && scene3d)) { force = false; shownS = s; render(); }
     requestAnimationFrame(frame);
   }
   if (isFinite(+H.get('at')) && H.get('at') !== null) { s = Math.max(-DAY, Math.min(SIM.tEnd, +H.get('at'))); if (s >= SIM.tEnd) $('#sim-report').hidden = false; }   // a shared moment

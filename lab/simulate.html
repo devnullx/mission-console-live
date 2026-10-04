@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mission simulation · LELP-1</title>
 <meta name="description" content="Your configured mission, simulated end to end: launch, orbit, your protocol, return, handover.">
-<meta name="build" content="33e653f">
+<meta name="build" content="618e61f">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lab.css?v=33e653f">
+<link rel="stylesheet" href="lab.css?v=618e61f">
 </head>
 <body>
 <header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html">Configure your mission</a><a href="simulate.html" class=on>Mission simulation</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments">Experiments</a><a href="modules.html">Payload modules</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
@@ -40,11 +40,12 @@
   <div class="sim-main">
     <div class="card sim-stage">
       <div class="sim-stagebar">
-        <div class="seg" id="sim-tabs" role="group" aria-label="View"><button type="button" data-v="auto" class="on">Follow</button><button type="button" data-v="map">Ground track</button><button type="button" data-v="ascent">Launch</button><button type="button" data-v="entry">Return</button></div>
+        <div class="seg" id="sim-tabs" role="group" aria-label="View"><button type="button" data-v="auto" class="on">Follow</button><button type="button" data-v="3d">3-D</button><button type="button" data-v="map">Ground track</button><button type="button" data-v="ascent">Launch chart</button><button type="button" data-v="entry">Return chart</button></div>
         <span class="small" id="sim-viewnote"></span>
       </div>
       <div class="sim-caption" id="sim-caption"></div>
       <div class="sim-view" id="sim-view"></div>
+      <div class="sim-3dw" id="sim-3dw" hidden><canvas id="sim-3dc" aria-label="3-D launch and return"></canvas><div class="sim-hud" id="d-hud"></div><div class="sim-3dnote" id="d-note"></div></div>
     </div>
     <div class="card sim-proto" id="sim-proto"></div>
     <div class="sim-charts" id="sim-charts"></div>
@@ -60,16 +61,16 @@
 
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script><script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script><script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/controls/OrbitControls.js"></script><script src="cad.js?v=33e653f"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script><script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script><script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/controls/OrbitControls.js"></script><script src="cad.js?v=618e61f"></script>
 <footer class="foot"><div class="wrap">
 <p><b>LELP-1 is in design.</b> Bay limits, budgets, timelines and environment numbers come from Space Philic's digital twin of the
 mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
 Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
 each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
-<p class="mono">build 33e653f</p>
+<p class="mono">build 618e61f</p>
 </div></footer>
-<script src="plan.js?v=33e653f"></script>
-<script src="sim.js?v=33e653f"></script>
-<script src="simulate.js?v=33e653f"></script>
+<script src="plan.js?v=618e61f"></script>
+<script src="sim.js?v=618e61f"></script>
+<script src="simulate.js?v=618e61f"></script>
 </body>
 </html>
