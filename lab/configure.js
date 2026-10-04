@@ -25,12 +25,13 @@
     if (/^\d{4}-\d{2}-\d{2}$/.test(h.get('l') || '')) S.launch = h.get('l');
     S.step = Math.min(4, Math.max(1, +h.get('s') || 1));
   } catch (e) { /* defaults */ }
-  const save = () => {
+  const hashOf = () => {
     const h = new URLSearchParams({ s: S.step, m: S.mode, n: S.n, c: +S.centrifuge, x: +S.xband, f: +S.furnace, l: S.launch });
     if (S.exp) { h.set('e', S.exp); if (S.days) h.set('d', S.days); if (S.temp != null) h.set('t', S.temp); }
     if (S.arch) h.set('a', S.arch);
-    history.replaceState(null, '', '#' + h.toString());
+    return h.toString();
   };
+  const save = () => history.replaceState(null, '', '#' + hashOf());
 
   // ---------- the experiment as configured ----------
   const exp = () => (S.exp ? byId[S.exp] : null);
@@ -213,10 +214,7 @@
   }
 
   // ---------- step 3: protocol and payload guide ----------
-  function scaledSteps(e) {
-    const d0 = e.protocol.duration_days, d1 = days(), k = d1 / d0;
-    return e.protocol.steps.map((s) => ({ day: s.day <= 0 || Math.abs(k - 1) < 1e-9 ? s.day : Math.round(s.day * k * 2) / 2, action: s.action }));
-  }
+  const scaledSteps = (e) => LelpPlan.scaledSteps(e, days());
   function guide(e) {
     const p = e.protocol, r = e.sample_return, m = e.module;
     const first = p.launch_state.split(/\.\s|;\s/)[0];          // the primary launch state; later sentences are options
@@ -255,37 +253,8 @@
       <p class="small">Template researched and fact-checked against its sources (<a href="${esc(e.id)}.html">full page with references</a>). Limits: ${esc(e.limitations[0] || '')}</p>`;
   }
 
-  // ---------- step 4: the mission that follows ----------
-  function mission() {
-    const e = exp(), own = S.mode === 'own', d = days();
-    const t0 = Date.parse(S.launch + 'T00:00:00Z');
-    const start = own ? T.t_orbit_s + 2 * DAY : T.t_ops_s + T.start_after_s;        // own satellite: 2 days of checkout first
-    const labDays = own ? d : Math.max(d, T.manifest_days);
-    const end = start + d * DAY, endLab = start + labDays * DAY;
-    const prep = endLab + T.prep_after_end_s, deorbit = prep + T.deorbit_after_prep_s, entry = deorbit + T.entry_after_deorbit_s;
-    const splash = deorbit + T.splash_after_deorbit_s, hand = splash + (own ? D.params.return_hold_h * 3600 : T.handover_after_splash_s);
-    const lab = hand + (e ? e.sample_return.max_hours * 3600 : 48 * 3600);
-    const cube = own && archOf() === 'A';
-    if (cube) {             // in-flight only: no capsule, the satellite re-enters and burns up after the protocol
-      const evA = [[-24 * 3600, 'Late load', 'your fluidic card goes into the CubeSat'], [0, 'Launch', 'rideshare deployment'], [T.t_orbit_s, 'Orbit', `${D.orbit.alt_km} km dawn-dusk sun-synchronous`],
-        [start, 'Your start', 'you sign it; Sentinel checks it'], [end, 'Your last reading', `after ${d} days; results downlinked daily`], [end + DAY, 'End of mission', 'deorbit or passivation; the CubeSat burns up on re-entry']];
-      let eclMaxA = 0;
-      const doyA = (ms) => Math.floor((ms - Date.UTC(new Date(ms).getUTCFullYear(), 0, 1)) / (DAY * 1000)) % 365;
-      for (let x = 0; x <= end; x += DAY) eclMaxA = Math.max(eclMaxA, D.eclipse[doyA(t0 + x * 1000)]);
-      return { ev: evA, t0, end, endLab: end, splash: end + DAY, hand: end + DAY, eclMin: eclMaxA * D.orbit.period_min, doseMgy: T.dose_mgy_day * (end - T.t_orbit_s) / DAY, labDays: d, cube: true };
-    }
-    const ev = [[-24 * 3600, 'Late load', own ? 'your module goes into the capsule' : 'your module goes into its bay'], [0, 'Launch on RUPAK', 'reusable booster flies back'],
-      [T.t_orbit_s, 'Orbit', `${D.orbit.alt_km} km dawn-dusk sun-synchronous`], [T.t_ops_s, own ? 'Satellite checkout (2 days)' : 'Lab power-on', own ? 'arrays out, Sun acquired, payload held at temperature' : 'bays at their setpoints, dosimeter logging'],
-      [start, 'Your start', 'you sign it; Sentinel checks it'], [end, 'Your preservation', `after ${d} days`],
-      ...(own || endLab === end ? [] : [[endLab, 'Lab operations end', `the longest protocol on board (${esc(T.manifest_driver)}, ${T.manifest_days} days)`]]),
-      [deorbit, 'Deorbit burn', own ? 'service module, then the capsule separates' : 'upper stage, then the lab separates'], [entry, 'Entry', `inflatable heat shield, about ${f1(T.peak_g)} g peak in the twin's model`],
-      [splash, 'Splashdown', own ? 'under the parachute; the capsule beacon guides the ship' : `${f1(T.splash_ms)} m/s next to the recovery ship`],
-      [hand, 'Your courier', own ? `latest: the capsule holds temperature for ${D.params.return_hold_h} h` : 'custody ledger signed'], [lab, 'In your lab', 'latest arrival for this protocol']];
-    const doyOf = (ms) => Math.floor((ms - Date.UTC(new Date(ms).getUTCFullYear(), 0, 1)) / (DAY * 1000)) % 365;
-    let eclMax = 0;
-    for (let s = 0; s <= splash; s += DAY) eclMax = Math.max(eclMax, D.eclipse[doyOf(t0 + s * 1000)]);
-    return { ev, t0, end, endLab, splash, hand, eclMin: eclMax * D.orbit.period_min, doseMgy: T.dose_mgy_day * (deorbit - T.t_ops_s) / DAY, labDays };
-  }
+  // ---------- step 4: the mission that follows (lab_plan.js: launch window, timeline, recovery-zone deorbit) ----------
+  const mission = () => LelpPlan.timeline(D, { mode: S.mode, days: days(), exp: exp(), arch: archOf(), launch: S.launch });
   const when = (t0, s) => { const d = new Date(t0 + s * 1000); return d.toISOString().slice(0, 16).replace('T', ' ') + ' UTC'; };
   const rel = (s) => { const a = Math.abs(s), dd = Math.floor(a / DAY), h = Math.floor(a % DAY / 3600), m = Math.floor(a % 3600 / 60); return (s < 0 ? 'L−' : 'T+') + (dd ? dd + ' d ' : '') + h + ' h ' + String(m).padStart(2, '0') + ' min'; };
   function step4() {
@@ -306,7 +275,9 @@
       <table class="tbl mission"><thead><tr><th>When</th><th>Mission time</th><th>Event</th><th></th></tr></thead><tbody>
       ${M.ev.map(([s, a, b]) => `<tr><td class="mono">${when(M.t0, s)}</td><td class="mono">${rel(s)}</td><td><b>${esc(a)}</b></td><td>${b}</td></tr>`).join('')}</tbody></table>
       <p class="small">${M.cube ? 'Your CubeSat reads the experiment in orbit and sends the results down every day; nothing comes back, so post-flight assays need a bay on LELP-1 or a sample-return satellite.' : own ? `Your satellite flies your protocol only. The deorbit and entry copy LELP-1's (same orbit and ballistic coefficient); the capsule's smaller nose sees about twice LELP-1's peak heat flux, and an unguided capsule lands tens of km from its aim point, so recovery takes hours. Deorbit burn about ${f0(sz().burn)} s on ${sz().nThr} × 22 N thrusters.` : `On LELP-1 the lab stays in orbit until the longest protocol on board is preserved (${f1(M.labDays)} days with this manifest), then returns. The twin's 21-minute handover assumes the ship waits at the predicted splash point.`} Launch, return and handover times come from a run of the mission twin.</p>
-      <p><button type="button" class="btn" id="o-dl">Download your mission file (JSON)</button></p>`;
+      <div class="sim-cta"><a class="btn" href="simulate.html#${esc(hashOf())}">▶ Run the mission simulation</a>
+        <span class="small">Launch, orbit, your protocol day by day, the return and the handover, played end to end from the twin's models.</span></div>
+      <p><button type="button" class="btn ghost" id="o-dl">Download your mission file (JSON)</button></p>`;
   }
 
   // ---------- summary and download ----------
@@ -318,6 +289,7 @@
       <dt>Protocol</dt><dd>${days()} days at ${temp()} °C</dd>
       <dt>Launch</dt><dd>${esc(S.launch)}</dd><dt>${M.cube ? 'Last reading' : 'Splashdown'}</dt><dd>${when(M.t0, M.cube ? M.end : M.splash).slice(0, 10)}</dd>
       <dt>Fit</dt><dd>${bad ? '<span class="chip bad">CHECK STEP 2</span>' : '<span class="chip good">FLYABLE</span>'}</dd></dl>
+      ${e ? `<p><a class="btn" href="simulate.html#${esc(hashOf())}">▶ Simulate this mission</a></p>` : ''}
       <p><button type="button" class="btn ghost" id="o-dl2">Download (JSON)</button></p>
       <p class="small">Share this configuration: the page address keeps it.</p>`;
   }
