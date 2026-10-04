@@ -1,1 +1,1 @@
-{"build": "ed6d442", "sha": "ed6d4427d0be62c079735667cc6e2b2e72603056", "dirty": false, "dev": false, "subject": "LELP-1 in CAD, with mass properties from the solids", "built_at": "2026-10-04T03:45:44Z"}
+{"build": "8cc91d0", "sha": "8cc91d024db99549cfbee8df586bf2903381e45a", "dirty": false, "dev": false, "subject": "LELP-1 CAD: bay numbers only in part names; fix the bay count in the CAD test", "built_at": "2026-10-04T03:48:22Z"}
