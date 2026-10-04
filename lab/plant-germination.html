@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Seed germination and root growth · LELP-1</title>
 <meta name="description" content="Every crop-growing system for long missions starts with a seed that must sprout, find its way and form a working root. On Earth, gravity tells roots which way to grow, so it is har">
-<meta name="build" content="b8da32d">
+<meta name="build" content="c7d42e8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lab.css?v=b8da32d">
+<link rel="stylesheet" href="lab.css?v=c7d42e8">
 </head>
 <body>
 <header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html">Configure your mission</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments" class=on>Experiments</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
@@ -38,33 +38,29 @@
   <section><h2>Coming home</h2><p>Samples are fixed in orbit, so they do not need to be alive at return. Keep fixed plates at 4 C from fixation (day 7) to the lab. 336 h covers the time from fixation to re-entry on day 14, plus courier time. This limit is our estimate; check it against the fixative maker&#x27;s storage data. Live seedlings returned unfixed would no longer reflect the microgravity state after landing.</p></section>
   <section><h2>Limits of this flight</h2><ul class="lim"><li>2-14 days covers germination and early seedlings only (up to about the two-leaf stage in crops like cowpea). No flowering, seed-to-seed cycles or crop yield studies.</li><li>No in-flight 1 g centrifuge, unlike the EMCS on the ISS. Flight and ground differences therefore mix microgravity with launch, radiation and hardware effects.</li><li>No -80 C freezer for return. Samples are chemically fixed at 4 C, which suits RNA and microscopy but limits some assays (for example, metabolites or enzyme activity may need frozen tissue).</li><li>Fixing in flight is not proven for this layout. In microgravity, fixative may not cover gel-grown seedlings evenly. Fixative delivery must be tested on the ground and in a flight-like setup first.</li><li>No crew: plates cannot be swapped, re-wet by hand, or rescued if seeds fail to hydrate. Water behaves differently in microgravity and can bead or bubble.</li><li>Sealed bay air with no CO2 supply limits plant number and growth stage. Larger seedlings or many seeds would change O2/CO2 levels.</li><li>In flight, imaging covers whole plates only. Detailed cell-level root data comes only after return.</li><li>A 550 km sun-synchronous orbit has a different radiation environment from the ISS. Log the dose and compare it before pooling results with ISS data.</li><li>Any live material after landing has sensed gravity again during the 1-2 day trip. Only samples fixed in flight reflect the microgravity state.</li></ul></section>
   
-<section class="ff" id="satellite"><h2>A satellite of its own: SP-PLT</h2>
-<p>If this experiment flies alone instead of in a LELP-1 bay, SP-PLT is a 78 kg free-flyer:
-a service module with a 0.40 m² sun-tracking array (120 W), a 241 Wh battery, S-band radios
-and a green-monopropellant deorbit module (2 × 22 N, a 339 s burn), carrying a
-25 kg return capsule with a 0.87 m heat shield. It flies the same 550 km dawn-dusk orbit: two days of checkout, then
-8 days of protocol, then deorbit; the capsule holds its samples at temperature for 8 h while the ship finds it.</p>
+<section class="ff" id="satellite"><h2>A satellite of its own: SP-PLT <span class="archchip B">B · samples return, hardware burns up</span></h2>
+<p>SP-PLT is a 117 kg free-flyer. Only the samples come home:
+1.9 kg ride in a 45 kg capsule in a drawer behind an optical window; the microscope looks through the window from the service module, and fluid lines cross through dry-break couplings that part at separation once the last fluid step is done.
+The microscope, pumps and reservoirs stay in the service module and burn up with it.
+Why B: seedlings are fixed in orbit; the LED panel and cameras stay; the drawer must keep the plates&#x27; orientation to the light.</p>
+<div class="satdraw-slot" data-d='{&quot;name&quot;: &quot;SP-PLT&quot;, &quot;arch&quot;: &quot;B&quot;, &quot;capD&quot;: 1.17, &quot;capKg&quot;: 45.0, &quot;wetKg&quot;: 116.6, &quot;busKg&quot;: 61.5, &quot;arrayM2&quot;: 0.4, &quot;arrayW&quot;: 120, &quot;battWh&quot;: 241, &quot;nThr&quot;: 2, &quot;xband&quot;: false, &quot;furnace&quot;: false, &quot;centrifuge&quot;: false, &quot;lit&quot;: true, &quot;retKg&quot;: 1.9}'></div>
 <div class="ffgrid">
-  <div class="card"><h3>Payload in the capsule</h3><table class="tbl"><thead><tr><th>Item</th><th class=num>kg</th><th class=num>W peak</th></tr></thead><tbody><tr><td>Seed germination and root growth module</td><td class=num>5.5</td><td class=num>22</td></tr></tbody></table></div>
-  <div class="card"><h3>Mass · estimate</h3><table class="tbl">
-    <tr><td>Return capsule (payload, hold battery 200 Wh, heat shield, parachute)</td><td class=num>24.8</td></tr>
-    <tr><td>Service module dry (structure, power, avionics, attitude, propulsion)</td><td class=num>46.9</td></tr>
-    <tr><td>Propellant for 190 m/s</td><td class=num>6.8</td></tr>
-    <tr class="tot"><td>At launch</td><td class=num>78.5</td></tr></table></div>
-  <div class="card"><h3>Power · estimate</h3><table class="tbl">
-    <tr><td>Average / peak load</td><td class=num>55 / 107 W</td></tr>
-    <tr><td>Array (worst eclipse season, 22 min shadow)</td><td class=num>120 W</td></tr>
-    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr></table></div>
+  <div class="card"><h3>Comes home · capsule</h3><table class="tbl"><tr><td>four seed plates in an indexed frame</td><td class=num>0.80</td></tr><tr><td>sample drawer, optical window, dry-break couplings</td><td class=num>0.50</td></tr><tr><td>drawer thermoelectric block</td><td class=num>0.60</td></tr><tr class="tot"><td>Capsule at entry (with heat shield, parachute, hold battery, margin)</td><td class=num>45.0</td></tr></table></div>
+  <div class="card"><h3>Stays · service module</h3><table class="tbl"><tr><td>experiment instruments, pumps and reservoirs</td><td class=num>4.70</td></tr><tr class="tot"><td>Service module dry, with power, radios, attitude, propulsion</td><td class=num>61.5</td></tr></table></div>
+  <div class="card"><h3>Budgets · estimate</h3><table class="tbl">
+    <tr><td>Launch mass</td><td class=num>116.6 kg</td></tr><tr><td>Propellant for 190 m/s</td><td class=num>10.0 kg</td></tr>
+    <tr><td>Average / peak load</td><td class=num>55 / 107 W</td></tr><tr><td>Array, worst eclipse season</td><td class=num>120 W</td></tr>
+    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr><tr><td>Deorbit burn</td><td class=num>2 × 22 N, 503 s</td></tr></table></div>
 </div>
 <div class="two">
-  <div><h3>Tailored for this experiment</h3><ul class="lim"><li>LED lighting panel inside the bay (white for growth, one-sided blue for phototropism, green/IR for imaging in the dark period)</li><li>Macro camera(s) imaging whole plates; the standard inverted cell microscope cannot image seedling morphology</li><li>O2/CO2 sensing in the sealed bay air</li><li>Fluidics plumbed to each plate for in-orbit hydration and two different fixatives</li><li>Fixed plate orientation relative to the light source and known orientation to the satellite axes</li><li>A quiet window with the robotic arm idle during the phototropism and imaging phase (arm motion raises acceleration to about 1e-4 to 1e-3 g)</li></ul></div>
-  <div><h3>Bay or satellite?</h3><p>On LELP-1 this payload takes one bay (5.5 kg, 2.3 % of the lab's launch mass), shares
-  power, radios and the return with 31 others, and comes home with the whole lab. Alone, it needs 78 kg of satellite, about
-  14 times its own mass, but it gets the schedule to itself and a quieter ride: about 7.3 × 10⁻⁸ g at the payload, with no robotic
-  arm, against about 7 × 10⁻⁷ g in a LELP-1 bay.</p></div>
+  <div><h3>Tailored for this experiment</h3><ul class="lim"><li>LED lighting panel inside the bay (white for growth, one-sided blue for phototropism, green/IR for imaging in the dark period)</li><li>Macro camera(s) imaging whole plates; the standard inverted cell microscope cannot image seedling morphology</li><li>O2/CO2 sensing in the sealed bay air</li><li>Fluidics plumbed to each plate for in-orbit hydration and two different fixatives</li><li>Fixed plate orientation relative to the light source and known orientation to the satellite axes</li></ul></div>
+  <div><h3>Bay or satellite?</h3><p>The capsule is the floor: no capsule much smaller than about 45 kg has been recovered yet, so 1.9 kg of samples need
+  117 kg of satellite. On LELP-1 the same samples share one capsule, the whole lab, with 31 other bays. A dedicated satellite earns its
+  place when the experiment needs the schedule to itself, a quieter ride (about 7.3 × 10⁻⁸ g quasi-steady, no robotic arm), or power a bay cannot give.</p></div>
 </div>
-<p class="small">First-order sizing with a 20 % system margin by <a href="satellites.html#method">the same model for every experiment</a>, reviewed independently;
-<a href="satellites.html#review">read the caveats</a>. Flown recoverable free-flyers are heavier, so treat these masses as optimistic.</p>
+
+<p class="small">First-order sizing with a 20 % margin by <a href="satellites.html#method">one model for every experiment</a>, reviewed independently;
+<a href="satellites.html#review">caveats and sources</a>. The smallest recovered capsule so far (Varda W-1) is under 90 kg, so treat these masses as optimistic.</p>
 </section>
   <section class="refs"><h2>References</h2><ol><li id="ref-1">Indian Space Research Organisation (ISRO). CROPS: A Leap in Space Biological Experiments. isro.gov.in <a href="https://www.isro.gov.in/CROPS.html" rel="noopener" target="_blank">https://www.isro.gov.in/CROPS.html</a></li><li id="ref-2">Indian Space Research Organisation (ISRO). POEM-4 in PSLV-C60 / SpaDeX Mission. isro.gov.in <a href="https://www.isro.gov.in/POEM_4_Payloads_spadex.html" rel="noopener" target="_blank">https://www.isro.gov.in/POEM_4_Payloads_spadex.html</a></li><li id="ref-3">Indian Space Research Organisation (ISRO). List of PSLV Launches. isro.gov.in <a href="https://www.isro.gov.in/PSLV_Launchers.html" rel="noopener" target="_blank">https://www.isro.gov.in/PSLV_Launchers.html</a></li><li id="ref-4">Paul AL, Amalfitano CE, Ferl RJ, 2012. Plant growth strategies are remodeled by spaceflight. BMC Plant Biology 12:232. doi:10.1186/1471-2229-12-232 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3556330/" rel="noopener" target="_blank">https://pmc.ncbi.nlm.nih.gov/articles/PMC3556330/</a></li><li id="ref-5">NASA Ames Space Biosciences. TROPI (STS-121). nasa.gov <a href="https://www.nasa.gov/ames/space-biosciences/tropi-sts-121" rel="noopener" target="_blank">https://www.nasa.gov/ames/space-biosciences/tropi-sts-121</a></li><li id="ref-6">Herranz R, Vandenbrink JP, Villacampa A, Manzano A, Poehlman WL, Feltus FA, Kiss JZ, Medina FJ, 2019. RNAseq Analysis of the Response of Arabidopsis thaliana to Fractional Gravity Under Blue-Light Stimulation During Spaceflight. Frontiers in Plant Science 10:1529. doi:10.3389/fpls.2019.01529 <a href="https://www.frontiersin.org/articles/10.3389/fpls.2019.01529/full" rel="noopener" target="_blank">https://www.frontiersin.org/articles/10.3389/fpls.2019.01529/full</a></li><li id="ref-7">NASA Ames Space Biosciences. Seedling Growth-2 (SpaceX-4). nasa.gov <a href="https://www.nasa.gov/ames/space-biosciences/seedling-growth-2-spacex-4/" rel="noopener" target="_blank">https://www.nasa.gov/ames/space-biosciences/seedling-growth-2-spacex-4/</a></li><li id="ref-8">Indian Space Research Organisation (ISRO). Progress of Axiom-4 mission and tentative schedule for undocking from ISS to return journey to earth. isro.gov.in <a href="https://www.isro.gov.in/Progress_Axiom-4_mission_tentative_schedule_undocking_ISS_to_earth.html" rel="noopener" target="_blank">https://www.isro.gov.in/Progress_Axiom-4_mission_tentative_schedule_undocking_ISS_to_earth.html</a></li></ol><p class="verify">Fact-check: 16 claims and sources checked, 12 confirmed, 2 corrected, 2 removed · confidence high</p></section>
 </div>
@@ -80,12 +76,13 @@ and a green-monopropellant deorbit module (2 × 22 N, a 339 s burn), carrying a
 <nav class="pager"><a href="antibiotic-resistance.html">← Antibiotic resistance of pathogenic bacteria</a><a href="alloy-solidification.html">Alloy solidification →</a></nav>
 
 </main>
+<script src="satdraw.js?v=c7d42e8"></script>
 <footer class="foot"><div class="wrap">
 <p><b>LELP-1 is in design.</b> Bay limits, budgets, timelines and environment numbers come from Space Philic's digital twin of the
 mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
 Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
 each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
-<p class="mono">build b8da32d</p>
+<p class="mono">build c7d42e8</p>
 </div></footer>
 </body>
 </html>

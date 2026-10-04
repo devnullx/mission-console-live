@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Immune T-cell activation · LELP-1</title>
 <meta name="description" content="Astronauts show immune dysregulation and reactivation of latent herpesviruses that last through 6-month ISS missions. On Earth, weak T-cell activation is also seen in older people.">
-<meta name="build" content="b8da32d">
+<meta name="build" content="c7d42e8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lab.css?v=b8da32d">
+<link rel="stylesheet" href="lab.css?v=c7d42e8">
 </head>
 <body>
 <header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html">Configure your mission</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments" class=on>Experiments</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
@@ -38,33 +38,29 @@
   <section><h2>Coming home</h2><p>All cells are chemically fixed in orbit, so nothing needs to come back alive. The manufacturer states RNAlater stabilises RNA for 1 month at 4 C (and indefinitely at -20 C), which easily covers the return. The 144 h limit is our estimate and is set by the unfrozen 24 h supernatants: drawn on day 3, they spend about 4 days in orbit, then about 20 min to courier pickup and 1-2 days in transit, so about 6 days at 4 C. The last paraformaldehyde-fixed cells (day 5) reach the lab after about 3-4 days. The bay cannot go below 4 C, so supernatants cannot be frozen in orbit; their cytokine stability for 6 days at 4 C must be checked on the ground before flight. Keep everything at 4 C in transit and avoid temperatures above 25 C.</p></section>
   <section><h2>Limits of this flight</h2><ul class="lim"><li>Without the added 1 g centrifuge, LELP-1 cannot tell microgravity effects apart from launch, radiation and handling effects. The 2006 and 2014 ISS studies used this control.</li><li>LELP-1 has no crew and no way to pellet cells. Thawed cells are diluted rather than washed, so some DMSO stays in the medium. Medium changes must go through filters, and activator or fixative mixing relies on pumped flow because there is no sedimentation or convection.</li><li>Bead-based activators need bead-cell contact, which in microgravity depends on mixing. The protocol therefore uses soluble activators (Con A + anti-CD28, soluble anti-CD3/CD28). Results with bead activation are not directly comparable.</li><li>Cell attachment changes the outcome: on SLS-1, bead-attached lymphocytes and monocytes responded more in microgravity, not less. Results from suspension wells apply to suspension culture only.</li><li>There is no CO2 supply. HEPES-buffered medium in sealed wells can drift in pH over several days of activated, high-metabolism culture, so 72 h is about the practical limit without a medium exchange.</li><li>No in-flight flow cytometry, cytokine assay or RNA readout. In flight, the satellite only gives images and environment logs; the molecular answers come after return.</li><li>Supernatants cannot be frozen (the bay minimum is 4 C), so cytokine values depend on about 6 days of stability at 4 C.</li><li>A 2-14 day free-flyer studies isolated cells in vitro. It cannot reproduce astronaut immune changes in the body over months, latent virus reactivation, stress hormones or the role of other tissues.</li><li>Few donors per flight (2 planned), so donor-to-donor variability limits the statistics. Several flights or more donors in a second bay may be needed.</li><li>The radiation environment at 550 km sun-synchronous orbit differs from the ISS, so dose comparisons with ISS heritage data need the on-board dosimeter record.</li></ul></section>
   
-<section class="ff" id="satellite"><h2>A satellite of its own: SP-IMM</h2>
-<p>If this experiment flies alone instead of in a LELP-1 bay, SP-IMM is a 108 kg free-flyer:
-a service module with a 0.60 m² sun-tracking array (179 W), a 350 Wh battery, S-band radios
-and a counter-rotor for the centrifuge, and a green-monopropellant deorbit module (2 × 22 N, a 468 s burn), carrying a
-40 kg return capsule with a 1.10 m heat shield. It flies the same 550 km dawn-dusk orbit: two days of checkout, then
-7 days of protocol, then deorbit; the capsule holds its samples at temperature for 8 h while the ship finds it.</p>
+<section class="ff" id="satellite"><h2>A satellite of its own: SP-IMM <span class="archchip B">B · samples return, hardware burns up</span></h2>
+<p>SP-IMM is a 133 kg free-flyer. Only the samples come home:
+3.6 kg ride in a 45 kg capsule in a drawer behind an optical window; the microscope looks through the window from the service module, and fluid lines cross through dry-break couplings that part at separation once the last fluid step is done.
+The microscope, pumps and reservoirs, the centrifuge drive stay in the service module and burn up with it, and a small mechanism moves the fixed cassette off the rotor into the capsule first.
+Why B: all cells are fixed in orbit; the unfrozen day-3 supernatants set the return clock.</p>
+<div class="satdraw-slot" data-d='{&quot;name&quot;: &quot;SP-IMM&quot;, &quot;arch&quot;: &quot;B&quot;, &quot;capD&quot;: 1.17, &quot;capKg&quot;: 45.0, &quot;wetKg&quot;: 132.8, &quot;busKg&quot;: 76.4, &quot;arrayM2&quot;: 0.6, &quot;arrayW&quot;: 179, &quot;battWh&quot;: 350, &quot;nThr&quot;: 2, &quot;xband&quot;: false, &quot;furnace&quot;: false, &quot;centrifuge&quot;: true, &quot;lit&quot;: false, &quot;retKg&quot;: 3.6}'></div>
 <div class="ffgrid">
-  <div class="card"><h3>Payload in the capsule</h3><table class="tbl"><thead><tr><th>Item</th><th class=num>kg</th><th class=num>W peak</th></tr></thead><tbody><tr><td>Immune T-cell activation module</td><td class=num>5.6</td><td class=num>28</td></tr><tr><td>1 g centrifuge module</td><td class=num>5.3</td><td class=num>14</td></tr></tbody></table></div>
-  <div class="card"><h3>Mass · estimate</h3><table class="tbl">
-    <tr><td>Return capsule (payload, hold battery 320 Wh, heat shield, parachute)</td><td class=num>39.7</td></tr>
-    <tr><td>Service module dry (structure, power, avionics, attitude, propulsion)</td><td class=num>59.3</td></tr>
-    <tr><td>Propellant for 190 m/s</td><td class=num>9.3</td></tr>
-    <tr class="tot"><td>At launch</td><td class=num>108.3</td></tr></table></div>
-  <div class="card"><h3>Power · estimate</h3><table class="tbl">
-    <tr><td>Average / peak load</td><td class=num>82 / 155 W</td></tr>
-    <tr><td>Array (worst eclipse season, 22 min shadow)</td><td class=num>179 W</td></tr>
-    <tr><td>Battery (sized by ascent)</td><td class=num>350 Wh</td></tr></table></div>
+  <div class="card"><h3>Comes home · capsule</h3><table class="tbl"><tr><td>24-well cassette</td><td class=num>0.70</td></tr><tr><td>1 g rotor cassette</td><td class=num>0.80</td></tr><tr><td>reagent block with the sealed supernatant reservoir</td><td class=num>1.00</td></tr><tr><td>sample drawer, optical window, dry-break couplings</td><td class=num>0.50</td></tr><tr><td>drawer thermoelectric block</td><td class=num>0.60</td></tr><tr class="tot"><td>Capsule at entry (with heat shield, parachute, hold battery, margin)</td><td class=num>45.0</td></tr></table></div>
+  <div class="card"><h3>Stays · service module</h3><table class="tbl"><tr><td>experiment instruments, pumps and reservoirs</td><td class=num>3.90</td></tr><tr><td>centrifuge drive and structure</td><td class=num>4.50</td></tr><tr><td>cassette transfer mechanism (rotor to capsule)</td><td class=num>1.00</td></tr><tr class="tot"><td>Service module dry, with power, radios, attitude, propulsion</td><td class=num>76.4</td></tr></table></div>
+  <div class="card"><h3>Budgets · estimate</h3><table class="tbl">
+    <tr><td>Launch mass</td><td class=num>132.8 kg</td></tr><tr><td>Propellant for 190 m/s</td><td class=num>11.4 kg</td></tr>
+    <tr><td>Average / peak load</td><td class=num>82 / 155 W</td></tr><tr><td>Array, worst eclipse season</td><td class=num>179 W</td></tr>
+    <tr><td>Battery (sized by ascent)</td><td class=num>350 Wh</td></tr><tr><td>Deorbit burn</td><td class=num>2 × 22 N, 573 s</td></tr></table></div>
 </div>
 <div class="two">
   <div><h3>Tailored for this experiment</h3><ul class="lim"><li>In-flight 1 g centrifuge control (not part of the standard bay): a second identical cassette on a small rotor. At 5 cm radius, 1 g needs about 134 rpm. Without it, the core control from the ISS heritage is missing.</li><li>Filtered well outlets and a sealed supernatant reservoir, so medium can be harvested in microgravity without drawing up the cells</li><li>Arm-motion lockout (keeping the vehicle in the 1e-6 g regime) for about 2 h after activator addition and during each fixation</li><li>A -80 C passive cassette hold time that covers the launch campaign plus 1 day in orbit, with the cassette temperature logged</li><li>Fixation events time-stamped against the accelerometer and dosimeter logs</li></ul></div>
-  <div><h3>Bay or satellite?</h3><p>On LELP-1 this payload takes one bay (10.9 kg, 4.5 % of the lab's launch mass), shares
-  power, radios and the return with 31 others, and comes home with the whole lab. Alone, it needs 108 kg of satellite, about
-  10 times its own mass, but it gets the schedule to itself and a quieter ride: about 7.3 × 10⁻⁸ g at the payload, with no robotic
-  arm, against about 7 × 10⁻⁷ g in a LELP-1 bay.</p></div>
+  <div><h3>Bay or satellite?</h3><p>The capsule is the floor: no capsule much smaller than about 45 kg has been recovered yet, so 3.6 kg of samples need
+  133 kg of satellite. On LELP-1 the same samples share one capsule, the whole lab, with 31 other bays. A dedicated satellite earns its
+  place when the experiment needs the schedule to itself, a quieter ride (about 7.3 × 10⁻⁸ g quasi-steady, no robotic arm), or power a bay cannot give.</p></div>
 </div>
-<p class="small">First-order sizing with a 20 % system margin by <a href="satellites.html#method">the same model for every experiment</a>, reviewed independently;
-<a href="satellites.html#review">read the caveats</a>. Flown recoverable free-flyers are heavier, so treat these masses as optimistic.</p>
+
+<p class="small">First-order sizing with a 20 % margin by <a href="satellites.html#method">one model for every experiment</a>, reviewed independently;
+<a href="satellites.html#review">caveats and sources</a>. The smallest recovered capsule so far (Varda W-1) is under 90 kg, so treat these masses as optimistic.</p>
 </section>
   <section class="refs"><h2>References</h2><ol><li id="ref-1">Cogoli A, Tschopp A, Fuchs-Bislin P. 1984. Cell sensitivity to gravity. Science 225:228-230. doi:10.1126/science.6729481 <a href="https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:6729481%20AND%20SRC:MED&amp;resultType=core&amp;format=json" rel="noopener" target="_blank">https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:6729481%20AND%20SRC:MED&amp;resultType=core&amp;format=json</a></li><li id="ref-2">Cogoli-Greuter M, Bechler B, Lorenzi G, Cogoli A, Sciola L, Pippia P, Sechi G. Mitogen binding, cytoskeleton patterns and motility of T lymphocytes in microgravity. In: ESA SP-1206, European Space Agency, April 1997 <a href="https://www.esa.int/esapub/sp/sp1206/cogol.htm" rel="noopener" target="_blank">https://www.esa.int/esapub/sp/sp1206/cogol.htm</a></li><li id="ref-3">Bechler B, Cogoli A, Cogoli-Greuter M, Muller O, Hunzinger E, Criswell SB. 1992. Activation of microcarrier-attached lymphocytes in microgravity. Biotechnology and Bioengineering 40(8). NASA NTRS record <a href="https://ntrs.nasa.gov/citations/20040089971" rel="noopener" target="_blank">https://ntrs.nasa.gov/citations/20040089971</a></li><li id="ref-4">Chang TT, Walther I, Li CF, Boonyaratanakornkit J, Galleri G, Meloni MA, Pippia P, Cogoli A, Hughes-Fulford M. 2012. The Rel/NF-kB pathway and transcription of immediate early genes in T cell activation are inhibited by microgravity. J Leukoc Biol 92(6):1133-1145. doi:10.1189/jlb.0312157 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3501893" rel="noopener" target="_blank">https://pmc.ncbi.nlm.nih.gov/articles/PMC3501893</a></li><li id="ref-5">NASA Ames Research Center. T-Cell Activation in Aging (SpaceX-3). NASA Space Biosciences web page <a href="https://www.nasa.gov/ames/research/space-biosciences/t-cell-activation-in-aging-spacex-3" rel="noopener" target="_blank">https://www.nasa.gov/ames/research/space-biosciences/t-cell-activation-in-aging-spacex-3</a></li><li id="ref-6">Crucian BE, Chouker A, Simpson RJ, et al. 2018. Immune System Dysregulation During Spaceflight: Potential Countermeasures for Deep Space Exploration Missions. Frontiers in Immunology 9:1437. doi:10.3389/fimmu.2018.01437 <a href="https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2018.01437/full" rel="noopener" target="_blank">https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2018.01437/full</a></li><li id="ref-7">Thermo Fisher Scientific. RNAlater Stabilization Solution, product page (AM7020) <a href="https://www.thermofisher.com/order/catalog/product/AM7020" rel="noopener" target="_blank">https://www.thermofisher.com/order/catalog/product/AM7020</a></li></ol><p class="verify">Fact-check: 17 claims and sources checked, 8 confirmed, 9 corrected, 0 removed · confidence high</p></section>
 </div>
@@ -80,12 +76,13 @@ and a counter-rotor for the centrifuge, and a green-monopropellant deorbit modul
 <nav class="pager"><a href="heart-cells.html">← Human heart muscle cells from stem cells</a><a href="bone-cells.html">Bone cells: resorption and mineralization →</a></nav>
 
 </main>
+<script src="satdraw.js?v=c7d42e8"></script>
 <footer class="foot"><div class="wrap">
 <p><b>LELP-1 is in design.</b> Bay limits, budgets, timelines and environment numbers come from Space Philic's digital twin of the
 mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
 Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
 each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
-<p class="mono">build b8da32d</p>
+<p class="mono">build c7d42e8</p>
 </div></footer>
 </body>
 </html>

@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Biofilm formation on spacecraft and medical materials · LELP-1</title>
 <meta name="description" content="Bacteria that settle on a surface build a slime-covered community called a biofilm. On Earth these films clog pipes and filters and cause device-related infections, and they are mu">
-<meta name="build" content="b8da32d">
+<meta name="build" content="c7d42e8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lab.css?v=b8da32d">
+<link rel="stylesheet" href="lab.css?v=c7d42e8">
 </head>
 <body>
 <header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html">Configure your mission</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments" class=on>Experiments</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
@@ -38,33 +38,29 @@
   <section><h2>Coming home</h2><p>Fixed and preserved wells come back in the sealed cassette at 4 C, the lowest the bay can hold. Fixation is on day 5 and splashdown on day 7; the cassette reaches the courier about 20 min after splashdown and the lab 1-2 days later, so about 4-5 days pass from preservation to the lab. Fixed samples tolerate this; on ISS the fixed samples were held at 4 C for weeks before return. The ISS RNA samples were kept at -80 C on orbit and returned at -20 C; LELP-1 bays cannot freeze, so RNA stays in preservative at 4 C and quality may be lower unless a passive -80 C return cassette is flown.</p></section>
   <section><h2>Limits of this flight</h2><ul class="lim"><li>Two to fourteen days is short for this field. Spacecraft water-system biofilms build up over months, so the flight shows early attachment and growth, not mature fouling or long-term material damage.</li><li>No crew. Everything runs on a timer, so there is no re-dosing if a well looks wrong and no fixing a stuck valve.</li><li>One fixation point per well set. A time course needs several bays or relies on the daily in-flight images, which are lower resolution than post-flight confocal.</li><li>The bay cannot freeze. RNA stays in preservative at 4 C rather than frozen as on ISS, so transcriptomics may be weaker unless a passive cold cassette is flown.</li><li>No in-flight 1 g control. Without a centrifuge, the only reference is the ground run, and the heritage flights show flight-versus-ground results on this organism can go either way.</li><li>Static culture only. The bay has no flow loop, so it does not reproduce flowing water or condensate lines where spacecraft biofilms form.</li><li>In-flight imaging cannot see films on opaque coupons; those are measured only after return.</li><li>Entry and splashdown loads act on fixed films. Shear or sloshing can detach or smear them; the non-inoculated cassette on the ground load test is the only check.</li><li>24 wells per bay gives a few replicates per material: enough for clear effects, not for small ones or dose-response work.</li><li>Results may be material-specific. On ISS, biofilm form depended on the material, not on gravity.</li><li>The column-and-canopy structure is not a safe expectation. It was reported on the shuttle flights and not seen on ISS with the same strain and an anaerobic setup but a different medium, so we do not promise it.</li></ul></section>
   
-<section class="ff" id="satellite"><h2>A satellite of its own: SP-BFM</h2>
-<p>If this experiment flies alone instead of in a LELP-1 bay, SP-BFM is a 81 kg free-flyer:
-a service module with a 0.43 m² sun-tracking array (128 W), a 241 Wh battery, S-band radios
-and a green-monopropellant deorbit module (2 × 22 N, a 349 s burn), carrying a
-26 kg return capsule with a 0.89 m heat shield. It flies the same 550 km dawn-dusk orbit: two days of checkout, then
-7 days of protocol, then deorbit; the capsule holds its samples at temperature for 8 h while the ship finds it.</p>
+<section class="ff" id="satellite"><h2>A satellite of its own: SP-BFM <span class="archchip B">B · samples return, hardware burns up</span></h2>
+<p>SP-BFM is a 117 kg free-flyer. Only the samples come home:
+2.4 kg ride in a 45 kg capsule in a drawer behind an optical window; the microscope looks through the window from the service module, and fluid lines cross through dry-break couplings that part at separation once the last fluid step is done.
+The microscope, pumps and reservoirs stay in the service module and burn up with it.
+Why B: biofilms are fixed, washed and stained in orbit before separation; entry loads may shear fixed films.</p>
+<div class="satdraw-slot" data-d='{&quot;name&quot;: &quot;SP-BFM&quot;, &quot;arch&quot;: &quot;B&quot;, &quot;capD&quot;: 1.17, &quot;capKg&quot;: 45.0, &quot;wetKg&quot;: 117.2, &quot;busKg&quot;: 62.1, &quot;arrayM2&quot;: 0.43, &quot;arrayW&quot;: 128, &quot;battWh&quot;: 241, &quot;nThr&quot;: 2, &quot;xband&quot;: false, &quot;furnace&quot;: false, &quot;centrifuge&quot;: false, &quot;lit&quot;: false, &quot;retKg&quot;: 2.35}'></div>
 <div class="ffgrid">
-  <div class="card"><h3>Payload in the capsule</h3><table class="tbl"><thead><tr><th>Item</th><th class=num>kg</th><th class=num>W peak</th></tr></thead><tbody><tr><td>Biofilm formation on spacecraft and medical materials module</td><td class=num>6.0</td><td class=num>28</td></tr></tbody></table></div>
-  <div class="card"><h3>Mass · estimate</h3><table class="tbl">
-    <tr><td>Return capsule (payload, hold battery 200 Wh, heat shield, parachute)</td><td class=num>26.0</td></tr>
-    <tr><td>Service module dry (structure, power, avionics, attitude, propulsion)</td><td class=num>47.8</td></tr>
-    <tr><td>Propellant for 190 m/s</td><td class=num>7.0</td></tr>
-    <tr class="tot"><td>At launch</td><td class=num>80.8</td></tr></table></div>
-  <div class="card"><h3>Power · estimate</h3><table class="tbl">
-    <tr><td>Average / peak load</td><td class=num>59 / 113 W</td></tr>
-    <tr><td>Array (worst eclipse season, 22 min shadow)</td><td class=num>128 W</td></tr>
-    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr></table></div>
+  <div class="card"><h3>Comes home · capsule</h3><table class="tbl"><tr><td>coupon cassette</td><td class=num>1.25</td></tr><tr><td>sample drawer, optical window, dry-break couplings</td><td class=num>0.50</td></tr><tr><td>drawer thermoelectric block</td><td class=num>0.60</td></tr><tr class="tot"><td>Capsule at entry (with heat shield, parachute, hold battery, margin)</td><td class=num>45.0</td></tr></table></div>
+  <div class="card"><h3>Stays · service module</h3><table class="tbl"><tr><td>experiment instruments, pumps and reservoirs</td><td class=num>4.75</td></tr><tr class="tot"><td>Service module dry, with power, radios, attitude, propulsion</td><td class=num>62.1</td></tr></table></div>
+  <div class="card"><h3>Budgets · estimate</h3><table class="tbl">
+    <tr><td>Launch mass</td><td class=num>117.2 kg</td></tr><tr><td>Propellant for 190 m/s</td><td class=num>10.1 kg</td></tr>
+    <tr><td>Average / peak load</td><td class=num>59 / 113 W</td></tr><tr><td>Array, worst eclipse season</td><td class=num>128 W</td></tr>
+    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr><tr><td>Deorbit burn</td><td class=num>2 × 22 N, 506 s</td></tr></table></div>
 </div>
 <div class="two">
-  <div><h3>Tailored for this experiment</h3><ul class="lim"><li>Glass-window wells and coupon carriers; in-flight imaging sees the window and transparent coupons, opaque coupons are read after return</li><li>Two termination lines per well, so morphology (paraformaldehyde) and transcriptomics (RNA preservative) come from the same run</li><li>A PBS line and waste volume for washing fixed wells before on-orbit staining</li><li>Sealed, gas-tight wells for the anaerobic case, plus a gas-permeable lid option for an aerobic bay; no gas bottle needed</li><li>On-orbit stain injection (nucleic-acid and lipid dyes) for the fluorescence channels</li><li>Stowage at 4 C from loading to orbit, not -80 C, since the inoculum launches live</li></ul></div>
-  <div><h3>Bay or satellite?</h3><p>On LELP-1 this payload takes one bay (6.0 kg, 2.5 % of the lab's launch mass), shares
-  power, radios and the return with 31 others, and comes home with the whole lab. Alone, it needs 81 kg of satellite, about
-  13 times its own mass, but it gets the schedule to itself and a quieter ride: about 7.3 × 10⁻⁸ g at the payload, with no robotic
-  arm, against about 7 × 10⁻⁷ g in a LELP-1 bay.</p></div>
+  <div><h3>Tailored for this experiment</h3><ul class="lim"><li>Glass-window wells and coupon carriers; in-flight imaging sees the window and transparent coupons, opaque coupons are read after return</li><li>Two termination lines per well, so morphology (paraformaldehyde) and transcriptomics (RNA preservative) come from the same run</li><li>A PBS line and waste volume for washing fixed wells before on-orbit staining</li><li>Sealed, gas-tight wells for the anaerobic case, plus a gas-permeable lid option for an aerobic bay; no gas bottle needed</li><li>On-orbit stain injection (nucleic-acid and lipid dyes) for the fluorescence channels</li></ul></div>
+  <div><h3>Bay or satellite?</h3><p>The capsule is the floor: no capsule much smaller than about 45 kg has been recovered yet, so 2.4 kg of samples need
+  117 kg of satellite. On LELP-1 the same samples share one capsule, the whole lab, with 31 other bays. A dedicated satellite earns its
+  place when the experiment needs the schedule to itself, a quieter ride (about 7.3 × 10⁻⁸ g quasi-steady, no robotic arm), or power a bay cannot give.</p></div>
 </div>
-<p class="small">First-order sizing with a 20 % system margin by <a href="satellites.html#method">the same model for every experiment</a>, reviewed independently;
-<a href="satellites.html#review">read the caveats</a>. Flown recoverable free-flyers are heavier, so treat these masses as optimistic.</p>
+
+<p class="small">First-order sizing with a 20 % margin by <a href="satellites.html#method">one model for every experiment</a>, reviewed independently;
+<a href="satellites.html#review">caveats and sources</a>. The smallest recovered capsule so far (Varda W-1) is under 90 kg, so treat these masses as optimistic.</p>
 </section>
   <section class="refs"><h2>References</h2><ol><li id="ref-1">Kim W, Tengra FK, Young Z, Shong J, Marchand N, Chan HK, Pangule RC, Parra M, Dordick JS, Plawsky JL, Collins CH (2013). Spaceflight promotes biofilm formation by Pseudomonas aeruginosa. PLoS ONE 8(4): e62437. doi 10.1371/journal.pone.0062437 <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0062437" rel="noopener" target="_blank">https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0062437</a></li><li id="ref-2">Flores P, McBride SA, Galazka JM, Varanasi KK, Zea L (2023). Biofilm formation of Pseudomonas aeruginosa in spaceflight is minimized on lubricant impregnated surfaces. npj Microgravity 9: 66. doi 10.1038/s41526-023-00316-w <a href="https://dspace.mit.edu/handle/1721.1/154925?show=full" rel="noopener" target="_blank">https://dspace.mit.edu/handle/1721.1/154925?show=full</a></li><li id="ref-3">Flores P, Luo J, Mueller DW, Muecklich F, Zea L (2024). Space biofilms - An overview of the morphology of Pseudomonas aeruginosa biofilms grown on silicone and cellulose membranes on board the international space station. Biofilm 7: 100182 <a href="https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10869243/fullTextXML" rel="noopener" target="_blank">https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10869243/fullTextXML</a></li><li id="ref-4">Flores P, Schauer R, McBride SA, Luo J, Hoehn C, Doraisingam S, Widhalm D, Chadha J, Selman L, Mueller DW, et al., Zea L (2022). Preparation for and performance of a Pseudomonas aeruginosa biofilm experiment on board the International Space Station. Acta Astronautica 199: 386-400. doi 10.1016/j.actaastro.2022.07.015 <a href="https://dspace.mit.edu/handle/1721.1/154935?show=full" rel="noopener" target="_blank">https://dspace.mit.edu/handle/1721.1/154935?show=full</a></li><li id="ref-5">NASA Biological and Physical Sciences (accessed 2026). Space Biofilms investigation page <a href="https://science.nasa.gov/biological-physical/investigations/space-biofilms" rel="noopener" target="_blank">https://science.nasa.gov/biological-physical/investigations/space-biofilms</a></li><li id="ref-6">University of Colorado Boulder, Luis Zea faculty pages (accessed 2026). Space Biofilms project <a href="https://www.colorado.edu/faculty/zea-luis/space-biofilms" rel="noopener" target="_blank">https://www.colorado.edu/faculty/zea-luis/space-biofilms</a></li></ol><p class="verify">Fact-check: 29 claims and sources checked, 16 confirmed, 13 corrected, 0 removed · confidence high</p></section>
 </div>
@@ -80,12 +76,13 @@ and a green-monopropellant deorbit module (2 × 22 N, a 349 s burn), carrying a
 <nav class="pager"><a href="cell-mechanobiology.html">← Cell mechanobiology: how cells sense gravity and load</a><a href="microalgae.html">Microalgae and cyanobacteria for oxygen and food →</a></nav>
 
 </main>
+<script src="satdraw.js?v=c7d42e8"></script>
 <footer class="foot"><div class="wrap">
 <p><b>LELP-1 is in design.</b> Bay limits, budgets, timelines and environment numbers come from Space Philic's digital twin of the
 mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
 Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
 each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
-<p class="mono">build b8da32d</p>
+<p class="mono">build c7d42e8</p>
 </div></footer>
 </body>
 </html>

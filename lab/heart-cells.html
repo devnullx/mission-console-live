@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Human heart muscle cells from stem cells · LELP-1</title>
 <meta name="description" content="Some drugs were withdrawn from the market because they caused arrhythmias and sudden death. Drug developers now check cardiac safety on heart muscle cells made from human induced p">
-<meta name="build" content="b8da32d">
+<meta name="build" content="c7d42e8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lab.css?v=b8da32d">
+<link rel="stylesheet" href="lab.css?v=c7d42e8">
 </head>
 <body>
 <header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html">Configure your mission</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments" class=on>Experiments</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
@@ -38,33 +38,29 @@
   <section><h2>Coming home</h2><p>Live wells must stay at 37 C from the bay to the customer&#x27;s lab. In CRS-20, live tissues were retrieved two days after splashdown and then hand-carried at 37 C and 5% CO2 to the lab, and they were still usable. LELP-1&#x27;s plan (handover about 20 min after splashdown, then 1-2 days to the lab) is about 25-49 h, which is close to that heritage. It needs a portable 37 C incubator in the courier chain, and we set a target of 48 h or less. PFA-fixed wells should travel at 4 C. RNA-stabilized wells should travel at 4 C and be frozen at -80 C on arrival.</p></section>
   <section><h2>Limits of this flight</h2><ul class="lim"><li>Short exposure. The heritage flights lasted about 30 days (CRS-20) and 5.5 weeks (CRS-9), but a LELP-1 mission lasts 2-14 days and sees only early changes. Force loss and mitochondrial damage may not have time to develop. On CRS-9, the beat rate was similar to ground even after 2.5 weeks.</li><li>No absolute force. Video of 2D monolayers gives beat rate, timing and relative motion, not twitch force. Measuring force needs post-based engineered heart tissues with sensors, which the customer would have to supply and qualify.</li><li>No CO2. The heritage cultures ran at 5% CO2. LELP-1 uses HEPES-buffered medium, so ground controls must use the same medium, and results are not directly comparable with ISS data.</li><li>Cells cannot practically launch frozen. One major supplier specifies storage at -150 C (colder than the -80 C passive cassette), the thaw includes centrifugation, and cells are ready only from day 3. A live late load is therefore needed, which adds work in a lab at the launch site.</li><li>Culture length. The same supplier states cells can be kept for at least 14 days after thawing. This plan needs about 21 days from thaw to splashdown, plus post-flight work. The heritage cultures ran for more than 5 weeks, but the customer must confirm that their line stays stable for that long.</li><li>Beating and calcium kinetics depend strongly on temperature, so any thermal drift in the bay will confound the results.</li><li>All live-return samples carry launch and re-entry loads and 1-2 days at 1 g before reaching the lab. Cells readapt early (on CRS-9, gene expression reverted toward ground-like levels after return), so live-return results are partly recovery data.</li><li>The orbit is 550 km sun-synchronous, so the radiation dose differs from the ISS. Dosimeter data are logged, but radiation and microgravity effects cannot be separated without a 1 g centrifuge control in flight.</li><li>Few replicates per arm (4-8 wells) and possibly only one cell line per bay. Studying donor-to-donor variability, as in the 3-donor CRS-9 design, needs several bays.</li><li>No crew. Nobody can fix a well that stops beating, a bubble or a failed medium exchange.</li></ul></section>
   
-<section class="ff" id="satellite"><h2>A satellite of its own: SP-HRT</h2>
-<p>If this experiment flies alone instead of in a LELP-1 bay, SP-HRT is a 85 kg free-flyer:
-a service module with a 0.49 m² sun-tracking array (146 W), a 241 Wh battery, S-band and X-band radios
-and a green-monopropellant deorbit module (2 × 22 N, a 368 s burn), carrying a
-26 kg return capsule with a 0.89 m heat shield. It flies the same 550 km dawn-dusk orbit: two days of checkout, then
-11 days of protocol, then deorbit; the capsule holds its samples at temperature for 8 h while the ship finds it.</p>
+<section class="ff" id="satellite"><h2>A satellite of its own: SP-HRT <span class="archchip C">C · live return</span></h2>
+<p>SP-HRT is a 118 kg free-flyer. The live culture system comes home, powered:
+3.1 kg ride in a 45 kg capsule that keeps them at 37 °C on its own battery.
+The microscope stay in the service module and burn up with it.
+Why C: live tissues must come back beating at 37 C (CRS-20 heritage); fixed wells need a separate 4 C zone; the microscope stays.</p>
+<div class="satdraw-slot" data-d='{&quot;name&quot;: &quot;SP-HRT&quot;, &quot;arch&quot;: &quot;C&quot;, &quot;capD&quot;: 1.17, &quot;capKg&quot;: 45.0, &quot;wetKg&quot;: 118.5, &quot;busKg&quot;: 63.3, &quot;arrayM2&quot;: 0.49, &quot;arrayW&quot;: 146, &quot;battWh&quot;: 241, &quot;nThr&quot;: 2, &quot;xband&quot;: true, &quot;furnace&quot;: false, &quot;centrifuge&quot;: false, &quot;lit&quot;: false, &quot;retKg&quot;: 3.1}'></div>
 <div class="ffgrid">
-  <div class="card"><h3>Payload in the capsule</h3><table class="tbl"><thead><tr><th>Item</th><th class=num>kg</th><th class=num>W peak</th></tr></thead><tbody><tr><td>Human heart muscle cells from stem cells module</td><td class=num>5.9</td><td class=num>29</td></tr></tbody></table></div>
-  <div class="card"><h3>Mass · estimate</h3><table class="tbl">
-    <tr><td>Return capsule (payload, hold battery 200 Wh, heat shield, parachute)</td><td class=num>25.8</td></tr>
-    <tr><td>Service module dry (structure, power, avionics, attitude, propulsion)</td><td class=num>52.1</td></tr>
-    <tr><td>Propellant for 190 m/s</td><td class=num>7.3</td></tr>
-    <tr class="tot"><td>At launch</td><td class=num>85.2</td></tr></table></div>
-  <div class="card"><h3>Power · estimate</h3><table class="tbl">
-    <tr><td>Average / peak load</td><td class=num>67 / 114 W</td></tr>
-    <tr><td>Array (worst eclipse season, 22 min shadow)</td><td class=num>146 W</td></tr>
-    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr></table></div>
+  <div class="card"><h3>Comes home · capsule</h3><table class="tbl"><tr><td>24-well cassette with cells</td><td class=num>0.35</td></tr><tr><td>fluidics manifold and pumps</td><td class=num>0.90</td></tr><tr><td>medium reservoirs</td><td class=num>0.45</td></tr><tr><td>thermoelectric block</td><td class=num>0.60</td></tr><tr><td>containment layers</td><td class=num>0.80</td></tr><tr class="tot"><td>Capsule at entry (with heat shield, parachute, hold battery, margin)</td><td class=num>45.0</td></tr></table></div>
+  <div class="card"><h3>Stays · service module</h3><table class="tbl"><tr><td>experiment instruments, pumps and reservoirs</td><td class=num>2.80</td></tr><tr class="tot"><td>Service module dry, with power, radios, attitude, propulsion</td><td class=num>63.3</td></tr></table></div>
+  <div class="card"><h3>Budgets · estimate</h3><table class="tbl">
+    <tr><td>Launch mass</td><td class=num>118.5 kg</td></tr><tr><td>Propellant for 190 m/s</td><td class=num>10.2 kg</td></tr>
+    <tr><td>Average / peak load</td><td class=num>67 / 114 W</td></tr><tr><td>Array, worst eclipse season</td><td class=num>146 W</td></tr>
+    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr><tr><td>Deorbit burn</td><td class=num>2 × 22 N, 512 s</td></tr></table></div>
 </div>
 <div class="two">
-  <div><h3>Tailored for this experiment</h3><ul class="lim"><li>Late load (live cells handed over about 24 h before launch) into a bay that is already powered and held at 37 C through launch, ascent and re-entry, up to handover on the recovery ship</li><li>An imaging schedule locked out against robotic-arm motion, because vibration corrupts beat analysis from video</li><li>A video frame rate high enough for beat timing and, if used, calcium transients (the customer sets the minimum; LumaScope-class default modes need checking)</li><li>Two thermal zones, or a second cassette, if fixed and RNA-stabilized wells are to be cooled to 4 C while live wells stay at 37 C</li><li>A portable 37 C incubator in the courier chain from ship to lab</li><li>Downlink budget for daily video of 24 wells, or on-board beat analysis that sends down only summary numbers and selected clips</li></ul></div>
-  <div><h3>Bay or satellite?</h3><p>On LELP-1 this payload takes one bay (5.9 kg, 2.4 % of the lab's launch mass), shares
-  power, radios and the return with 31 others, and comes home with the whole lab. Alone, it needs 85 kg of satellite, about
-  14 times its own mass, but it gets the schedule to itself and a quieter ride: about 7.3 × 10⁻⁸ g at the payload, with no robotic
-  arm, against about 7 × 10⁻⁷ g in a LELP-1 bay.</p></div>
+  <div><h3>Tailored for this experiment</h3><ul class="lim"><li>Late load (live cells handed over about 24 h before launch) into a bay that is already powered and held at 37 C through launch, ascent and re-entry, up to handover on the recovery ship</li><li>An imaging schedule locked out against robotic-arm motion, because vibration corrupts beat analysis from video</li><li>A video frame rate high enough for beat timing and, if used, calcium transients (the customer sets the minimum; LumaScope-class default modes need checking)</li><li>Two thermal zones, or a second cassette, if fixed and RNA-stabilized wells are to be cooled to 4 C while live wells stay at 37 C</li><li>A portable 37 C incubator in the courier chain from ship to lab</li></ul></div>
+  <div><h3>Bay or satellite?</h3><p>The capsule is the floor: no capsule much smaller than about 45 kg has been recovered yet, so 3.1 kg of samples need
+  118 kg of satellite. On LELP-1 the same samples share one capsule, the whole lab, with 31 other bays. A dedicated satellite earns its
+  place when the experiment needs the schedule to itself, a quieter ride (about 7.3 × 10⁻⁸ g quasi-steady, no robotic arm), or power a bay cannot give.</p></div>
 </div>
-<p class="small">First-order sizing with a 20 % system margin by <a href="satellites.html#method">the same model for every experiment</a>, reviewed independently;
-<a href="satellites.html#review">read the caveats</a>. Flown recoverable free-flyers are heavier, so treat these masses as optimistic.</p>
+
+<p class="small">First-order sizing with a 20 % margin by <a href="satellites.html#method">one model for every experiment</a>, reviewed independently;
+<a href="satellites.html#review">caveats and sources</a>. The smallest recovered capsule so far (Varda W-1) is under 90 kg, so treat these masses as optimistic.</p>
 </section>
   <section class="refs"><h2>References</h2><ol><li id="ref-1">Wnorowski A, Sharma A, Chen H, ... Wu JC. 2019. Effects of Spaceflight on Human Induced Pluripotent Stem Cell-Derived Cardiomyocyte Structure and Function. Stem Cell Reports 13(6):960-969. doi:10.1016/j.stemcr.2019.10.006 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6915842/" rel="noopener" target="_blank">https://pmc.ncbi.nlm.nih.gov/articles/PMC6915842/</a></li><li id="ref-2">Mair DB, Tsui JH, Higashi T, ... Kim DH. 2024. Spaceflight-induced contractile and mitochondrial dysfunction in an automated heart-on-a-chip platform. PNAS 121(40):e2404644121. doi:10.1073/pnas.2404644121 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11459163/" rel="noopener" target="_blank">https://pmc.ncbi.nlm.nih.gov/articles/PMC11459163/</a></li><li id="ref-3">US Food and Drug Administration. Developing a Mechanistic Model-Based Approach to Assess Cardiac Safety of New Drugs. FDA Science and Research page. <a href="https://www.fda.gov/science-research/about-science-research-fda/developing-mechanistic-model-based-approach-assess-cardiac-safety-new-drugs" rel="noopener" target="_blank">https://www.fda.gov/science-research/about-science-research-fda/developing-mechanistic-model-based-approach-assess-cardiac-safety-new-drugs</a></li><li id="ref-4">Takara Bio Europe AB. 2018. Cellartis Cardiomyocytes User Manual (102318). Takara Bio. <a href="https://www.takarabio.com/documents/User%20Manual/Cellartis%20Cardiomyocytes%20User%20Manual/Cellartis%20Cardiomyocytes%20User%20Manual_102318.pdf" rel="noopener" target="_blank">https://www.takarabio.com/documents/User%20Manual/Cellartis%20Cardiomyocytes%20User%20Manual/Cellartis%20Cardiomyocytes%20User%20Manual_102318.pdf</a></li><li id="ref-5">ISS National Laboratory. 2020. SpaceX Successfully Completes CRS-20, Returning ISS National Lab-sponsored Payloads to Earth. <a href="https://www.issnationallab.org/spacex-crs20-returns-national-lab-payloads/" rel="noopener" target="_blank">https://www.issnationallab.org/spacex-crs20-returns-national-lab-payloads/</a></li><li id="ref-6">ISS National Laboratory. SpaceX CRS-9 mission page. <a href="https://issnationallab.org/?p=40454" rel="noopener" target="_blank">https://issnationallab.org/?p=40454</a></li></ol><p class="verify">Fact-check: 16 claims and sources checked, 9 confirmed, 7 corrected, 0 removed · confidence high</p></section>
 </div>
@@ -80,12 +76,13 @@ and a green-monopropellant deorbit module (2 × 22 N, a 368 s burn), carrying a
 <nav class="pager"><a href="microalgae.html">← Microalgae and cyanobacteria for oxygen and food</a><a href="t-cell-activation.html">Immune T-cell activation →</a></nav>
 
 </main>
+<script src="satdraw.js?v=c7d42e8"></script>
 <footer class="foot"><div class="wrap">
 <p><b>LELP-1 is in design.</b> Bay limits, budgets, timelines and environment numbers come from Space Philic's digital twin of the
 mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
 Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
 each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
-<p class="mono">build b8da32d</p>
+<p class="mono">build c7d42e8</p>
 </div></footer>
 </body>
 </html>

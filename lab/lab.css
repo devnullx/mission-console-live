@@ -187,3 +187,26 @@ button.xcard { font: inherit; text-align: left; cursor: pointer; }
 .start a:hover { text-decoration: none; background: #18202a; }
 .start b { font-size: 16px; padding-right: 8px; } .start span { font-size: 13px; color: #c9d2db; border-left: 1px solid #2c3642; padding-left: 10px; }
 @media (max-width: 900px) { .start a { grid-template-columns: 1fr; } .start span { border-left: 0; padding-left: 0; } }
+
+/* satellite drawings (scripts/lab_satdraw.js) */
+.satdraw { width: 100%; height: auto; display: block; }
+.satdraw .sheet { fill: #fbfcfd; stroke: var(--line); }
+.satdraw .bus { fill: #dfe5ec; stroke: #6b7887; } .satdraw .seam { stroke: #9aa6b3; }
+.satdraw .wing { fill: #1d3b66; stroke: #0e2240; } .satdraw .cell { stroke: #3d5f93; } .satdraw .yoke { stroke: #6b7887; stroke-width: 2; }
+.satdraw .capsule { fill: #eceef1; stroke: #6b7887; }
+.satdraw .hiad { fill: #d9b46a; stroke: #a8823c; } .satdraw .tori { stroke: #a8823c; }
+.satdraw .hiad-out { fill: none; stroke: #b07a2a; stroke-dasharray: 5 4; }
+.satdraw .cass { fill: var(--accent); } .satdraw .live { fill: #c2410c; } .satdraw .window { stroke: #38bdf8; stroke-width: 3; }
+.satdraw .thr { fill: #6b7280; } .satdraw .adapter { fill: #4b5563; }
+.satdraw .rotor { fill: none; stroke: #13a07a; stroke-width: 2; } .satdraw .rad { fill: #e5e7eb; stroke: #9ca3af; } .satdraw .hot { fill: #d0612a; }
+.satdraw .led { fill: #facc15; stroke: #ca8a04; } .satdraw .xb { fill: #6366f1; }
+.satdraw .dim line { stroke: #5a6773; stroke-width: 1; } .satdraw .dim text { font: 10px var(--mono); fill: #3c4550; }
+.satdraw .bub circle { fill: var(--accent); } .satdraw .bub text { font: 600 9px var(--mono); fill: #fff; }
+.satdraw .cl { font: 11px/1.25 var(--sans); color: var(--ink-2); }
+.satdraw .title line { stroke: var(--line); } .satdraw .tname { font: 600 13px var(--sans); fill: var(--ink); } .satdraw .tsub { font: 10.5px var(--sans); fill: var(--ink-3); }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 14px; }
+.gallery figure { margin: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 8px; }
+.gallery figcaption { font-size: 12.5px; color: var(--ink-2); padding: 6px 4px 2px; }
+.archchip { font: 600 11px var(--mono); padding: 2px 6px; border-radius: 4px; }
+.archchip.A { background: #ede9fe; color: #5b21b6; } .archchip.B { background: var(--info-bg); color: var(--info); } .archchip.C { background: #ffedd5; color: #9a3412; }
+@media (max-width: 600px) { .gallery { grid-template-columns: 1fr; } }

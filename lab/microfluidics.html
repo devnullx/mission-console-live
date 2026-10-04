@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Microfluidic lab-on-a-chip and organ-chips · LELP-1</title>
 <meta name="description" content="Organ-chips are small devices where living human cells line tiny perfused channels, so they behave more like real tissue than a flat dish. NIH funds them so scientists can assess b">
-<meta name="build" content="b8da32d">
+<meta name="build" content="c7d42e8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lab.css?v=b8da32d">
+<link rel="stylesheet" href="lab.css?v=c7d42e8">
 </head>
 <body>
 <header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html">Configure your mission</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments" class=on>Experiments</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
@@ -38,33 +38,29 @@
   <section><h2>Coming home</h2><p>Our estimate, not a source value. All chips are fixed or RNA-stabilised in orbit and effluent is collected at 4 C, so nothing needs to stay alive through return. The chain is held at 4 C: about 1 day in orbit after fixation, re-entry, about 20 min to the recovery ship, then 1-2 days to the lab. The ISS heart study stored PFA-fixed samples at 4 C, which matches this plan. But both ISS studies kept RNAlater samples or vitamin D effluent at -80 C, which LELP-1 cannot do. Customers must test RNA quality and labile markers after a 4 C hold of the same length on the ground, and the ground control must use the same hold times.</p></section>
   <section><h2>Limits of this flight</h2><ul class="lim"><li>Short exposure: LELP-1 runs at most 14 days. The ISS heart study ran about 30 days. The ISS kidney study found no unique response after 6 days plus 2 days of treatment, and the authors call for study of longer exposure. Slow effects may not show up in a LELP-1 flight.</li><li>No crew: nobody can clear a bubble, re-prime a line or swap a leaking or contaminated chip. A failed chip is lost, so each condition needs at least two chips.</li><li>Live launch: mature organ-chips are launched live, so they must survive late loading, any launch slip and ascent at 37 C. BioSentinel lost its yeast to long pre-launch storage, and EcAMSat cells were stressed by multi-week storage, so launch-slip limits must be agreed with the customer.</li><li>No -80 C freezing in orbit: samples are fixed or RNA-stabilised and returned at 4 C. Both ISS chip studies froze some samples at -80 C. Markers that need frozen samples may degrade.</li><li>No CO2 or incubator gas control: the ISS heart tissues were kept at 5% CO2, but LELP-1 media must be HEPES-buffered and oxygen depends on gas-permeable chip materials. The customer must qualify the chip and medium in a sealed, CO2-free bay on the ground first. Some chip plastics (e.g. PDMS) may absorb small hydrophobic drugs, so the drug must also be qualified on the same chips.</li><li>No in-flight 1 g control: LELP-1 has no centrifuge, so the 1 g comparison is only on the ground, and launch, re-entry and radiation effects are mixed in with the microgravity effect.</li><li>Few chips per bay (about 4-6) and microlitre effluent volumes limit how many doses and assays one bay supports. Big dose-response studies need several bays.</li><li>Microgravity at the bay is good (about 1e-6 g) but drops to about 1e-4 to 1e-3 g while the arm moves, so arm moves must be scheduled away from key steps.</li><li>The protocol and module here are a reference design in a digital twin. LELP-1 has not flown yet, and none of the heritage results above were obtained on LELP-1.</li></ul></section>
   
-<section class="ff" id="satellite"><h2>A satellite of its own: SP-CHIP</h2>
-<p>If this experiment flies alone instead of in a LELP-1 bay, SP-CHIP is a 85 kg free-flyer:
-a service module with a 0.49 m² sun-tracking array (145 W), a 241 Wh battery, S-band and X-band radios
-and a green-monopropellant deorbit module (2 × 22 N, a 366 s burn), carrying a
-26 kg return capsule with a 0.88 m heat shield. It flies the same 550 km dawn-dusk orbit: two days of checkout, then
-10 days of protocol, then deorbit; the capsule holds its samples at temperature for 8 h while the ship finds it.</p>
+<section class="ff" id="satellite"><h2>A satellite of its own: SP-CHIP <span class="archchip B">B · samples return, hardware burns up</span></h2>
+<p>SP-CHIP is a 122 kg free-flyer. Only the samples come home:
+2.4 kg ride in a 45 kg capsule in a drawer behind an optical window; the microscope looks through the window from the service module, and fluid lines cross through dry-break couplings that part at separation once the last fluid step is done.
+The microscope, pumps and reservoirs stay in the service module and burn up with it.
+Why B: chips are fixed in orbit; the effluent carousel needs power and a heat path through entry and the hold.</p>
+<div class="satdraw-slot" data-d='{&quot;name&quot;: &quot;SP-CHIP&quot;, &quot;arch&quot;: &quot;B&quot;, &quot;capD&quot;: 1.17, &quot;capKg&quot;: 45.0, &quot;wetKg&quot;: 121.5, &quot;busKg&quot;: 66.0, &quot;arrayM2&quot;: 0.49, &quot;arrayW&quot;: 145, &quot;battWh&quot;: 241, &quot;nThr&quot;: 2, &quot;xband&quot;: true, &quot;furnace&quot;: false, &quot;centrifuge&quot;: false, &quot;lit&quot;: false, &quot;retKg&quot;: 2.4}'></div>
 <div class="ffgrid">
-  <div class="card"><h3>Payload in the capsule</h3><table class="tbl"><thead><tr><th>Item</th><th class=num>kg</th><th class=num>W peak</th></tr></thead><tbody><tr><td>Microfluidic lab-on-a-chip and organ-chips module</td><td class=num>5.8</td><td class=num>28</td></tr></tbody></table></div>
-  <div class="card"><h3>Mass · estimate</h3><table class="tbl">
-    <tr><td>Return capsule (payload, hold battery 200 Wh, heat shield, parachute)</td><td class=num>25.5</td></tr>
-    <tr><td>Service module dry (structure, power, avionics, attitude, propulsion)</td><td class=num>52.0</td></tr>
-    <tr><td>Propellant for 190 m/s</td><td class=num>7.3</td></tr>
-    <tr class="tot"><td>At launch</td><td class=num>84.8</td></tr></table></div>
-  <div class="card"><h3>Power · estimate</h3><table class="tbl">
-    <tr><td>Average / peak load</td><td class=num>67 / 113 W</td></tr>
-    <tr><td>Array (worst eclipse season, 22 min shadow)</td><td class=num>145 W</td></tr>
-    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr></table></div>
+  <div class="card"><h3>Comes home · capsule</h3><table class="tbl"><tr><td>organ-chips with holders and manifold</td><td class=num>0.60</td></tr><tr><td>effluent-collection carousel with its Peltier stage</td><td class=num>0.70</td></tr><tr><td>sample drawer, optical window, dry-break couplings</td><td class=num>0.50</td></tr><tr><td>drawer thermoelectric block</td><td class=num>0.60</td></tr><tr class="tot"><td>Capsule at entry (with heat shield, parachute, hold battery, margin)</td><td class=num>45.0</td></tr></table></div>
+  <div class="card"><h3>Stays · service module</h3><table class="tbl"><tr><td>experiment instruments, pumps and reservoirs</td><td class=num>4.50</td></tr><tr class="tot"><td>Service module dry, with power, radios, attitude, propulsion</td><td class=num>66.0</td></tr></table></div>
+  <div class="card"><h3>Budgets · estimate</h3><table class="tbl">
+    <tr><td>Launch mass</td><td class=num>121.5 kg</td></tr><tr><td>Propellant for 190 m/s</td><td class=num>10.5 kg</td></tr>
+    <tr><td>Average / peak load</td><td class=num>67 / 113 W</td></tr><tr><td>Array, worst eclipse season</td><td class=num>145 W</td></tr>
+    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr><tr><td>Deorbit burn</td><td class=num>2 × 22 N, 525 s</td></tr></table></div>
 </div>
 <div class="two">
-  <div><h3>Tailored for this experiment</h3><ul class="lim"><li>A second, cold zone at 4 C for effluent inside a bay held at 37 C. The standard bay has one setpoint, so the module brings its own small Peltier stage, and the bay must take its heat.</li><li>Late loading of live chips (within about 24 h of launch) and bay power and heating from loading through ascent. Live chips cannot launch in the -80 C passive cassette.</li><li>Sterile assembly, leak checks and contamination screening before loading (the ISS kidney study lost about a third of flight samples to mold)</li><li>Inline flow and pressure sensing and bubble traps on every chip line, with telemetry, so the ground can see blockages or bubbles</li><li>A chip-scanning stage under the bay microscope (or arm transfers to the 40x central microscope) to image several chips</li><li>For heart-chips only: a beat-sensing option (fast video or magnet-and-sensor posts)</li></ul></div>
-  <div><h3>Bay or satellite?</h3><p>On LELP-1 this payload takes one bay (5.8 kg, 2.4 % of the lab's launch mass), shares
-  power, radios and the return with 31 others, and comes home with the whole lab. Alone, it needs 85 kg of satellite, about
-  15 times its own mass, but it gets the schedule to itself and a quieter ride: about 7.3 × 10⁻⁸ g at the payload, with no robotic
-  arm, against about 7 × 10⁻⁷ g in a LELP-1 bay.</p></div>
+  <div><h3>Tailored for this experiment</h3><ul class="lim"><li>A second, cold zone at 4 C for effluent inside a bay held at 37 C. The standard bay has one setpoint, so the module brings its own small Peltier stage, and the bay must take its heat.</li><li>Late loading of live chips (within about 24 h of launch) and bay power and heating from loading through ascent. Live chips cannot launch in the -80 C passive cassette.</li><li>Sterile assembly, leak checks and contamination screening before loading (the ISS kidney study lost about a third of flight samples to mold)</li><li>Inline flow and pressure sensing and bubble traps on every chip line, with telemetry, so the ground can see blockages or bubbles</li><li>A chip-scanning stage under the bay microscope (or arm transfers to the 40x central microscope) to image several chips</li></ul></div>
+  <div><h3>Bay or satellite?</h3><p>The capsule is the floor: no capsule much smaller than about 45 kg has been recovered yet, so 2.4 kg of samples need
+  122 kg of satellite. On LELP-1 the same samples share one capsule, the whole lab, with 31 other bays. A dedicated satellite earns its
+  place when the experiment needs the schedule to itself, a quieter ride (about 7.3 × 10⁻⁸ g quasi-steady, no robotic arm), or power a bay cannot give.</p></div>
 </div>
-<p class="small">First-order sizing with a 20 % system margin by <a href="satellites.html#method">the same model for every experiment</a>, reviewed independently;
-<a href="satellites.html#review">read the caveats</a>. Flown recoverable free-flyers are heavier, so treat these masses as optimistic.</p>
+
+<p class="small">First-order sizing with a 20 % margin by <a href="satellites.html#method">one model for every experiment</a>, reviewed independently;
+<a href="satellites.html#review">caveats and sources</a>. The smallest recovered capsule so far (Varda W-1) is under 90 kg, so treat these masses as optimistic.</p>
 </section>
   <section class="refs"><h2>References</h2><ol><li id="ref-1">NIH National Center for Advancing Translational Sciences (NCATS). Tissue Chips in Space (programme page). NCATS, NIH. <a href="https://ncats.nih.gov/research/research-activities/tissue-chip/projects/space" rel="noopener" target="_blank">https://ncats.nih.gov/research/research-activities/tissue-chip/projects/space</a></li><li id="ref-2">Lidberg KA, et al., Kelly EJ (2024). Modeling cellular responses to serum and vitamin D in microgravity using a human kidney microphysiological system. npj Microgravity 10:75. doi:10.1038/s41526-024-00415-2 <a href="https://doi.org/10.1038/s41526-024-00415-2" rel="noopener" target="_blank">https://doi.org/10.1038/s41526-024-00415-2</a></li><li id="ref-3">Mair DB, et al., Kim DH (2024). Spaceflight-induced contractile and mitochondrial dysfunction in an automated heart-on-a-chip platform. PNAS 121(40):e2404644121. doi:10.1073/pnas.2404644121 <a href="https://doi.org/10.1073/pnas.2404644121" rel="noopener" target="_blank">https://doi.org/10.1073/pnas.2404644121</a></li><li id="ref-4">Ricco AJ, Parra M, Niesel D, et al. (2011). PharmaSat: drug dose response in microgravity from a free-flying integrated biofluidic/optical culture-and-analysis satellite. Proc. SPIE, Microfluidics, BioMEMS, and Medical Microsystems IX. doi:10.1117/12.881082 <a href="https://researchexperts.utmb.edu/en/publications/pharmasat-drug-dose-response-in-microgravity-from-a-free-flying-i/" rel="noopener" target="_blank">https://researchexperts.utmb.edu/en/publications/pharmasat-drug-dose-response-in-microgravity-from-a-free-flying-i/</a></li><li id="ref-5">Padgen MR, et al., Matin AC (2020). EcAMSat spaceflight measurements of the role of sigma-s in antibiotic resistance of stationary phase Escherichia coli in microgravity. Life Sciences in Space Research 24:18-24. doi:10.1016/j.lssr.2019.10.007 <a href="https://doi.org/10.1016/j.lssr.2019.10.007" rel="noopener" target="_blank">https://doi.org/10.1016/j.lssr.2019.10.007</a></li><li id="ref-6">Santa Maria SR, Zea L, Ricco T (2019). Biological CubeSats: What Have We Learned so Far and What Is Next? ASGSR Annual Meeting, Denver. NASA Technical Reports Server 20190033204. <a href="https://ntrs.nasa.gov/citations/20190033204" rel="noopener" target="_blank">https://ntrs.nasa.gov/citations/20190033204</a></li><li id="ref-7">NASA Ames Research Center. BioSentinel (mission page). NASA. <a href="https://www.nasa.gov/ames/biosentinel" rel="noopener" target="_blank">https://www.nasa.gov/ames/biosentinel</a></li></ol><p class="verify">Fact-check: 18 claims and sources checked, 6 confirmed, 11 corrected, 1 removed · confidence high</p></section>
 </div>
@@ -80,12 +76,13 @@ and a green-monopropellant deorbit module (2 × 22 N, a 366 s burn), carrying a
 <nav class="pager"><a href="bioreactor.html">← Bioreactor for tissue engineering and biomanufacturing</a><a href="cell-mechanobiology.html">Cell mechanobiology: how cells sense gravity and load →</a></nav>
 
 </main>
+<script src="satdraw.js?v=c7d42e8"></script>
 <footer class="foot"><div class="wrap">
 <p><b>LELP-1 is in design.</b> Bay limits, budgets, timelines and environment numbers come from Space Philic's digital twin of the
 mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
 Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
 each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
-<p class="mono">build b8da32d</p>
+<p class="mono">build c7d42e8</p>
 </div></footer>
 </body>
 </html>

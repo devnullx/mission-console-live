@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bone cells: resorption and mineralization · LELP-1</title>
 <meta name="description" content="On Earth, osteoporosis comes from an imbalance between osteoclasts, which remove bone, and osteoblasts, which build it. In space this imbalance appears quickly: astronauts lose bon">
-<meta name="build" content="b8da32d">
+<meta name="build" content="c7d42e8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lab.css?v=b8da32d">
+<link rel="stylesheet" href="lab.css?v=c7d42e8">
 </head>
 <body>
 <header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html">Configure your mission</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments" class=on>Experiments</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
@@ -38,33 +38,29 @@
   <section><h2>Coming home</h2><p>All wells are fixed or RNA-stabilized in orbit on day 11, so no live cells need to survive re-entry. Keep the cassette at 4 C from day 11 through recovery and courier transfer (about 20 min after splashdown plus 1-2 days to the lab), which can total about 3 to 6 days. The 168 h limit is our estimate: the RNA-stabilizing reagent maker rates RNA as stable for 1 month at 4 C, but supernatant proteins are less certain. If the total will exceed 168 h, put stabilized samples and supernatants on dry ice or at -80 C on the recovery ship. Fixed slices tolerate longer at 4 C once fixative is replaced with buffer.</p></section>
   <section><h2>Limits of this flight</h2><ul class="lim"><li>Bone and dentin slices are opaque, so resorption pits on them cannot be seen with the inverted microscope in flight; only the calcium-phosphate-coated clear wells give in-flight resorption data, and their contrast in brightfield may be weak until they are stained after return.</li><li>Mature mineralized nodules from osteoblast lines usually need longer culture than a 14-day mission allows (our assumption), so Arm B gives early mineralization and differentiation markers, not mature mineralized matrix.</li><li>The flight evidence for reduced mineralization comes from fetal mouse bone organ cultures, not from osteoblast monolayers; Arm B tests whether a similar effect shows up in a simpler cell model.</li><li>Cells must be thawed and seeded in orbit; thaw and attachment losses add variability, and the protocol must be proven on the ground first.</li><li>Without the optional centrifuge, launch loads, radiation at 550 km and handling in the bay cannot be fully separated from microgravity; the ground control covers only temperature and timeline.</li><li>Isolated cells on slices lack osteocytes, blood supply, hormones and mechanical loading, so results show direct cell responses, not whole-skeleton bone loss.</li><li>No crew means no slice replacement, no fresh-reagent preparation and no extra fixation time points beyond those planned in the reservoirs.</li><li>Microgravity is about 1e-4 to 1e-3 g while the robotic arm moves; arm moves should be avoided during the key fusion and resorption days.</li><li>Samples reach the lab 1-2 days after splashdown, so no live-cell work after return is possible; everything is fixed or stabilized in orbit.</li></ul></section>
   
-<section class="ff" id="satellite"><h2>A satellite of its own: SP-BONE</h2>
-<p>If this experiment flies alone instead of in a LELP-1 bay, SP-BONE is a 80 kg free-flyer:
-a service module with a 0.43 m² sun-tracking array (128 W), a 241 Wh battery, S-band radios
-and a green-monopropellant deorbit module (2 × 22 N, a 347 s burn), carrying a
-26 kg return capsule with a 0.89 m heat shield. It flies the same 550 km dawn-dusk orbit: two days of checkout, then
-12 days of protocol, then deorbit; the capsule holds its samples at temperature for 8 h while the ship finds it.</p>
+<section class="ff" id="satellite"><h2>A satellite of its own: SP-BONE <span class="archchip B">B · samples return, hardware burns up</span></h2>
+<p>SP-BONE is a 118 kg free-flyer. Only the samples come home:
+1.9 kg ride in a 45 kg capsule in a drawer behind an optical window; the microscope looks through the window from the service module, and fluid lines cross through dry-break couplings that part at separation once the last fluid step is done.
+The microscope, pumps and reservoirs stay in the service module and burn up with it.
+Why B: wells are fixed or stabilised on day 11 and moved to buffer on day 12, before separation.</p>
+<div class="satdraw-slot" data-d='{&quot;name&quot;: &quot;SP-BONE&quot;, &quot;arch&quot;: &quot;B&quot;, &quot;capD&quot;: 1.17, &quot;capKg&quot;: 45.0, &quot;wetKg&quot;: 117.8, &quot;busKg&quot;: 62.7, &quot;arrayM2&quot;: 0.43, &quot;arrayW&quot;: 128, &quot;battWh&quot;: 241, &quot;nThr&quot;: 2, &quot;xband&quot;: false, &quot;furnace&quot;: false, &quot;centrifuge&quot;: false, &quot;lit&quot;: false, &quot;retKg&quot;: 1.9}'></div>
 <div class="ffgrid">
-  <div class="card"><h3>Payload in the capsule</h3><table class="tbl"><thead><tr><th>Item</th><th class=num>kg</th><th class=num>W peak</th></tr></thead><tbody><tr><td>Bone cells: resorption and mineralization module</td><td class=num>5.9</td><td class=num>28</td></tr></tbody></table></div>
-  <div class="card"><h3>Mass · estimate</h3><table class="tbl">
-    <tr><td>Return capsule (payload, hold battery 200 Wh, heat shield, parachute)</td><td class=num>25.8</td></tr>
-    <tr><td>Service module dry (structure, power, avionics, attitude, propulsion)</td><td class=num>47.7</td></tr>
-    <tr><td>Propellant for 190 m/s</td><td class=num>6.9</td></tr>
-    <tr class="tot"><td>At launch</td><td class=num>80.4</td></tr></table></div>
-  <div class="card"><h3>Power · estimate</h3><table class="tbl">
-    <tr><td>Average / peak load</td><td class=num>59 / 113 W</td></tr>
-    <tr><td>Array (worst eclipse season, 22 min shadow)</td><td class=num>128 W</td></tr>
-    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr></table></div>
+  <div class="card"><h3>Comes home · capsule</h3><table class="tbl"><tr><td>cassette with bone and dentin slices</td><td class=num>0.60</td></tr><tr><td>supernatant aliquot rack</td><td class=num>0.20</td></tr><tr><td>sample drawer, optical window, dry-break couplings</td><td class=num>0.50</td></tr><tr><td>drawer thermoelectric block</td><td class=num>0.60</td></tr><tr class="tot"><td>Capsule at entry (with heat shield, parachute, hold battery, margin)</td><td class=num>45.0</td></tr></table></div>
+  <div class="card"><h3>Stays · service module</h3><table class="tbl"><tr><td>experiment instruments, pumps and reservoirs</td><td class=num>5.10</td></tr><tr class="tot"><td>Service module dry, with power, radios, attitude, propulsion</td><td class=num>62.7</td></tr></table></div>
+  <div class="card"><h3>Budgets · estimate</h3><table class="tbl">
+    <tr><td>Launch mass</td><td class=num>117.8 kg</td></tr><tr><td>Propellant for 190 m/s</td><td class=num>10.2 kg</td></tr>
+    <tr><td>Average / peak load</td><td class=num>59 / 113 W</td></tr><tr><td>Array, worst eclipse season</td><td class=num>128 W</td></tr>
+    <tr><td>Battery (sized by ascent)</td><td class=num>241 Wh</td></tr><tr><td>Deorbit burn</td><td class=num>2 × 22 N, 509 s</td></tr></table></div>
 </div>
 <div class="two">
   <div><h3>Tailored for this experiment</h3><ul class="lim"><li>Optional 1 g reference centrifuge for a subset of wells, so microgravity can be separated from launch and radiation effects</li><li>Cold (4 C) zone for labile factors and supernatant aliquots during the 37 C culture; the bay&#x27;s single thermoelectric setpoint cannot hold 37 C and 4 C at once</li><li>Brightfield and fluorescence imaging time on the microscope schedule every day from day 1 to day 11</li><li>Optional robotic-arm slot on the central 40x fluorescence microscope on day 10</li><li>Recovery-ship -80 C freezer or dry ice for stabilized samples and supernatants if transit to the lab will exceed about 168 h</li></ul></div>
-  <div><h3>Bay or satellite?</h3><p>On LELP-1 this payload takes one bay (5.9 kg, 2.4 % of the lab's launch mass), shares
-  power, radios and the return with 31 others, and comes home with the whole lab. Alone, it needs 80 kg of satellite, about
-  14 times its own mass, but it gets the schedule to itself and a quieter ride: about 7.3 × 10⁻⁸ g at the payload, with no robotic
-  arm, against about 7 × 10⁻⁷ g in a LELP-1 bay.</p></div>
+  <div><h3>Bay or satellite?</h3><p>The capsule is the floor: no capsule much smaller than about 45 kg has been recovered yet, so 1.9 kg of samples need
+  118 kg of satellite. On LELP-1 the same samples share one capsule, the whole lab, with 31 other bays. A dedicated satellite earns its
+  place when the experiment needs the schedule to itself, a quieter ride (about 7.3 × 10⁻⁸ g quasi-steady, no robotic arm), or power a bay cannot give.</p></div>
 </div>
-<p class="small">First-order sizing with a 20 % system margin by <a href="satellites.html#method">the same model for every experiment</a>, reviewed independently;
-<a href="satellites.html#review">read the caveats</a>. Flown recoverable free-flyers are heavier, so treat these masses as optimistic.</p>
+
+<p class="small">First-order sizing with a 20 % margin by <a href="satellites.html#method">one model for every experiment</a>, reviewed independently;
+<a href="satellites.html#review">caveats and sources</a>. The smallest recovered capsule so far (Varda W-1) is under 90 kg, so treat these masses as optimistic.</p>
 </section>
   <section class="refs"><h2>References</h2><ol><li id="ref-1">Tamma R, Colaianni G, Camerino C, et al. (2009). Microgravity during spaceflight directly affects in vitro osteoclastogenesis and bone resorption. FASEB Journal 23(8):2549-2554. doi:10.1096/fj.08-127951 <a href="https://europepmc.org/article/MED/19329761" rel="noopener" target="_blank">https://europepmc.org/article/MED/19329761</a></li><li id="ref-2">European Space Agency (2007). Foton-M3 mission to launch European experiments. ESA news page, 11 September 2007. <a href="https://www.esa.int/Our_Activities/Human_and_Robotic_Exploration/Research/Foton-M3_mission_to_launch_European_experiments" rel="noopener" target="_blank">https://www.esa.int/Our_Activities/Human_and_Robotic_Exploration/Research/Foton-M3_mission_to_launch_European_experiments</a></li><li id="ref-3">Hughes-Fulford M, Lewis ML (1996). Effects of microgravity on osteoblast growth activation. Experimental Cell Research 224(1):103-109. doi:10.1006/excr.1996.0116 <a href="https://europepmc.org/article/MED/8612673" rel="noopener" target="_blank">https://europepmc.org/article/MED/8612673</a></li><li id="ref-4">NASA. STS-56 mission page (Space Shuttle Discovery, April 1993). <a href="https://www.nasa.gov/?p=289608" rel="noopener" target="_blank">https://www.nasa.gov/?p=289608</a></li><li id="ref-5">van Loon JJWA, Berezovska OP, Bervoets TJM, et al. (2024). Growth and mineralization of fetal mouse long bones under microgravity and daily 1 g gravity exposure. npj Microgravity 10:80. doi:10.1038/s41526-024-00421-4 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11282293/" rel="noopener" target="_blank">https://pmc.ncbi.nlm.nih.gov/articles/PMC11282293/</a></li><li id="ref-6">Axpe E, Chan D, Abegaz MF, et al. (2020). A human mission to Mars: Predicting the bone mineral density loss of astronauts. PLoS One 15(1):e0226434. doi:10.1371/journal.pone.0226434 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6975633/" rel="noopener" target="_blank">https://pmc.ncbi.nlm.nih.gov/articles/PMC6975633/</a></li><li id="ref-7">Thermo Fisher Scientific. RNAlater Stabilization Solution (AM7020), product page and FAQ. <a href="https://www.thermofisher.com/order/catalog/product/AM7020" rel="noopener" target="_blank">https://www.thermofisher.com/order/catalog/product/AM7020</a></li></ol><p class="verify">Fact-check: 18 claims and sources checked, 9 confirmed, 8 corrected, 1 removed · confidence high</p></section>
 </div>
@@ -80,12 +76,13 @@ and a green-monopropellant deorbit module (2 × 22 N, a 347 s burn), carrying a
 <nav class="pager"><a href="t-cell-activation.html">← Immune T-cell activation</a><a href="c-elegans-muscle.html">C. elegans muscle and ageing →</a></nav>
 
 </main>
+<script src="satdraw.js?v=c7d42e8"></script>
 <footer class="foot"><div class="wrap">
 <p><b>LELP-1 is in design.</b> Bay limits, budgets, timelines and environment numbers come from Space Philic's digital twin of the
 mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
 Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
 each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
-<p class="mono">build b8da32d</p>
+<p class="mono">build c7d42e8</p>
 </div></footer>
 </body>
 </html>
